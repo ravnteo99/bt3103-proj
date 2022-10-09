@@ -25,5 +25,5 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
 ```
-npm i firebase vue-textarea-autosize
+npm i firebase vue-textarea-autosize vue-router@4
 ```

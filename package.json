@@ -13,6 +13,7 @@
     "firebase": "^9.11.0",
     "roboto-fontface": "*",
     "vue": "^3.2.13",
+    "vue-router": "^4.1.5",
     "vue-textarea-autosize": "^1.1.1",
     "vuetify": "^3.0.0-beta.0",
     "webfontloader": "^1.0.0"

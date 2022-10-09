@@ -1,19 +1,19 @@
 <template>
   <v-app>
     <v-main>
-      <HelloWorld/>
+      <EmployeeCalendar/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import EmployeeCalendar from './components/EmployeeCalendar.vue'
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
+    EmployeeCalendar,
   },
 
   data: () => ({
