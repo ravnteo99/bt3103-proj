@@ -1,4 +1,4 @@
-# bt3103-proj
+# jobscheduler
 
 ## Project setup
 ```
@@ -22,8 +22,3 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
-
-
-```
-npm i firebase vue-textarea-autosize vue-router@4
-```
