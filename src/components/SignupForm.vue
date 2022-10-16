@@ -57,10 +57,10 @@
 <script>
 import firebaseApp from '../firebase.js';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-//import { getFirestore } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 
 const auth = getAuth(firebaseApp);
-//const db = getFirestore(firebaseApp);
+const db = getFirestore(firebaseApp);
 
 export default {
     data() {
@@ -89,7 +89,7 @@ export default {
                         throw new Error();
                     } else {
                         alert("Successfully signed up!");
-                        //this.registerUser();
+                        this.registerUser();
                     }
                 })
                 .catch((error) => {
@@ -105,14 +105,14 @@ export default {
                 });
             }
         },
-        /*registerUser() {
-            db.collection("employees").doc(`${auth.currentUser.uid}`).set({
-                employeeID: auth.currentUser.uid,
+        registerUser() {
+            db.collection("employees").doc(this.auth.currentUser.uid).set({
+                employeeID: this.auth.currentUser.uid,
                 fname: this.fname,
                 lname: this.lname,
                 email: auth.currentUser.email,
             });
-        },*/
+        }
     }
 }
 </script>
