@@ -1,7 +1,7 @@
 <template>
         <h1 class="signup">Sign Up</h1>
         <br>
-        <form id="signup">
+        <form id="signup" @submit.prevent="signup()">
             <label for="email">Email Address</label><br>
             <input 
                 type="email"
@@ -55,7 +55,66 @@
 </template>
 
 <script>
+import firebaseApp from '../firebase.js';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+//import { getFirestore } from 'firebase/firestore';
 
+const auth = getAuth(firebaseApp);
+//const db = getFirestore(firebaseApp);
+
+export default {
+    data() {
+        return {
+            email: "",
+            fname: "",
+            lname: "",
+            password: "",
+            confirmPassword: ""
+        }
+    },
+    methods: {
+        signup() {
+            if (this.password.length < 6) {
+                alert(
+                    "Password must contain at least 6 characters. Please check your password and try again."
+                    );
+            } else if (this.password != this.confirmPassword) {
+                alert(
+                    "Passwords do not match. Please check your password and try again."
+                    );
+            } else {
+                createUserWithEmailAndPassword(auth, this.email, this.password)
+                .then(() => {
+                    if (this.password != this.confirmPassword) {
+                        throw new Error();
+                    } else {
+                        alert("Successfully signed up!");
+                        //this.registerUser();
+                    }
+                })
+                .catch((error) => {
+                    if (error.code == "auth/invalid-email") {
+                    alert(
+                        "The email you entered is invalid. Please check your email and try again."
+                        );
+                    } else if (error.code == "auth/email-already-in-use") {
+                    alert(
+                        "Email already exists. Please enter a different email and try again."
+                        );
+                    }
+                });
+            }
+        },
+        /*registerUser() {
+            db.collection("employees").doc(`${auth.currentUser.uid}`).set({
+                employeeID: auth.currentUser.uid,
+                fname: this.fname,
+                lname: this.lname,
+                email: auth.currentUser.email,
+            });
+        },*/
+    }
+}
 </script>
 
 <style scoped>
