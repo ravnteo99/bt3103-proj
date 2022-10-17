@@ -4,6 +4,7 @@ import Login from '@/views/Login.vue'
 import Availability from "@/views/Availability";
 import Signup from '@/views/Signup.vue'
 import Availability from "@/views/Availability";
+import EmployeeDatabase from "@/views/EmployeeDatabase";
 
 const routes = [
   {
@@ -25,7 +26,12 @@ const routes = [
     path:'/availability',
     name: 'Availability',
     component: Availability
-  }
+  },
+  {
+    path:'/employee',
+    name: 'EmployeeDatabase',
+    component: EmployeeDatabase
+  },
 ]
 
 const router = createRouter({

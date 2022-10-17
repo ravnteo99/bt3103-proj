@@ -25,10 +25,6 @@
         flex-direction: row;
     }
 
-    .current-selection {
-        margin: 10px 0 0 0;
-    }
-
     .action-button {
         display: block;
         border-radius: 10px;

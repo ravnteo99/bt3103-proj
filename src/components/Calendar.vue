@@ -1,23 +1,30 @@
 <template>
+  <div class="datepicker">
     <Datepicker
         class="calendar-component"
         v-model="date"
         inline
-        selectText="Done"
-        cancelText="Reset"
         :enableTimePicker="false"
         :range="true"
         :minDate="new Date()"
         :action-row-component="actionRow"
     >
     </Datepicker>
+    <button class="reset-button" @click="resetClick">Reset</button>
     <h3> Selected {{ date }} </h3>
     <h3 v-if="done">Done is clicked</h3>
+  </div>
 </template>
 
 <script>
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+
 import ActionRowCustom from "@/components/ActionRowCustom";
+
 export default {
+  name: "Calendar",
+  components: { Datepicker },
   data() {
     return {
       date: null,
@@ -29,6 +36,11 @@ export default {
       return ActionRowCustom
     }
   },
+  methods: {
+    resetClick() {
+      this.date = null
+    }
+  }
 }
 </script>
 
@@ -44,5 +56,14 @@ export default {
   .dp__range_end, .dp__range_start {
     background-color: var(--yellow-tone-2);
     color: black;
+  }
+
+  /*hacky way to remove selection from date component*/
+  .dp__selection_preview {
+    width: 0%;
+  }
+
+  .dp__action_buttons {
+    width: 100%;
   }
 </style>
