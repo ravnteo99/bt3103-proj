@@ -1,7 +1,5 @@
 <template>
-  <div>
-  </div>
-  <router-view />
+  <router-view/>
 </template>
 
 <script>
@@ -11,5 +9,10 @@ export default {
 </script>
 
 <style>
-
+#app {
+  font-family: 'Poppins', sans-serif;
+  --yellow-tone-1: #F9EBC9;
+  --yellow-tone-2: #F8D57E;
+  --yellow-tone-3: #FFB100;
+}
 </style>
