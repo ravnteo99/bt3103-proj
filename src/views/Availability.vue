@@ -4,11 +4,12 @@
 
 <script>
 import Calendar from '@/components/Calendar.vue'
+
 export default {
     name: "Availability",
     components: {
-      Calendar
-    },
+      Calendar,
+    }
 }
 </script>
 

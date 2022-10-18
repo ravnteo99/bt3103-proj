@@ -38,13 +38,27 @@ export default {
   },
   methods: {
     resetClick() {
-      this.date = null
+      const date = new Date();
+      const newDate = new Date()
+      newDate.setDate(date.getDate() + 7)
+
+      this.date = [date, newDate]
     }
   }
 }
 </script>
 
 <style>
+  .datepicker {
+    position: relative;
+    border: 1px solid red;
+  }
+
+  .reset-button {
+    position: absolute;
+    bottom: 30px;
+  }
+
   .dp__today {
     border: 1px solid var(--yellow-tone-3)
   }
