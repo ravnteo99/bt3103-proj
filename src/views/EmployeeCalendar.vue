@@ -1,24 +1,15 @@
 <template>
-  <div></div>
-  <router-view />
+  <CalendarWeek/>
 </template>
 
 <script>
+import CalendarWeek from '../components/CalendarWeek.vue';
 export default {
-  name: "App",
-};
+    components: { CalendarWeek }
+}
 </script>
 
 <style>
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
 body {
   font-family: sans-serif;
   font-weight: 100;
@@ -37,7 +28,7 @@ li {
   list-style: none;
 }
 
-.calendar-month-header {
+.calendar-week-header {
   display: flex;
   justify-content: space-between;
   background-color: #fff;
