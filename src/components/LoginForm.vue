@@ -3,9 +3,9 @@
         <br>
         <p class="register1">If you don't have an account registered,</p>
         <br>
-        <p class="register2">you can register here!</p>
+        <p class="register2">you can register <router-link to="/signup">here</router-link>!</p>
         <br>
-        <form id="login">
+        <form id="login" @submit.prevent="login()">
             <label for="email">Email Address</label><br>
             <input 
                 type="email"
@@ -31,7 +31,43 @@
 </template>
 
 <script>
+import firebaseApp from '../firebase.js';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
+const auth = getAuth(firebaseApp);
+
+export default {
+    data() {
+        return {
+            email: "",
+            password: "",
+        }
+    },
+    methods: {
+        login() {
+            signInWithEmailAndPassword(auth, this.email, this.password)
+            .then(() => {
+                console.log("Login")
+                // push to home page
+            })
+            .catch((error) => {
+                if (error.code == "auth/invalid-email") {
+                    alert(
+                    "The email you entered is invalid. Please check your email and try again."
+                    );
+                } else if (error.code == "auth/user-not-found") {
+                    alert(
+                    "The email you entered does not appear to belong to an account. Please check your email and try again."
+                    );
+                } else if (error.code == "auth/wrong-password") {
+                    alert(
+                    "Incorrect password. Please check your password and try again."
+                    );
+                }
+            })
+        }
+    }
+}
 </script>
 
 <style scoped>
