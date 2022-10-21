@@ -10,7 +10,7 @@
 <script>
 import LoginForm from '@/components/LoginForm.vue'
 export default {
-    name: 'App',
+    name: 'Login',
     data() {
         return {
             logo: require('@/assets/logo.png')

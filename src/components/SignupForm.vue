@@ -2,6 +2,8 @@
         <h1 class="signup">Sign Up</h1>
         <br>
         <form id="signup" @submit.prevent="signup()">
+            <label for="profilePic">Profile Picture</label><br>
+            <UploadImage /><br>
             <label for="email">Email Address</label><br>
             <input 
                 type="email"
@@ -58,6 +60,7 @@
 import firebaseApp from '../firebase.js';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { getFirestore } from 'firebase/firestore';
+import UploadImage from './UploadImage.vue'
 
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
@@ -113,6 +116,9 @@ export default {
                 email: auth.currentUser.email,
             });
         }
+    },
+    components: {
+        UploadImage
     }
 }
 </script>
@@ -120,6 +126,7 @@ export default {
 <style scoped>
 h1 {
     font-family: sans-serif;
+    margin-bottom: 0px;
 }
 p {
     font-family: sans-serif;

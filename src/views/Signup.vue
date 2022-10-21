@@ -10,7 +10,7 @@
 <script>
 import SignupForm from '@/components/SignupForm.vue'
 export default {
-    name: 'App',
+    name: 'Signup',
     data() {
         return {
             logo: require('@/assets/logo.png')
