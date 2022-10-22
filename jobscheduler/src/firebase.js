@@ -13,3 +13,27 @@ const firebaseConfig = {
 const firebaseApp = initializeApp(firebaseConfig);
 
 export default firebaseApp;
+
+//---- save to firestore ------
+function savetofs(){
+  var a = document.getElementById("email").value
+  var b = document.getElementById("name").value
+  var c = document.getElementById("address").value
+  var d = document.getElementById("contactInfo").value
+
+  alert("Hello " + a + " we have saved your information")
+
+  db.collection("employeeInfo").doc(a).set({
+      Email: a,
+      Name :b,
+      Address:c,
+      ContactNo:d
+  })
+  .then((docRef)=>{
+      console.log(docRef)
+      window.location.reload()
+  })
+  .catch((error)=>{
+      console.error("Error adding document: ", error);
+  });
+      }
