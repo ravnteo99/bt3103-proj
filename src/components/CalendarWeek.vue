@@ -16,9 +16,8 @@
     <CalendarDays :selected-date="selectedDate" />
 
     <ol class="days-grid">
-      <CalendarDayItem v-for="day in days" :key="day" :day="day" />
+      <CalendarDayItem v-for="day in days" :key="day" :day="day" :shifts="shiftMap.get(day.date)"/>
     </ol>
-    {{ shiftMap }}
   </div>
 </template>
 
@@ -26,8 +25,8 @@
 import dayjs from "dayjs";
 import CalendarWeekSelector from "./CalendarWeekSelector.vue";
 import CalendarDays from "./CalendarDays.vue";
-import weekday from "dayjs/plugin/weekday";
-import weekOfYear from "dayjs/plugin/weekOfYear";
+// import weekday from "dayjs/plugin/weekday";
+// import weekOfYear from "dayjs/plugin/weekOfYear";
 import CalendarDayItem from "./CalendarDayItem.vue";
 import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
@@ -36,8 +35,8 @@ import { collection, getDoc, getDocs, doc } from "firebase/firestore";
 
 const db = getFirestore(firebaseApp);
 
-dayjs.extend(weekday);
-dayjs.extend(weekOfYear);
+// dayjs.extend(weekday);
+// dayjs.extend(weekOfYear);
 
 export default {
   components: {
@@ -114,18 +113,19 @@ export default {
   },
 
   mounted() {
-    // get userid
+    // get userid INCOMPLETE
 
-    // get shiftids assigned to userid
+    // get shiftids assigned to userid INCOMPLETE
     async function getShiftIds() {
       let z = await getDocs(collection(db, "EmployeeAssignments"));
       let shiftIds = [];
       z.forEach((docs) => {
+        console.log(docs)
         let data = docs.data();
         let shiftId = data.Shift;
         shiftIds.push(String(shiftId));
-        // console.log(this.shiftIds)
       });
+      console.log(shiftIds);
       return shiftIds;
     }
 
@@ -145,7 +145,8 @@ export default {
           let startTime = shift.StartTime;
           let endTime = shift.EndTime;
           let branch = shift.Branch;
-          this.shiftMap.set(date, {
+          this.shiftMap.set(date, [])
+          this.shiftMap.get(date).push({
             startTime: startTime,
             endTime: endTime,
             branch: branch,
