@@ -26,5 +26,5 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### Other dependencies
 ```
-npm i firebase vue-router@4
+npm i firebase vue-router@4 dayjs
 ```

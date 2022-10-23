@@ -1,8 +1,12 @@
 <template>
-  <div class="selected-week">{{ selectedWeek }}</div>
+  <div class="selected-week">{{ startOfWeek }} &#8211; {{endOfWeek}}</div>
 </template>
 
 <script>
+import dayjs from "dayjs";
+
+console.log(dayjs().day())
+
 export default {
   props: {
     selectedDate: {
@@ -13,8 +17,16 @@ export default {
 
   computed: {
     selectedWeek() {
-      return this.selectedDate.format("MMMM YYYY");
+      return this.selectedDate.format("DD MMM YYYY");
     },
+    startOfWeek() {
+      let days = (this.selectedDate.day()+6)%7;
+      return dayjs(this.selectedDate).subtract(days, "day").format("DD MMM YYYY");
+    },
+    endOfWeek() {
+      let days = (this.selectedDate.day()+6)%7;
+      return dayjs(this.selectedDate).add(6-days, "day").format("DD MMM YYYY");
+    }
   },
 };
 </script>

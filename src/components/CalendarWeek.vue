@@ -15,14 +15,16 @@
 
     <CalendarDays />
 
-    <ol class="days-grid">
+    
+
+    <!-- <ol class="days-grid">
       <CalendarDayItem
         v-for="day in days"
         :key="day.date"
         :day="day"
         :is-today="day.date === today"
       />
-    </ol>
+    </ol> -->
   </div>
 </template>
 
@@ -30,14 +32,19 @@
 import dayjs from "dayjs";
 import CalendarWeekIndicator from "./CalendarWeekIndicator.vue";
 import CalendarWeekSelector from "./CalendarWeekSelector.vue";
-import CalendarDayItem from "./CalendarDayItem.vue";
+// import CalendarDayItem from "./CalendarDayItem.vue";
 import CalendarDays from "./CalendarDays.vue";
+import weekday from "dayjs/plugin/weekday";
+import weekOfYear from "dayjs/plugin/weekOfYear";
+
+dayjs.extend(weekday);
+dayjs.extend(weekOfYear);
 
 export default {
   components: {
     CalendarWeekIndicator,
     CalendarWeekSelector,
-    CalendarDayItem,
+    // CalendarDayItem,
     CalendarDays,
   },
 
@@ -45,6 +52,7 @@ export default {
     return {
       selectedDate: dayjs(),
       today: dayjs().format("YYYY-MM-DD"),
+      dayOfWeek: dayjs().day(),
     };
   },
 
@@ -65,6 +73,9 @@ export default {
         { date: "2022-10-15" },
         { date: "2022-10-16" },
       ];
+    },
+    numberOfDaysInWeek() {
+      return dayjs(this.selectedDate).daysInMonth();
     },
   },
 };
