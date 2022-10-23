@@ -13,7 +13,9 @@
       />
     </div>
 
-    <CalendarDays />
+    <CalendarDays 
+    :selected-date="selectedDate"
+    />
 
     
 
