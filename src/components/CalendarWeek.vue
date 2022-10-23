@@ -1,10 +1,10 @@
 <template>
   <div class="calendar-week">
     <div class="calendar-week-header">
-      <CalendarWeekIndicator
+      <!-- <CalendarWeekIndicator
         :selected-date="selectedDate"
         class="calendar-week-header-selected-week"
-      />
+      /> -->
 
       <CalendarWeekSelector
         :current-date="today"
@@ -32,7 +32,7 @@
 
 <script>
 import dayjs from "dayjs";
-import CalendarWeekIndicator from "./CalendarWeekIndicator.vue";
+// import CalendarWeekIndicator from "./CalendarWeekIndicator.vue";
 import CalendarWeekSelector from "./CalendarWeekSelector.vue";
 // import CalendarDayItem from "./CalendarDayItem.vue";
 import CalendarDays from "./CalendarDays.vue";
@@ -44,7 +44,7 @@ dayjs.extend(weekOfYear);
 
 export default {
   components: {
-    CalendarWeekIndicator,
+    // CalendarWeekIndicator,
     CalendarWeekSelector,
     // CalendarDayItem,
     CalendarDays,
@@ -61,26 +61,9 @@ export default {
   methods: {
     selectDate(newSelectedDate) {
       this.selectedDate = newSelectedDate;
-    },
-  },
-
-  computed: {
-    days() {
-      return [
-        { date: "2022-10-10" },
-        { date: "2022-10-11" },
-        { date: "2022-10-12" },
-        { date: "2022-10-13" },
-        { date: "2022-10-14" },
-        { date: "2022-10-15" },
-        { date: "2022-10-16" },
-      ];
-    },
-    numberOfDaysInWeek() {
-      return dayjs(this.selectedDate).daysInMonth();
-    },
-  },
-};
+    }
+  }
+}
 </script>
 
 <style scoped>
