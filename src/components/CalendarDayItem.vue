@@ -11,6 +11,11 @@
 
 <script>
 import dayjs from "dayjs";
+// import firebaseApp from "../firebase.js";
+// import { getFirestore } from "firebase/firestore";
+// import { collection, getDoc, getDocs, doc } from "firebase/firestore";
+
+// const db = getFirestore(firebaseApp)
 
 export default {
   name: "CalendarDayItem",
@@ -32,6 +37,26 @@ export default {
       return dayjs(this.day.date).format("D");
     },
   },
+
+  // mounted() {
+  //   async function display() {
+  //     let z = await getDocs(collection(db, "EmployeeAssignments"));
+
+  //     z.forEach((docs) => {
+  //       let data = docs.data()
+  //       let shiftId = data.Shift;
+  //       async function getShift() {
+  //         const docRef = doc(db, 'shift', shiftId)
+  //         const docSnap = await getDoc(docRef)
+  //         return docSnap.data()
+  //       }
+  //       let shift = getShift()
+  //       let startTime = shift.StartTime;
+  //       let endTime = shift.EndTime;
+
+  //     })
+  //   }
+  // }
 };
 </script>
 

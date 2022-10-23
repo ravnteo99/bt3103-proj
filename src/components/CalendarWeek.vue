@@ -18,36 +18,30 @@
     <ol class="days-grid">
       <CalendarDayItem v-for="day in days" :key="day" :day="day" />
     </ol>
-
-    <!-- <ol class="days-grid">
-      <CalendarDayItem
-        v-for="day in days"
-        :key="day"
-        :day="day"
-        :is-today="day.date === today"
-      />
-    </ol> -->
+    {{ shiftMap }}
   </div>
 </template>
 
 <script>
 import dayjs from "dayjs";
-// import CalendarWeekIndicator from "./CalendarWeekIndicator.vue";
 import CalendarWeekSelector from "./CalendarWeekSelector.vue";
-// import CalendarDayItem from "./CalendarDayItem.vue";
 import CalendarDays from "./CalendarDays.vue";
 import weekday from "dayjs/plugin/weekday";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import CalendarDayItem from "./CalendarDayItem.vue";
+import firebaseApp from "../firebase.js";
+import { getFirestore } from "firebase/firestore";
+import { collection, getDoc, getDocs, doc } from "firebase/firestore";
+// import { collection, getDocs } from "firebase/firestore";
+
+const db = getFirestore(firebaseApp);
 
 dayjs.extend(weekday);
 dayjs.extend(weekOfYear);
 
 export default {
   components: {
-    // CalendarWeekIndicator,
     CalendarWeekSelector,
-    // CalendarDayItem,
     CalendarDays,
     CalendarDayItem,
   },
@@ -57,6 +51,8 @@ export default {
       selectedDate: dayjs(),
       today: dayjs().format("YYYY-MM-DD"),
       dayOfWeek: dayjs().day(),
+      shiftIds: [],
+      shiftMap: new Map(),
     };
   },
 
@@ -115,6 +111,48 @@ export default {
       ];
       return days;
     },
+  },
+
+  mounted() {
+    // get userid
+
+    // get shiftids assigned to userid
+    async function getShiftIds() {
+      let z = await getDocs(collection(db, "EmployeeAssignments"));
+      let shiftIds = [];
+      z.forEach((docs) => {
+        let data = docs.data();
+        let shiftId = data.Shift;
+        shiftIds.push(String(shiftId));
+        // console.log(this.shiftIds)
+      });
+      return shiftIds;
+    }
+
+    getShiftIds().then((arr) => {
+      this.shiftIds = arr;
+
+      arr.forEach((id) => {
+        async function getShift() {
+          const docRef = doc(db, "shift", id);
+          const docSnap = await getDoc(docRef);
+          return docSnap.data();
+        }
+
+        getShift().then((shift) => {
+          // map key:shiftDates value:[StartTime, EndTime, Branch]
+          let date = shift.Date;
+          let startTime = shift.StartTime;
+          let endTime = shift.EndTime;
+          let branch = shift.Branch;
+          this.shiftMap.set(date, {
+            startTime: startTime,
+            endTime: endTime,
+            branch: branch,
+          });
+        });
+      });
+    });
   },
 };
 </script>
