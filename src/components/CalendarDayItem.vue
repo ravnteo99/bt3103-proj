@@ -21,11 +21,6 @@ export default {
       required: true,
     },
 
-    // isCurrentMonth: {
-    //   type: Boolean,
-    //   default: false,
-    // },
-
     isToday: {
       type: Boolean,
       default: false,

@@ -1,7 +1,14 @@
 <template>
   <ol class="day-of-week">
-    <li v-for="day in days" :key="day">
-      {{ day.day }} <span style="font-size: 15px; margin-left: 5px;">{{ day.date }}</span>
+    <li
+      v-for="day in days"
+      :key="day"
+      :class="{
+        'calendar-day--today': day.fulldate === today,
+      }"
+    >
+      {{ day.day }}
+      <span style="font-size: 15px; margin-left: 5px">{{ day.date }}</span>
     </li>
   </ol>
 </template>
@@ -19,6 +26,12 @@ export default {
     },
   },
 
+  data() {
+    return {
+      today: dayjs().format("YYYY-MM-DD"),
+    };
+  },
+
   computed: {
     days() {
       let index = (this.selectedDate.day() + 6) % 7;
@@ -26,42 +39,63 @@ export default {
         {
           day: "Mon",
           date: dayjs(this.selectedDate).subtract(index, "day").format("DD"),
+          fulldate: dayjs(this.selectedDate)
+            .subtract(index, "day")
+            .format("YYYY-MM-DD"),
         },
         {
           day: "Tue",
           date: dayjs(this.selectedDate)
             .subtract(index - 1, "day")
             .format("DD"),
+          fulldate: dayjs(this.selectedDate)
+            .subtract(index - 1, "day")
+            .format("YYYY-MM-DD"),
         },
         {
           day: "Wed",
           date: dayjs(this.selectedDate)
             .subtract(index - 2, "day")
             .format("DD"),
+          fulldate: dayjs(this.selectedDate)
+            .subtract(index - 2, "day")
+            .format("YYYY-MM-DD"),
         },
         {
           day: "Thu",
           date: dayjs(this.selectedDate)
             .subtract(index - 3, "day")
             .format("DD"),
+          fulldate: dayjs(this.selectedDate)
+            .subtract(index - 3, "day")
+            .format("YYYY-MM-DD"),
         },
         {
           day: "Fri",
           date: dayjs(this.selectedDate)
             .subtract(index - 4, "day")
             .format("DD"),
+          fulldate: dayjs(this.selectedDate)
+            .subtract(index - 4, "day")
+            .format("YYYY-MM-DD"),
         },
         {
           day: "Sat",
           date: dayjs(this.selectedDate)
             .subtract(index - 5, "day")
             .format("DD"),
+          fulldate: dayjs(this.selectedDate)
+            .subtract(index - 5, "day")
+            .format("YYYY-MM-DD"),
         },
         {
           day: "Sun",
           date: dayjs(this.selectedDate)
             .subtract(index - 6, "day")
             .format("DD"),
+          fulldate: dayjs(this.selectedDate)
+            .subtract(index - 6, "day")
+            .format("YYYY-MM-DD"),
         },
       ];
       return days;
@@ -79,5 +113,8 @@ export default {
 .day-of-week > * {
   text-align: left;
   padding-right: 5px;
+}
+.calendar-day--today {
+  background-color: greenyellow;
 }
 </style>

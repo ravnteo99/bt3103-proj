@@ -13,16 +13,16 @@
       />
     </div>
 
-    <CalendarDays 
-    :selected-date="selectedDate"
-    />
+    <CalendarDays :selected-date="selectedDate" />
 
-    
+    <ol class="days-grid">
+      <CalendarDayItem v-for="day in days" :key="day" :day="day" />
+    </ol>
 
     <!-- <ol class="days-grid">
       <CalendarDayItem
         v-for="day in days"
-        :key="day.date"
+        :key="day"
         :day="day"
         :is-today="day.date === today"
       />
@@ -38,6 +38,7 @@ import CalendarWeekSelector from "./CalendarWeekSelector.vue";
 import CalendarDays from "./CalendarDays.vue";
 import weekday from "dayjs/plugin/weekday";
 import weekOfYear from "dayjs/plugin/weekOfYear";
+import CalendarDayItem from "./CalendarDayItem.vue";
 
 dayjs.extend(weekday);
 dayjs.extend(weekOfYear);
@@ -48,6 +49,7 @@ export default {
     CalendarWeekSelector,
     // CalendarDayItem,
     CalendarDays,
+    CalendarDayItem,
   },
 
   data() {
@@ -61,9 +63,60 @@ export default {
   methods: {
     selectDate(newSelectedDate) {
       this.selectedDate = newSelectedDate;
-    }
-  }
-}
+    },
+  },
+
+  computed: {
+    days() {
+      let index = (this.selectedDate.day() + 6) % 7;
+      let days = [
+        {
+          day: "Mon",
+          date: dayjs(this.selectedDate)
+            .subtract(index, "day")
+            .format("YYYY-MM-DD"),
+        },
+        {
+          day: "Tue",
+          date: dayjs(this.selectedDate)
+            .subtract(index - 1, "day")
+            .format("YYYY-MM-DD"),
+        },
+        {
+          day: "Wed",
+          date: dayjs(this.selectedDate)
+            .subtract(index - 2, "day")
+            .format("YYYY-MM-DD"),
+        },
+        {
+          day: "Thu",
+          date: dayjs(this.selectedDate)
+            .subtract(index - 3, "day")
+            .format("YYYY-MM-DD"),
+        },
+        {
+          day: "Fri",
+          date: dayjs(this.selectedDate)
+            .subtract(index - 4, "day")
+            .format("YYYY-MM-DD"),
+        },
+        {
+          day: "Sat",
+          date: dayjs(this.selectedDate)
+            .subtract(index - 5, "day")
+            .format("YYYY-MM-DD"),
+        },
+        {
+          day: "Sun",
+          date: dayjs(this.selectedDate)
+            .subtract(index - 6, "day")
+            .format("YYYY-MM-DD"),
+        },
+      ];
+      return days;
+    },
+  },
+};
 </script>
 
 <style scoped>
