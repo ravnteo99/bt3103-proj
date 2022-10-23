@@ -1,7 +1,9 @@
 <template>
   <div class="card">
-    {{shift.branch}} <br>
-    <span>{{shift.startTime}}hrs - {{shift.endTime}}hrs</span>
+    <li>
+      {{ shift.branch }} <br />
+      <span>{{ shift.startTime }}hrs - {{ shift.endTime }}hrs</span>
+    </li>
   </div>
 </template>
 

@@ -1,8 +1,8 @@
 <template>
   <li class="calendar-day">
-    <span v-if="shifts">
+    <ol class="cards-grid" v-if="shifts">
       <CalendarCards v-for="shift in shifts" :key="shift" :shift="shift" />
-    </span>
+    </ol>
     <span v-else>There are no shifts allocated on this date</span>
   </li>
 </template>
@@ -43,5 +43,14 @@ export default {
 
 .calendar-day span {
   padding: 10px 0px 10px 0px;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-rows: repeat(7, 1fr);
+  height: 100%;
+  position: relative;
+  grid-column-gap: var(--grid-gap);
+  grid-row-gap: var(--grid-gap);
 }
 </style>

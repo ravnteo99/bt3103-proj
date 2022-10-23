@@ -120,12 +120,10 @@ export default {
       let z = await getDocs(collection(db, "EmployeeAssignments"));
       let shiftIds = [];
       z.forEach((docs) => {
-        console.log(docs)
         let data = docs.data();
         let shiftId = data.Shift;
         shiftIds.push(String(shiftId));
       });
-      console.log(shiftIds);
       return shiftIds;
     }
 
