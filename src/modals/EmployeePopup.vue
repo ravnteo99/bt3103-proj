@@ -1,11 +1,26 @@
 <template>
   <div class="information-wrapper">
     <div class="employee-popup">
+
+      <!--      cross icon on top right-->
+      <font-awesome-icon
+          icon="fa-solid fa-x"
+          class="cross-icon"
+          @click="this.$emit('togglePopup')"
+      />
+
       <div class="header-wrapper">
         <div class="header">
           <img :src="require(`@/assets/${employee.firstName}.svg`)" alt="profile picture">
           <h2> {{ employee.fullName }} </h2>
           <p> {{ employee.emailAddress }} </p>
+          <div class="user-tag">
+            <p :class="employee.tag">
+              {{ employee.tag }}
+              <span class="remove-class-button"><font-awesome-icon icon="fa-solid fa-x fa-2xs" /></span>
+            </p>
+            <span class="add-button"><font-awesome-icon icon="fa-solid fa-plus" /></span>
+          </div>
         </div>
       </div>
 
@@ -20,7 +35,7 @@
         <input type="text" name="contactNumber" :value="employee.emailAddress" disabled>
 
         <div class="button-wrapper custom-action-row">
-          <button class="action-button" type="button" @click="this.$emit('togglePopup')">Cancel</button>
+          <button class="action-button cancel-button" type="button" @click="this.$emit('togglePopup')">Cancel</button>
           <button class="action-button done" type="button" @click="this.$emit('togglePopup'), updateTagBranches()">Save</button>
         </div>
       </form>
@@ -63,13 +78,25 @@ export default {
     display: flex;
     flex-direction: row;
     align-items: center;
+    gap: 20px;
     padding: 10px;
+    position: relative;
+    max-width: 700px;
+    min-width: 600px;
+  }
+
+  .cross-icon {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    cursor: pointer;
   }
 
   input {
     padding: 7px 12px 6px 12px;
     border: 1px solid #d1d5db;
     border-radius: 4px;
+    overflow: hidden;
   }
 
   .header-wrapper {
@@ -77,6 +104,7 @@ export default {
     justify-content: center;
     text-align: center;
     flex: .4;
+    padding-left: 30px;
   }
 
   .header h2 {
@@ -86,7 +114,46 @@ export default {
 
   .header p {
     font-size: 18px;
-    margin: 0px;
+    margin-top: 0px;
+  }
+
+  .user-tag {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .user-tag p {
+    border-radius: 5px;
+    font-weight: bold;
+    padding: 3px;
+    width: 150px;
+    margin-bottom: 0px;
+    position: relative;
+  }
+
+  .user-tag p span {
+    font-size: 15px;
+    width: 10%;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+  }
+
+  .user-tag p span:hover {
+    background-color: #d1d5db;
+  }
+
+  .add-button {
+    background-color: buttonface;
+    border-radius: 3px;
+    padding: 4px 6px;
+    cursor: pointer;
+  }
+
+  .add-button:hover {
+    background-color: var(--yellow-tone-1);
   }
 
   img {
@@ -113,5 +180,13 @@ export default {
   .action-button {
     padding-top: 10px;
     padding-bottom: 10px;
+  }
+
+  .cancel-button:hover {
+    background-color: #d1d5db;
+  }
+
+  .done:hover {
+    background-color: var(--yellow-tone-3);
   }
 </style>

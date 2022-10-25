@@ -82,6 +82,15 @@ export default {
         "name": branch.name
       })
     });
+
+    const employeeBranchQuery = await getDocs(collection(db, "branchEmployee"));
+    employeeBranchQuery.forEach((doc) => {
+      const assignment = doc.data()
+      this.employeeBranches.push({
+        "employeeID": assignment.employeeID,
+        "branchID": assignment.branchID
+      })
+    });
   },
   computed: {
     employeeCount() {
@@ -92,8 +101,25 @@ export default {
         return employee.fullName.toLowerCase().includes(this.employeeSearch)
       })
 
+      if (this.selectedBranch !== "") {
+        let branchID = this.selectedBranch.id
+
+        // only return employees from this branch
+        const allowedEmployees = []
+        this.employeeBranches.filter(assignment => {
+          if (assignment.branchID === branchID) {
+            allowedEmployees.push(assignment.employeeID)
+          }
+        })
+
+        const newResults = result.filter(employee => {
+          return allowedEmployees.includes(employee.id)
+        })
+        return newResults
+      }
+
       return result
-    },
+    }
   },
   methods: {
     clearSearchBar() {
