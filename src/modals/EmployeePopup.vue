@@ -2,7 +2,7 @@
   <div class="information-wrapper">
     <div class="employee-popup">
 
-      <!--      cross icon on top right-->
+      <!-- cross icon on top right-->
       <font-awesome-icon
           icon="fa-solid fa-x"
           class="cross-icon"
@@ -79,7 +79,7 @@ export default {
     flex-direction: row;
     align-items: center;
     gap: 20px;
-    padding: 10px;
+    padding: 30px;
     position: relative;
     max-width: 700px;
     min-width: 600px;
