@@ -15,17 +15,11 @@
 export default {
   name: "EmployeeCard",
   props: {
-    firstName: String,
-    lastName: String,
+    fullName: String,
     tag: String,
     emailAddress: String,
     profileLink: String
   },
-  computed: {
-    fullName() {
-      return this.firstName + " " + this.lastName
-    }
-  }
 }
 </script>
 
@@ -34,7 +28,6 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 200px;
     background-color: #FBFBFD;
     border-radius: 10px;
     padding-top: 20px;
@@ -42,6 +35,8 @@ export default {
 
   .worker-information {
     text-align: center;
+    padding: 0 20px;
+    width: inherit;
   }
 
   .worker-information p {
@@ -60,6 +55,7 @@ export default {
     border-radius: 5px;
     font-weight: bold;
     padding: 3px;
+    width: 200px;
   }
 
   .email-address {

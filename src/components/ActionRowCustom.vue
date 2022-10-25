@@ -18,24 +18,5 @@
 </script>
 
 <style>
-    .custom-action-row {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        flex-direction: row;
-    }
 
-    .action-button {
-        display: block;
-        border-radius: 10px;
-        padding: 5px;
-        margin: 10px;
-        cursor: pointer;
-        font-family: 'Poppins', sans-serif;
-        width: 30%;
-    }
-
-    .done {
-      background-color: var(--yellow-tone-2);
-    }
 </style>

@@ -24,6 +24,12 @@ export default {
   --ms-ring-color: #F9EBC9;
 }
 
+/* input boxes to have the same font size */
+input {
+  font-family: inherit;
+  font-size: inherit;
+}
+
 /* employee tags class to be used in employee card */
 .Barista {
   background-color: #787161;
@@ -38,5 +44,27 @@ export default {
 .Clerk {
   background-color: #FFB100;
   color: black;
+}
+
+/* action buttons CSS */
+.custom-action-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-direction: row;
+}
+
+.action-button {
+    display: block;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 10px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    width: 30%;
+}
+
+.done {
+  background-color: var(--yellow-tone-2);
 }
 </style>

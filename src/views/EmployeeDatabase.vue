@@ -14,63 +14,93 @@
           @click="clearSearchBar"
       />
     </form>
-    <BranchFilter class="branch-filter"/>
-  </div>
 
+    <select name="branch" id="branch" class="branch-filter input-field" v-model="selectedBranch">
+      <option value="" selected>All branches</option>
+      <option v-for="branch in branches" :value="branch" :key="branch.name"> {{ branch.name }} </option>
+    </select>
+
+  </div>
   <div class="employee-wrapper">
       <EmployeeCard
-        v-for="employee in employees"
+        v-for="employee in filteredEmployees"
+        class="employee-card"
         :key="employee.firstName"
-        :first-name="employee.firstName"
-        :last-name="employee.lastName"
+        :full-name="employee.fullName"
         :tag="employee.tag"
         :email-address="employee.emailAddress"
         :profile-link="require(`@/assets/${employee.firstName}.svg`)"
+        @click="toggleModal(employee)"
     />
   </div>
+
+  <!--  Modal Component-->
+  <EmployeePopup
+        v-if="lastClick"
+        @togglePopup="this.lastClick=null"
+        :employee="lastClick"
+    />
 </template>
 
 <script>
 import { db } from "@/firebase"
 import { collection, getDocs } from "firebase/firestore";
 import EmployeeCard from "@/components/EmployeeCard";
-import BranchFilter from "@/views/BranchFilter";
+import EmployeePopup from "@/modals/EmployeePopup";
 
 export default {
   name: "EmployeeDatabase",
-  components: { EmployeeCard, BranchFilter },
+  components: { EmployeePopup, EmployeeCard },
   data() {
     return {
       employees: [],
-      employeesPlaceholder: [],
+      employeeBranches: [],
       employeeSearch: "",
-      branchFilter: [],
-      tags: [
-          "Cashier", "Barista", "Clerk"
-      ],
+      selectedBranch: "",
+      branches: [],
+      lastClick: null,
     }
   },
   async mounted() {
-    const querySnapshot = await getDocs(collection(db, "employee"));
-    querySnapshot.forEach((doc) => {
+    const employeeQuery = await getDocs(collection(db, "employee"));
+    employeeQuery.forEach((doc) => {
       const employee = doc.data()
       this.employees.push({
+        "id": doc.id,
         "firstName": employee.firstName,
-        "lastName": employee.lastName,
+        "fullName": `${employee.firstName} ${employee.lastName}`,
         "tag": employee.tag,
         "emailAddress": employee.emailAddress
       })
     });
-    this.employeesPlaceholder = this.employees
+
+    const branchQuery = await getDocs(collection(db, "branch"));
+    branchQuery.forEach((doc) => {
+      const branch = doc.data()
+      this.branches.push({
+        "id": doc.id,
+        "name": branch.name
+      })
+    });
   },
   computed: {
     employeeCount() {
       return this.employees.length
     },
+    filteredEmployees() {
+      const result = this.employees.filter(employee => {
+        return employee.fullName.toLowerCase().includes(this.employeeSearch)
+      })
+
+      return result
+    },
   },
   methods: {
     clearSearchBar() {
       this.employeeSearch = ""
+    },
+    toggleModal(employee) {
+      this.lastClick = employee
     }
   }
 }
@@ -82,6 +112,7 @@ export default {
     flex-direction: row;
     flex-wrap: wrap;
     gap: 20px;
+    margin-top: 30px;
   }
 
   h1 span {
@@ -123,14 +154,13 @@ export default {
   .filter-wrapper {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: flex-start;
     gap: 30px;
-    width: 700px;
   }
 
   .branch-filter {
-    min-width: 300px;
-    max-width: 400px;
-    width: 300px;
+    min-width: 200px;
+    max-width: 250px;
   }
 </style>
