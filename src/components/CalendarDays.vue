@@ -7,8 +7,8 @@
         'calendar-day--today': day.fulldate === today,
       }"
     >
-      {{ day.day }}
-      <span style="font-size: 15px; margin-left: 5px">{{ day.date }}</span>
+      <strong id="day">{{ day.day }}</strong>
+      <span id="date">{{ day.date }}</span>
     </li>
   </ol>
 </template>
@@ -115,6 +115,15 @@ export default {
   padding-right: 5px;
 }
 .calendar-day--today {
-  background-color: greenyellow;
+  background-color: rgb(254, 206, 124);
+}
+
+#day {
+  margin-left: 10px;
+}
+
+#date {
+  font-size: 15px;
+  margin-left: 10px;
 }
 </style>

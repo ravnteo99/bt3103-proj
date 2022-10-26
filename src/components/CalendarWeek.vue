@@ -1,18 +1,10 @@
 <template>
+  <CalendarWeekSelector
+    :current-date="today"
+    :selected-date="selectedDate"
+    @dateSelected="selectDate"
+  />
   <div class="calendar-week">
-    <div class="calendar-week-header">
-      <!-- <CalendarWeekIndicator
-        :selected-date="selectedDate"
-        class="calendar-week-header-selected-week"
-      /> -->
-
-      <CalendarWeekSelector
-        :current-date="today"
-        :selected-date="selectedDate"
-        @dateSelected="selectDate"
-      />
-    </div>
-
     <CalendarDays :selected-date="selectedDate" />
 
     <ol class="days-grid">
@@ -124,7 +116,7 @@ export default {
       }
       return 0;
     }
-    
+
     // get userid INCOMPLETE
 
     // get shiftids assigned to userid INCOMPLETE
@@ -180,10 +172,11 @@ export default {
 </script>
 
 <style scoped>
-.calendar-month {
+.calendar-week {
   position: relative;
   background-color: var(--grey-200);
   border: solid 1px var(--grey-300);
+  margin-top: 20px;
 }
 
 .day-of-week {

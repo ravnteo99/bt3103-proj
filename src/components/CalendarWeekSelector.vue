@@ -1,26 +1,15 @@
 <template>
-  <span
-    style="
-      position: absolute;
-      margin-left: 10%;
-      margin-top: 0px;
-      background-color: greenyellow;
-      padding: 0px 10px 0px 10px;
-      border: 5px;
-      border-style: solid;
-      border-color: greenyellow;
-      border-radius: 10%;
-    "
-    @click="selectCurr"
-    >Today</span
-  >
-  <div class="week-selector">
-    <span @click="selectPrev"> &lt; </span>
-    <CalendarWeekIndicator
-      style="margin: 0px 10px 0px 10px"
-      :selected-date="selectedDate"
-    />
-    <span @click="selectNext"> > </span>
+  <div class="left-column">
+    <span id="today" @click="selectCurr">Go To Today</span>
+  </div>
+  <div class="middle-column">
+    <div class="week-selector">
+      <span id="arrow" @click="selectPrev"> &lt; </span>
+      <CalendarWeekIndicator
+        :selected-date="selectedDate"
+      />
+      <span id="arrow" @click="selectNext"> > </span>
+    </div>
   </div>
 </template>
 
@@ -66,19 +55,35 @@ export default {
 </script>
 
 <style scoped>
+.left-column {
+  float: left;
+  width: 30%;
+}
+
+#today {
+  position: absolute;
+  background-color: rgb(254, 206, 124);
+  padding: 0px 10px 0px 10px;
+  border: 5px;
+  border-style: solid;
+  border-color: rgb(254, 206, 124);
+  border-radius: 10%;
+  cursor: pointer;
+}
+
 .week-selector {
   margin: auto;
   display: flex;
   justify-content: space-between;
   color: var(--grey-800);
+  max-width: 30%;
 }
 
-.week-selector > * {
+#arrow {
+  font-size: 30px;
   cursor: pointer;
   user-select: none;
 }
 
-span {
-  margin-top: 5px;
-}
+
 </style>

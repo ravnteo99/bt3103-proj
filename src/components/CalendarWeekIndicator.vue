@@ -1,5 +1,8 @@
 <template>
-  <div class="selected-week">{{ startOfWeek }} &#8211; {{endOfWeek}}</div>
+  <div class="selected-week">
+    <font-awesome-icon icon="fa-regular fa-calendar" />
+    {{ startOfWeek }} &#8211; {{ endOfWeek }}
+  </div>
 </template>
 
 <script>
@@ -15,13 +18,17 @@ export default {
 
   computed: {
     startOfWeek() {
-      let day = (this.selectedDate.day()+6)%7;
-      return dayjs(this.selectedDate).subtract(day, "day").format("DD MMM YYYY");
+      let day = (this.selectedDate.day() + 6) % 7;
+      return dayjs(this.selectedDate)
+        .subtract(day, "day")
+        .format("DD MMM YYYY");
     },
     endOfWeek() {
-      let day = (this.selectedDate.day()+6)%7;
-      return dayjs(this.selectedDate).add(6-day, "day").format("DD MMM YYYY");
-    }
+      let day = (this.selectedDate.day() + 6) % 7;
+      return dayjs(this.selectedDate)
+        .add(6 - day, "day")
+        .format("DD MMM YYYY");
+    },
   },
 };
 </script>
@@ -30,6 +37,9 @@ export default {
 .selected-week {
   font-size: 24px;
   font-weight: 600;
-  color: var(--grey-00);
+  margin: 0px 10px 0px 10px;
+  border: 1px;
+  border-style: solid;
+  padding: 5px;
 }
 </style>

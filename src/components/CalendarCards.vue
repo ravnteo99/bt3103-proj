@@ -19,7 +19,7 @@ export default {
 
 <style scoped>
 .card {
-  background-color: greenyellow;
+  background-color: rgb(254, 206, 124);
   padding: 10px;
   border-radius: 5px;
   margin: 10px 0px 10px 0px;
