@@ -16,7 +16,12 @@
     <CalendarDays :selected-date="selectedDate" />
 
     <ol class="days-grid">
-      <CalendarDayItem v-for="day in days" :key="day" :day="day" :shifts="shiftMap.get(day.date)"/>
+      <CalendarDayItem
+        v-for="day in days"
+        :key="day"
+        :day="day"
+        :shifts="shiftMap.get(day.date)"
+      />
     </ol>
   </div>
 </template>
@@ -107,6 +112,19 @@ export default {
   },
 
   mounted() {
+    // function to sort shifts
+    function compareShifts(shift1, shift2) {
+      const obj1 = shift1.startTime;
+      const obj2 = shift2.startTime;
+      if (obj1 < obj2) {
+        return -1;
+      }
+      if (obj1 > obj2) {
+        return 1;
+      }
+      return 0;
+    }
+    
     // get userid INCOMPLETE
 
     // get shiftids assigned to userid INCOMPLETE
@@ -138,13 +156,22 @@ export default {
           let endTime = shift.EndTime;
           let branch = shift.Branch;
           if (this.shiftMap.get(date) == undefined) {
-            this.shiftMap.set(date, [])
+            this.shiftMap.set(date, []);
           }
           this.shiftMap.get(date).push({
             startTime: startTime,
             endTime: endTime,
             branch: branch,
           });
+
+          // sort shifts by time
+          let arr = this.shiftMap.get(date);
+          this.shiftMap.set(
+            date,
+            arr.sort((shift1, shift2) => {
+              return compareShifts(shift1, shift2);
+            })
+          );
         });
       });
     });
