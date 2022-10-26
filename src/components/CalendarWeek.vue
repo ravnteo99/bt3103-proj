@@ -25,18 +25,12 @@
 import dayjs from "dayjs";
 import CalendarWeekSelector from "./CalendarWeekSelector.vue";
 import CalendarDays from "./CalendarDays.vue";
-// import weekday from "dayjs/plugin/weekday";
-// import weekOfYear from "dayjs/plugin/weekOfYear";
 import CalendarDayItem from "./CalendarDayItem.vue";
 import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
 import { collection, getDoc, getDocs, doc } from "firebase/firestore";
-// import { collection, getDocs } from "firebase/firestore";
 
 const db = getFirestore(firebaseApp);
-
-// dayjs.extend(weekday);
-// dayjs.extend(weekOfYear);
 
 export default {
   components: {
@@ -143,7 +137,9 @@ export default {
           let startTime = shift.StartTime;
           let endTime = shift.EndTime;
           let branch = shift.Branch;
-          this.shiftMap.set(date, [])
+          if (this.shiftMap.get(date) == undefined) {
+            this.shiftMap.set(date, [])
+          }
           this.shiftMap.get(date).push({
             startTime: startTime,
             endTime: endTime,
