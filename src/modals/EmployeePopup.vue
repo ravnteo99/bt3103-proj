@@ -15,8 +15,8 @@
           <h2> {{ employee.fullName }} </h2>
           <p> {{ employee.emailAddress }} </p>
           <div class="user-tag">
-            <p :class="employee.tag">
-              {{ employee.tag }}
+            <p v-for="tag in employee.tags" :class="tag" :key="tag">
+              {{ tag }}
               <span class="remove-class-button"><font-awesome-icon icon="fa-solid fa-x fa-2xs" /></span>
             </p>
             <span class="add-button"><font-awesome-icon icon="fa-solid fa-plus" /></span>
@@ -28,15 +28,22 @@
         <label for="emailAddress">Email Address</label>
         <input type="text" name="emailAddress" :value="employee.emailAddress" disabled>
         <label for="address">Address</label>
-        <input type="text" name="address" :value="employee.emailAddress" disabled>
-        <input type="text" name="address" :value="employee.emailAddress" disabled>
-        <input type="text" name="address" :value="employee.emailAddress" disabled>
+        <input type="text" name="address" :value="employee.address1" disabled>
+        <input type="text" name="address" :value="employee.address2" disabled>
+        <input type="text" name="address" :value="employee.address3" disabled>
         <label for="contactNumber">Contact Number</label>
-        <input type="text" name="contactNumber" :value="employee.emailAddress" disabled>
+        <input type="text" name="contactNumber" :value="employee.contactNo" disabled>
+        <label for="branches">Branches</label>
+        <branch-filter
+          :branches="branches"
+          :branchOptions="branchOptions"
+          :employeeID="employee.id"
+          @removeBranch="$emit('removeBranch')"
+        />
 
         <div class="button-wrapper custom-action-row">
           <button class="action-button cancel-button" type="button" @click="this.$emit('togglePopup')">Cancel</button>
-          <button class="action-button done" type="button" @click="this.$emit('togglePopup'), updateTagBranches()">Save</button>
+          <button class="action-button done" type="button" @click="this.$emit('togglePopup')">Save</button>
         </div>
       </form>
 
@@ -45,14 +52,21 @@
 </template>
 
 <script>
+import BranchFilter from "@/components/BranchFilter";
+
 export default {
   name: "EmployeePopup",
-  props: ["employee"],
-  methods: {
-    updateTagBranches() {
-      console.log("hi")
-    }
-  }
+  components: { BranchFilter },
+  props: ["employee", "branches", "branchOptions"],
+  emits: ["removeBranch", "togglePopup"],
+  // methods: {
+  //   addBranch(employeeData) {
+  //     this.$emit('addBranch', employeeData)
+  //   },
+  //   removeBranch(employeeData) {
+  //     this.$emit('removeBranch', employeeData)
+  //   }
+  // }
 }
 </script>
 
@@ -74,7 +88,7 @@ export default {
     background-color: white;
     border-radius: 20px;
     width: 50%;
-    height: 50%;
+    min-height: 500px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -175,11 +189,6 @@ export default {
   .custom-action-row {
     margin-top: 20px;
     justify-content: center;
-  }
-
-  .action-button {
-    padding-top: 10px;
-    padding-bottom: 10px;
   }
 
   .cancel-button:hover {

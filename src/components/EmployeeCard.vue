@@ -5,7 +5,7 @@
     </div>
     <div class="worker-information">
       <p class="name"> {{ fullName }} </p>
-      <p :class="tag" class="user-tag"> {{ tag }} </p>
+      <p v-for="tag in tags" :class="tag" class="user-tag" :key="tag"> {{ methodTag(tag) }} </p>
       <p class="email-address"> {{ emailAddress }} </p>
     </div>
   </div>
@@ -16,10 +16,19 @@ export default {
   name: "EmployeeCard",
   props: {
     fullName: String,
-    tag: String,
+    tags: Array,
     emailAddress: String,
     profileLink: String
   },
+  methods: {
+    methodTag(tag) {
+      if (tag === "none") {
+        return "Missing Tag"
+      } else {
+        return tag
+      }
+    }
+  }
 }
 </script>
 
@@ -37,6 +46,9 @@ export default {
     text-align: center;
     padding: 0 20px;
     width: inherit;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .worker-information p {
@@ -56,6 +68,11 @@ export default {
     font-weight: bold;
     padding: 3px;
     width: 200px;
+  }
+
+  .none {
+    background-color: #F83262;
+    color: white;
   }
 
   .email-address {

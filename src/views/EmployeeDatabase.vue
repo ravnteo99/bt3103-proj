@@ -1,5 +1,5 @@
 <template>
-  <h1 class="section-title">Available Employees <span>{{ employeeCount }} </span></h1>
+  <h1 class="section-title">Available Employees <span>{{ filteredEmployees.length }} </span></h1>
   <div class="filter-wrapper">
     <form @submit.prevent="" class="search-bar">
       <input class="input-field"
@@ -9,7 +9,7 @@
       >
       <font-awesome-icon
           icon="fa-solid fa-x"
-          class="cross-icon"
+          class="crfross-icon"
           v-if="employeeSearch.length > 0"
           @click="clearSearchBar"
       />
@@ -27,7 +27,7 @@
         class="employee-card"
         :key="employee.firstName"
         :full-name="employee.fullName"
-        :tag="employee.tag"
+        :tags="employee.tags"
         :email-address="employee.emailAddress"
         :profile-link="require(`@/assets/${employee.firstName}.svg`)"
         @click="toggleModal(employee)"
@@ -37,14 +37,19 @@
   <!--  Modal Component-->
   <EmployeePopup
         v-if="lastClick"
-        @togglePopup="this.lastClick=null"
         :employee="lastClick"
+        :branches="employeeBranches.filter((obj) => {
+          return (obj.employeeID === lastClick.id)
+        })"
+        :branch-options="branchOptions"
+        @togglePopup="this.lastClick=null"
+        @removeBranch="this.key += 1"
     />
 </template>
 
 <script>
 import { db } from "@/firebase"
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import EmployeeCard from "@/components/EmployeeCard";
 import EmployeePopup from "@/modals/EmployeePopup";
 
@@ -55,23 +60,31 @@ export default {
     return {
       employees: [],
       employeeBranches: [],
+      employeeTags: [],
+      branches: [],
       employeeSearch: "",
       selectedBranch: "",
-      branches: [],
       lastClick: null,
+      key: 0
     }
   },
-  async mounted() {
+  async created() {
     const employeeQuery = await getDocs(collection(db, "employee"));
     employeeQuery.forEach((doc) => {
-      const employee = doc.data()
-      this.employees.push({
-        "id": doc.id,
-        "firstName": employee.firstName,
-        "fullName": `${employee.firstName} ${employee.lastName}`,
-        "tag": employee.tag,
-        "emailAddress": employee.emailAddress
+      onSnapshot(doc.ref, (doc) => {
+        const employee = doc.data()
+        this.employees.push({
+          "id": doc.id,
+          "firstName": employee.firstName,
+          "fullName": `${employee.firstName} ${employee.lastName}`,
+          "emailAddress": employee.emailAddress,
+          "contactNo": employee.contactNo,
+          "address1": employee.address1,
+          "address2": employee.address2,
+          "address3": employee.address3,
+        })
       })
+
     });
 
     const branchQuery = await getDocs(collection(db, "branch"));
@@ -86,16 +99,46 @@ export default {
     const employeeBranchQuery = await getDocs(collection(db, "branchEmployee"));
     employeeBranchQuery.forEach((doc) => {
       const assignment = doc.data()
+      // get current branch name
+      let branchNames = []
+      this.branches.filter((branch) => {
+        if (branch.id === assignment.branchID) {
+          branchNames.push(branch.name)
+        }
+      })
       this.employeeBranches.push({
         "employeeID": assignment.employeeID,
-        "branchID": assignment.branchID
+        "branchID": assignment.branchID,
+        "branchName": branchNames
       })
     });
+
+    const employeeTagQuery = await getDocs(collection(db, "employeeTag"));
+    employeeTagQuery.forEach((doc) => {
+      const employeeTag = doc.data()
+      this.employeeTags.push({
+        "employeeID": employeeTag.employeeID,
+        "tagName": employeeTag.tagName
+      })
+    });
+
+    // find out all the tags each employee has
+    this.employees.forEach((employee) => {
+      const tags = []
+      this.employeeTags.filter((obj) => {
+        if  (obj.employeeID === employee.id) {
+          tags.push(obj.tagName)
+        }
+      })
+      if (tags.length === 0) {
+        employee.tags = ["none"]
+      } else {
+        employee.tags = tags
+      }
+    })
+
   },
   computed: {
-    employeeCount() {
-      return this.employees.length
-    },
     filteredEmployees() {
       const result = this.employees.filter(employee => {
         return employee.fullName.toLowerCase().includes(this.employeeSearch)
@@ -119,6 +162,14 @@ export default {
       }
 
       return result
+    },
+    branchOptions() {
+      const result = []
+      this.branches.forEach((branch) => {
+        result.push({"value": branch.name})
+      })
+
+      return result
     }
   },
   methods: {
@@ -127,7 +178,7 @@ export default {
     },
     toggleModal(employee) {
       this.lastClick = employee
-    }
+    },
   }
 }
 </script>

@@ -50,14 +50,13 @@ input {
 .custom-action-row {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
     flex-direction: row;
 }
 
 .action-button {
     display: block;
     border-radius: 10px;
-    padding: 5px;
+    padding: 10px 10px;
     margin: 10px;
     cursor: pointer;
     font-family: 'Poppins', sans-serif;
