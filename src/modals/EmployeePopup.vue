@@ -42,8 +42,7 @@
         />
 
         <div class="button-wrapper custom-action-row">
-          <button class="action-button cancel-button" type="button" @click="this.$emit('togglePopup')">Cancel</button>
-          <button class="action-button done" type="button" @click="this.$emit('togglePopup')">Save</button>
+          <button class="action-button done" type="button" @click="this.$emit('togglePopup')">Done</button>
         </div>
       </form>
 
@@ -59,14 +58,6 @@ export default {
   components: { BranchFilter },
   props: ["employee", "branches", "branchOptions"],
   emits: ["removeBranch", "togglePopup"],
-  // methods: {
-  //   addBranch(employeeData) {
-  //     this.$emit('addBranch', employeeData)
-  //   },
-  //   removeBranch(employeeData) {
-  //     this.$emit('removeBranch', employeeData)
-  //   }
-  // }
 }
 </script>
 
@@ -188,11 +179,7 @@ export default {
 
   .custom-action-row {
     margin-top: 20px;
-    justify-content: center;
-  }
-
-  .cancel-button:hover {
-    background-color: #d1d5db;
+    justify-content: flex-end;
   }
 
   .done:hover {
