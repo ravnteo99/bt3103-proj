@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
-// import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
 import Signup from '@/views/Signup.vue'
 import ForgotPassword from '@/views/ForgotPassword.vue'
+import Availability from "@/views/Availability";
+import EmployeeDatabase from "@/views/EmployeeDatabase";
 
 const routes = [
   {
@@ -19,7 +20,17 @@ const routes = [
     path:'/forgotpassword',
     name: 'ForgotPassword',
     component: ForgotPassword
-  }
+  },
+  {
+    path:'/availability',
+    name: 'Availability',
+    component: Availability
+  },
+  {
+    path:'/employee',
+    name: 'EmployeeDatabase',
+    component: EmployeeDatabase
+  },
 ]
 
 const router = createRouter({
