@@ -60,7 +60,7 @@
           <button id="requestbutton" type="button" onclick="openRequestForm()">Request Tag/Branches</button><br>
 
           <div class="form-popup" id="requestForm">
-            <form action="/request_page" methoe="post" class="form-container">
+            <form action="/request_page" method="post" class="form-container">
               <h1 id="requestTitle">Request Tags/Branches</h1>
           
               <label for="Tags"><b>Tags</b></label>
@@ -84,6 +84,24 @@
           </div>
 
           <button id="resetbutton" type="button" onclick="savetofs()">Reset Password</button><br><br>
+
+          <div class="form-popup" id="resetPW">
+            <form action="/resetPW_page" method="post" class="form-container">
+              <h1 id="requestTitle">Request Tags/Branches</h1>
+          
+              <label for="oldPW"><b>Old Password</b> </label><br><br>
+              <input type="text" id="oldPW" required="" placeholder="old password"> 
+          
+              <label for="newPW"><b>New Password</b> </label><br><br>
+              <input type="text" id="newPW" required="" placeholder="new password"> 
+
+              <label for="cfmPW"><b>Confirm Password</b> </label><br><br>
+              <input type="text" id="cfmPW" required="" placeholder="Confirm new password"> 
+          
+              <button id="Sendbutton" type="submit" onclick="savetofs()">Request</button>
+              <button id="Cancelbutton" type="button" onclick="closeForm()">Cancel</button><br><br>
+            </form>
+          </div>
         </form>
       </div>
     
@@ -91,3 +109,7 @@
 
 </body>
 </html>
+
+
+
+
