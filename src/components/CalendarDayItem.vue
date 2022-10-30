@@ -3,7 +3,7 @@
     <ol class="cards-grid" v-if="shifts">
       <CalendarCards v-for="shift in shifts" :key="shift" :shift="shift" />
     </ol>
-    <span v-else>There are no shifts allocated on this date</span>
+    <span id="no-shifts" v-else>There are no shifts allocated on this date</span>
   </li>
 </template>
 
@@ -67,5 +67,11 @@ export default {
   position: relative;
   grid-column-gap: var(--grid-gap);
   grid-row-gap: var(--grid-gap);
+}
+
+#no-shifts {
+  display: flex;
+  align-content: center;
+  justify-content: center;
 }
 </style>

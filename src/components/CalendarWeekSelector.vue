@@ -1,14 +1,14 @@
 <template>
-  <div class="left-column">
-    <span id="today" @click="selectCurr">Go To Today</span>
-  </div>
-  <div class="middle-column">
-    <div class="week-selector">
-      <span id="arrow" @click="selectPrev"> &lt; </span>
-      <CalendarWeekIndicator
-        :selected-date="selectedDate"
-      />
-      <span id="arrow" @click="selectNext"> > </span>
+  <div class="top-bar">
+    <div class="left-column">
+      <span id="today" @click="selectCurr">Go To Today</span>
+    </div>
+    <div class="middle-column">
+      <div class="week-selector">
+        <span id="arrow" @click="selectPrev"> &lt; </span>
+        <CalendarWeekIndicator :selected-date="selectedDate" />
+        <span id="arrow" @click="selectNext"> > </span>
+      </div>
     </div>
   </div>
 </template>
@@ -55,6 +55,11 @@ export default {
 </script>
 
 <style scoped>
+.top-bar {
+  position: relative;
+  margin-bottom: -25px;
+}
+
 .left-column {
   float: left;
   width: 30%;
@@ -69,6 +74,8 @@ export default {
   border-color: rgb(254, 206, 124);
   border-radius: 10%;
   cursor: pointer;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 .week-selector {
@@ -77,6 +84,10 @@ export default {
   justify-content: space-between;
   color: var(--grey-800);
   max-width: 30%;
+  align-items: center;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 #arrow {
@@ -84,6 +95,4 @@ export default {
   cursor: pointer;
   user-select: none;
 }
-
-
 </style>

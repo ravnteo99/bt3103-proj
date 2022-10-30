@@ -1,6 +1,6 @@
 <template>
   <div class="selected-week">
-    <font-awesome-icon icon="fa-regular fa-calendar" />
+    <!-- <font-awesome-icon icon="fa-regular fa-calendar" /> -->
     {{ startOfWeek }} &#8211; {{ endOfWeek }}
   </div>
 </template>
