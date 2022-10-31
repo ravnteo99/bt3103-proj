@@ -94,6 +94,7 @@ export default {
                     } else {
                         alert("Successfully signed up!");
                         this.registerUser(cred.user.uid);
+                        this.$router.push({path: '/'});
                     }
                 })
                 .catch((error) => {
