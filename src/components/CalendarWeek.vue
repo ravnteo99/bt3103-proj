@@ -25,7 +25,8 @@ import CalendarDays from "./CalendarDays.vue";
 import CalendarDayItem from "./CalendarDayItem.vue";
 import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
-import { collection, getDoc, getDocs, doc } from "firebase/firestore";
+import { getDoc, doc } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const db = getFirestore(firebaseApp);
 
@@ -43,6 +44,7 @@ export default {
       dayOfWeek: dayjs().day(),
       shiftIds: [],
       shiftMap: new Map(),
+      uid: "",
     };
   },
 
@@ -117,55 +119,55 @@ export default {
       return 0;
     }
 
-    // get userid INCOMPLETE
-
-    // get shiftids assigned to userid INCOMPLETE
-    async function getShiftIds() {
-      let z = await getDocs(collection(db, "EmployeeAssignments"));
-      let shiftIds = [];
-      z.forEach((docs) => {
-        let data = docs.data();
-        let shiftId = data.Shift;
-        shiftIds.push(String(shiftId));
-      });
-      return shiftIds;
+    // function to get shiftids assigned to userid
+    async function getShiftIds(uid) {
+      const docRef = doc(db, "employeeAssignments", uid);
+      const docSnap = await getDoc(docRef);
+      return docSnap.data().shiftIds;
     }
 
-    getShiftIds().then((arr) => {
-      this.shiftIds = arr;
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        getShiftIds(user.uid).then((arr) => {
+          this.shiftIds = arr;
 
-      arr.forEach((id) => {
-        async function getShift() {
-          const docRef = doc(db, "shift", id);
-          const docSnap = await getDoc(docRef);
-          return docSnap.data();
-        }
+          arr.forEach((id) => {
+            async function getShift() {
+              const docRef = doc(db, "shift", id);
+              const docSnap = await getDoc(docRef);
+              return docSnap.data();
+            }
 
-        getShift().then((shift) => {
-          // map key:shiftDates value:[StartTime, EndTime, Branch]
-          let date = shift.Date;
-          let startTime = shift.StartTime;
-          let endTime = shift.EndTime;
-          let branch = shift.Branch;
-          if (this.shiftMap.get(date) == undefined) {
-            this.shiftMap.set(date, []);
-          }
-          this.shiftMap.get(date).push({
-            startTime: startTime,
-            endTime: endTime,
-            branch: branch,
+            getShift().then((shift) => {
+              // map key:shiftDates value:[StartTime, EndTime, Branch]
+              let date = shift.date;
+              let startTime = shift.startTime;
+              let endTime = shift.endTime;
+              let branch = shift.branch;
+              if (this.shiftMap.get(date) == undefined) {
+                this.shiftMap.set(date, []);
+              }
+              this.shiftMap.get(date).push({
+                startTime: startTime,
+                endTime: endTime,
+                branch: branch,
+              });
+
+              // sort shifts by time
+              let arr = this.shiftMap.get(date);
+              this.shiftMap.set(
+                date,
+                arr.sort((shift1, shift2) => {
+                  return compareShifts(shift1, shift2);
+                })
+              );
+            });
           });
-
-          // sort shifts by time
-          let arr = this.shiftMap.get(date);
-          this.shiftMap.set(
-            date,
-            arr.sort((shift1, shift2) => {
-              return compareShifts(shift1, shift2);
-            })
-          );
         });
-      });
+      } else {
+        console.log("not signed in");
+      }
     });
   },
 };

@@ -1,12 +1,25 @@
 <template>
-  <CalendarWeek/>
+  <CalendarWeek />
 </template>
 
 <script>
-import CalendarWeek from '../components/CalendarWeek.vue';
+import CalendarWeek from "../components/CalendarWeek.vue";
+// import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 export default {
-    components: { CalendarWeek }
-}
+  components: { CalendarWeek },
+
+  // mounted() {
+  //   const auth = getAuth();
+  //   onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       console.log(user.email);
+  //     } else {
+  //       console.log("not signed in");
+  //     }
+  //   });
+  // },
+};
 </script>
 
 <style>
