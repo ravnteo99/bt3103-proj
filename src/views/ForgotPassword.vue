@@ -1,23 +1,23 @@
 <template>
 <div id="wrapper">
     <img :src="logo" />
-    <div id="login">
-        <LoginForm />
+    <div id="signup">
+        <ForgotPasswordForm />
     </div>
 </div>
 </template>
 
 <script>
-import LoginForm from '@/components/LoginForm.vue'
+import ForgotPasswordForm from '@/components/ForgotPasswordForm.vue'
 export default {
-    name: 'Login',
+    name: 'App',
     data() {
         return {
             logo: require('@/assets/logo.png')
         }
     },
     components: {
-        LoginForm
+        ForgotPasswordForm
     }
 }
 </script>

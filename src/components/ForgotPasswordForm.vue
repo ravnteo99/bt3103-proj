@@ -1,11 +1,7 @@
 <template>
-        <h1 class="signin">Sign In</h1>
+        <h1 class="reset">Reset Password</h1>
         <br>
-        <p class="register1">If you don't have an account registered,</p>
-        <br>
-        <p class="register2">you can register <router-link to="/signup">here</router-link>!</p>
-        <br>
-        <form id="login" @submit.prevent="login()">
+        <form id="reset" @submit.prevent="reset()">
             <label for="email">Email Address</label><br>
             <input 
                 type="email"
@@ -15,24 +11,13 @@
                 placeholder="someone@example.com" required 
             />
             <br><br>
-            <label for="password">Password</label><br>
-            <input 
-                type="password"
-                name="password"
-                id="password"
-                v-model="password"
-                placeholder="Enter your password"
-                required
-            />
-            <br>
-            <p class="forgotPassword"><router-link to="/forgotpassword">Forgot Password?</router-link></p>
-            <button type="submit">Sign In</button><br>
+            <button type="submit">Reset</button><br>
         </form>
 </template>
 
 <script>
 import firebaseApp from '../firebase.js';
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
 const auth = getAuth(firebaseApp);
 
@@ -40,16 +25,17 @@ export default {
     data() {
         return {
             email: "",
-            password: "",
         }
     },
     methods: {
-        login() {
-            signInWithEmailAndPassword(auth, this.email, this.password)
+        reset() {
+            sendPasswordResetEmail(auth, this.email)
             .then(() => {
-                console.log("Login")
-                // push to home page
-                //this.$router.push('/home');
+                alert(
+                    'A password reset email has been sent to the email address. Please check your email for the password reset link.'
+                );
+                this.$router.push('/');
+                console.log('Email Sent');
             })
             .catch((error) => {
                 if (error.code == "auth/invalid-email") {
@@ -60,13 +46,9 @@ export default {
                     alert(
                     "The email you entered does not appear to belong to an account. Please check your email and try again."
                     );
-                } else if (error.code == "auth/wrong-password") {
-                    alert(
-                    "Incorrect password. Please check your password and try again."
-                    );
                 }
             })
-        },
+        }
     }
 }
 </script>
@@ -78,13 +60,6 @@ h1 {
 p {
     font-family: sans-serif;
     font-size: 16px;
-}
-.register1 {
-    margin-top: -10px;
-}
-.register2 {
-    margin-top: -30px;
-    margin-bottom: 10px;
 }
 .forgotPassword {
     font-size: 12px;
@@ -131,11 +106,5 @@ button:hover{
 button:active {
     opacity: 0.6;
     transform: translateY(3px);
-}
-a {
-  color: black;
-}
-a:hover {
-  color: grey;
 }
 </style>

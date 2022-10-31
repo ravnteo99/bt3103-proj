@@ -1,7 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
-// import Home from '@/views/Home.vue'
 import Login from "@/views/Login.vue";
 import EmployeeCalendar from "@/views/EmployeeCalendar.vue";
+import Signup from '@/views/Signup.vue'
+import ForgotPassword from '@/views/ForgotPassword.vue'
+import Availability from "@/views/Availability";
+import EmployeeDatabase from "@/views/EmployeeDatabase";
 
 const routes = [
 	{
