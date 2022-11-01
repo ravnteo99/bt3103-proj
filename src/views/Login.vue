@@ -1,6 +1,6 @@
 <template>
 <div id="wrapper">
-    <img :src="logo" />
+    <img :src="login" />
     <div id="login">
         <LoginForm />
     </div>
@@ -13,7 +13,7 @@ export default {
     name: 'App',
     data() {
         return {
-            logo: require('@/assets/logo.png')
+            login: require('@/assets/login.png')
         }
     },
     components: {
