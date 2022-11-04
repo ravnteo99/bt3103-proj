@@ -47,7 +47,7 @@ export default {
             .then(() => {
                 console.log("Login")
                 // push to home page
-                //this.$router.push('/home');
+                this.$router.push('/home');
             })
             .catch((error) => {
                 if (error.code == "auth/invalid-email") {
