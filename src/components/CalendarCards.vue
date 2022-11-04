@@ -1,7 +1,7 @@
 <template>
-  <div class="card">
+  <div class="card" :class="branch">
     <li>
-      {{ shift.branch }} <br />
+      <b>{{ shift.branch }}</b> <br />
       <span>{{ shift.startTime }}hrs - {{ shift.endTime }}hrs</span>
     </li>
   </div>
@@ -9,6 +9,11 @@
 
 <script>
 export default {
+  data() {
+    return {
+      branch: this.shift.branch.replace(/\s/g, '')
+    }
+  },
   props: {
     shift: {
       type: Object,
@@ -28,4 +33,20 @@ export default {
 .card span {
   font-size: 13px;
 }
+
+.AngMoKio {
+  background-color: rgb(244, 182, 187);
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0px 10px 0px;
+}
+
+.Junction8 {
+  background-color: rgb(250, 224, 191);
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0px 10px 0px;
+}
+
+/* 255,255,193 201,253,205 194,224,252 */
 </style>
