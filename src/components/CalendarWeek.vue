@@ -25,7 +25,7 @@ import CalendarDays from "./CalendarDays.vue";
 import CalendarDayItem from "./CalendarDayItem.vue";
 import firebaseApp from "../firebase.js";
 import { getFirestore } from "firebase/firestore";
-import { getDoc, doc } from "firebase/firestore";
+import { collection, query, where, getDoc, getDocs, doc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const db = getFirestore(firebaseApp);
@@ -121,9 +121,14 @@ export default {
 
     // function to get shiftids assigned to userid
     async function getShiftIds(uid) {
-      const docRef = doc(db, "employeeAssignments", uid);
-      const docSnap = await getDoc(docRef);
-      return docSnap.data().shiftIds;
+      const employeeAssignmentsRef = collection(db, "employeeAssignments");
+      const q = await query(employeeAssignmentsRef, where("employeeId", "==", uid));
+      const querySnapshot = await getDocs(q)
+      let shiftIds = []
+      querySnapshot.forEach((doc) => {
+        shiftIds.push(doc.data().shiftId)
+      })
+      return shiftIds;
     }
 
     const auth = getAuth();
