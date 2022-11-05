@@ -1,23 +1,13 @@
 <template>
-    <button @click="signout">Sign Out</button>
+    <button @click="myprofile">My Profile</button>
 </template>
 
 <script>
-import firebaseApp from '../firebase.js';
-import { getAuth, signOut } from "firebase/auth";
-
-const auth = getAuth(firebaseApp);
-
 export default {
-    name: 'SignOut',
+    name: 'MyProfile',
     methods: {
-        signout() {
-            signOut(auth).then(() => {
-                this.$router.push('/');
-            })
-            .catch((error) => {
-                alert(error);
-            });
+        myprofile() {
+            //this.$router.push('/profile');
         }
     }
 }
@@ -30,7 +20,7 @@ button {
     font-weight: bold;
     text-align: center;
     height: 30px;
-    width: 80px;
+    width: 90px;
     background-color: transparent;
     border-radius: 8px;
     border: none;
