@@ -22,21 +22,6 @@ export default {
       type: Object,
     },
   },
-  // testing only
-  // data() {
-  //   return {
-  //     shifts: [{
-  //       branch: 'a',
-  //       startTime: 'b',
-  //       endTime:'c'
-  //     },
-  //     {
-  //       branch: 'a',
-  //       startTime: 'b',
-  //       endTime:'c'
-  //     }]
-  //   }
-  // },
   computed: {
     label() {
       return dayjs(this.day.date).format("D");
@@ -62,7 +47,6 @@ export default {
 
 .cards-grid {
   display: grid;
-  /* grid-template-rows: repeat(7, 1fr); */
   height: 100%;
   position: relative;
   grid-column-gap: var(--grid-gap);
