@@ -26,28 +26,46 @@
           </div>
         </div>
         <label for="manpower">Manpower</label>
+        <Multiselect
+          v-model="selectedBranch"
+          mode="tags"
+          placeholder="Select Branches"
+          track-by="value"
+          label="value"
+          :close-on-select="false"
+          :options="tags"
+          @select="selectToggle"
+          @deselect="removeToggle"
+        />
       </form>
     </div>
   </div>
 </template>
 
 <script>
-// import { db } from "@/firebase"
-// import { collection, query, where, getDocs, addDoc, deleteDoc } from "firebase/firestore";
-// const dbTags = collection(db, "tags")
+import { db } from "@/firebase";
+import { collection, getDocs } from "firebase/firestore";
+import Multiselect from "@vueform/multiselect/src/Multiselect";
+const dbTags = collection(db, "tags");
 
 export default {
   name: "NewShift",
   data() {
     return {
       repeating: false,
-      tags: []
-    }
-  }
+      tags: [],
+      selectedTags: [],
+    };
+  },
 
-  // mounted() {
-  //   dbTags.
-  // }
+  components: { Multiselect },
+
+  async mounted() {
+    const tagsQuery = await getDocs(dbTags);
+    tagsQuery.forEach((doc) => {
+      this.tags.push(doc.data().tag);
+    });
+  },
 };
 </script>
 
