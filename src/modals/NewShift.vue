@@ -27,7 +27,7 @@
         </div>
         <label for="manpower">Manpower</label>
         <Multiselect
-          v-model="selectedBranch"
+          v-model="selectedTags"
           mode="tags"
           placeholder="Select Branches"
           track-by="value"
@@ -37,6 +37,18 @@
           @select="selectToggle"
           @deselect="removeToggle"
         />
+        <label>Manpower Detail</label>
+
+        <div v-if="selectedTags.length==0"><br></div>
+
+        <ol v-for="tag in selectedTags" :key="tag">
+          <font-awesome-icon icon="fa-user" class="fa-user" />
+          <label for="{{tag}}">{{ tag }} Qty:</label>
+          <input class="manpower-qty" type="text" name="{{tag}}" />
+        </ol>
+        <div class="button-wrapper custom-action-row">
+          <button class="action-button done" type="button" @click="createShift">Publish</button>
+        </div>
       </form>
     </div>
   </div>
@@ -55,6 +67,9 @@ export default {
       repeating: false,
       tags: [],
       selectedTags: [],
+      Clerk: 0,
+      Barista: 0,
+      Cashier: 0,
     };
   },
 
@@ -65,6 +80,12 @@ export default {
     tagsQuery.forEach((doc) => {
       this.tags.push(doc.data().tag);
     });
+  },
+
+  methods: {
+    createShift() {
+      console.log("test1");
+    },
   },
 };
 </script>
@@ -138,18 +159,31 @@ input {
   margin-top: 0px;
 }
 
-.add-button {
-  background-color: buttonface;
-  border-radius: 3px;
-  padding: 4px 6px;
-  cursor: pointer;
-}
-
-.add-button:hover {
-  background-color: var(--yellow-tone-1);
+.done:hover {
+  background-color: var(--yellow-tone-3);
 }
 
 label {
   margin-top: 20px;
+}
+
+ol {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.fa-user {
+  margin: 0px 5px 0px 5px;
+}
+
+.manpower-qty {
+  width: 20px;
+  margin: 0px 5px 0px 5px;
+}
+
+.custom-action-row {
+  margin-top: 20px;
+  justify-content: flex-end;
 }
 </style>
