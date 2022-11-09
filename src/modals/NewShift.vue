@@ -12,12 +12,13 @@
         <button id="onetimebtn" @click="selectOneTime">One-Time</button>
         <button id="repeatingbtn" @click="selectRepeating">Repeating</button>
       </div>
-      <form class="new-schedule">
+      <form class="new-schedule" @submit.prevent="">
         <label for="title">Title</label>
-        <input type="text" name="title" />
+        <input type="text" name="title" v-model="title" />
 
         <label v-if="repeating" for="repeatedDays">Repeats Every</label>
-        <Multiselect v-if="repeating"
+        <Multiselect
+          v-if="repeating"
           v-model="selectedDays"
           mode="tags"
           placeholder="Select Days"
@@ -35,23 +36,23 @@
         <input v-if="repeating" type="date" name="endDate" />
 
         <label v-if="!repeating" for="date">Date</label>
-        <input v-if="!repeating" type="date" name="date" />
+        <input v-if="!repeating" type="date" name="date" v-model="date" />
 
         <div class="multi-input">
           <div class="column">
             <label for="startTime">Time In</label>
-            <input type="time" name="startTime" />
+            <input type="time" name="startTime" v-model="startTime" />
           </div>
           <div class="column">
-            <label for="startTime">Time Out</label>
-            <input type="time" name="startTime" />
+            <label for="endTime">Time Out</label>
+            <input type="time" name="endTime" v-model="endTime" />
           </div>
         </div>
         <label for="manpower">Manpower</label>
         <Multiselect
           v-model="selectedTags"
           mode="tags"
-          placeholder="Select Branches"
+          placeholder="Select Manpower"
           track-by="value"
           label="value"
           :close-on-select="false"
@@ -64,7 +65,12 @@
         <div v-if="selectedTags.length == 0"><br /></div>
 
         <ol v-for="tag in selectedTags" :key="tag">
-          <input class="manpower-qty" type="text" name="{{tag}}" />
+          <input
+            class="manpower-qty"
+            type="number"
+            name="{{tag}}"
+            v-model="manpower[tag]"
+          />
           <font-awesome-icon icon="fa-user" class="fa-user" />
           <label for="{{tag}}"> x {{ tag }}</label>
         </ol>
@@ -80,7 +86,7 @@
 
 <script>
 import { db } from "@/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, doc, getDocs, setDoc } from "firebase/firestore";
 import Multiselect from "@vueform/multiselect/src/Multiselect";
 const dbTags = collection(db, "tags");
 
@@ -89,13 +95,27 @@ export default {
   data() {
     return {
       repeating: false,
-      days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      title: "",
+      date: "",
+      startTime: "",
+      endTime: "",
+      days: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
       selectedDays: [],
       tags: [],
       selectedTags: [],
-      Clerk: 0,
-      Barista: 0,
-      Cashier: 0,
+      manpower: {
+        Clerk: 1,
+        Barista: 1,
+        Cashier: 1,
+      },
     };
   },
 
@@ -109,8 +129,30 @@ export default {
   },
 
   methods: {
-    createShift() {
-      console.log("test1");
+    async createShift() {
+      let manpower = {};
+
+      for (let i = 0; i < this.selectedTags.length; i++) {
+        console.log(i);
+        const tag = this.selectedTags[i];
+        manpower[tag] = this.manpower[tag];
+      }
+
+      if (!this.repeating) {
+        try {
+          const docRef = await setDoc(doc(db, "shifts", "test"), {
+            title: this.title,
+            branch: "Ang Mo Kio", // to be changed
+            date: this.date,
+            startTime: this.startTime.replace(":", ""),
+            endTime: this.endTime.replace(":", ""),
+            manpower: manpower,
+          });
+          console.log("Document written with ID: ", docRef);
+        } catch (error) {
+          console.error(error);
+        }
+      }
     },
 
     selectOneTime() {
@@ -224,7 +266,7 @@ ol {
 }
 
 .manpower-qty {
-  width: 20px;
+  width: 40px;
   margin: 0px 5px 0px 5px;
 }
 
