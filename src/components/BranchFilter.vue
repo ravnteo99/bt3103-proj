@@ -1,6 +1,6 @@
 <template>
   <Multiselect
-      v-model="selectedBranch"
+      v-model="assignedBranch"
       mode="tags"
       placeholder="Select Branches"
       track-by="value"
@@ -10,122 +10,92 @@
       @select="selectToggle"
       @deselect="removeToggle"
     />
-<!--  @deselect="removeToggle"-->
-<!--      @clear="removeToggle"-->
 
 <!--  Modal component  -->
     <ConfirmationMessage
         v-if="showConfirmation"
         msg="Would you like to confirm your edits?"
         @closeMessage="closeMessage"
-        @confirmEdit="confirmEditFn"
+        @confirmEdit="confirmEditFn(this.action)"
     />
 </template>
 
 <script>
 import Multiselect from '@vueform/multiselect'
 import ConfirmationMessage from "@/modals/ConfirmationMessage";
+import { fetchBranchAssignment, createBranchAssignment, removeBranchAssignment } from "@/common/Employee";
 
-import { db } from "@/firebase"
-import { collection, query, where, getDocs, addDoc, deleteDoc } from "firebase/firestore";
-const dbBranch = collection(db, "branch");
-const dbBranchEmployee = collection(db, "branchEmployee")
+const CONFIRM_ACTION = {
+  CREATE: "create",
+  DELETE: "delete"
+}
 
 export default {
   name: "BranchFilter",
   components: { Multiselect, ConfirmationMessage },
-  props: ["employeeID", "branches", "branchOptions"],
-  emits: ['removeBranch'],
+  props: ["employeeID", "branchOptions"],
   data() {
     return {
-      selectedBranch: [],
+      unsubscribeListener: null,
+      assignedBranch: [],
       showConfirmation: false,
+      action: null,
       selectedOption: "",
       removedOption: ""
     }
   },
-  mounted() {
-    const employeeBranch = []
-    this.branches.forEach((branch) => {
-      const branchNames = branch.branchName
-      branchNames.forEach((name) => {
-        employeeBranch.push(name)
-      })
-    })
-    this.selectedBranch = employeeBranch
+  created() {
+    const [unsubscribe, assignedBranch] = fetchBranchAssignment(this.employeeID, this.branchOptions)
+    this.unsubscribeListener = unsubscribe
+    this.assignedBranch = assignedBranch
+  },
+  unmounted() {
+    this.unsubscribeListener()
   },
   methods: {
     selectToggle(selectedOption) {
       this.showConfirmation = true
       this.selectedOption = selectedOption
+      this.action = CONFIRM_ACTION.CREATE
     },
     removeToggle(removedOption) {
       this.showConfirmation = true
       this.removedOption = removedOption
+      this.action = CONFIRM_ACTION.DELETE
     },
-    confirmEditFn() {
-      if (this.selectedOption !== "") {
-        // add new branch to employee
-        this.assignBranch(this.selectedOption)
+    async confirmEditFn(action) {
+      let branchID = ""
+      const toCompare = (this.selectedOption === "") ? this.removedOption : this.selectedOption
+      this.branchOptions.forEach((branch) => {
+        if (branch.value === toCompare) {
+          branchID = branch.id
+        }
+      })
 
-        // // changes data to re-render EmployeePopup
-        // const employeeData = {
-        //   "employeeID": this.employeeID,
-        //   "addedBranchName": this.selectedOption
-        // }
-        // this.$emit('addBranch', employeeData)
-        this.selectedOption = ""
-      } else if (this.removedOption !== "") {
-        // remove employee from a branch
-        this.removeBranch(this.removedOption)
-
-        // // changes data to re-render EmployeePopup
-        // const employeeData = {
-        //   "employeeID": this.employeeID,
-        //   "removedBranchName": this.selectedOption
-        // }
-        // this.$emit('removeBranch', employeeData)
-        this.$emit('removeBranch')
-        this.removedOption = ""
+      if (action === CONFIRM_ACTION.CREATE) {
+        if (branchID !== "") {
+          await createBranchAssignment(this.employeeID, branchID)
+          this.selectedOption = ""
+        }
+      } else if (action === CONFIRM_ACTION.DELETE) {
+          await removeBranchAssignment(this.employeeID, branchID)
+          this.removedOption = ""
       }
 
       this.showConfirmation = false
     },
-    closeMessage(lastSelected) {
+    closeMessage() {
       this.showConfirmation=false
-      // remove the last selected branch from input box
-      this.selectedBranch = this.selectedBranch.filter((branch) => {
-        return (branch !== lastSelected)
-      })
-    },
-    async assignBranch(branchName) {
-      const branchID = await this.getBranchID(branchName)
-
-      // Assign employee to new branch
-      await addDoc(dbBranchEmployee, {
-        branchID: branchID,
-        employeeID: this.employeeID
-      });
-    },
-    async removeBranch(branchName) {
-      const branchID = await this.getBranchID(branchName)
-      const employeeQuery = await getDocs(query(dbBranchEmployee,
-          where("branchID", "==", branchID),
-          where("employeeID", "==", this.employeeID)
-      ))
-
-      // remove employee from a branch
-      employeeQuery.forEach((doc) => {
-        deleteDoc(doc.ref)
-      })
-    },
-    async getBranchID(branchName) {
-      const branchQuery = await getDocs(query(dbBranch, where("name", "==", branchName)))
-      let branchID = ""
-      branchQuery.forEach((doc) => {
-        branchID = doc.id
-      });
-      return branchID
+      if (this.selectedOption !== "") {
+        const removeIdx = this.assignedBranch.indexOf(this.selectedOption)
+        if (removeIdx > -1) {
+          this.assignedBranch.splice(removeIdx, 1)
+        }
+        this.selectedOption = ""
+      } else if (this.removedOption !== "") {
+        this.assignedBranch.push(this.removedOption)
+        this.removedOption = ""
+      }
     }
   },
 }

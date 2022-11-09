@@ -35,10 +35,8 @@
         <input type="text" name="contactNumber" :value="employee.contactNo" disabled>
         <label for="branches">Branches</label>
         <branch-filter
-          :branches="branches"
           :branchOptions="branchOptions"
           :employeeID="employee.id"
-          @removeBranch="$emit('removeBranch')"
         />
 
         <div class="button-wrapper custom-action-row">
@@ -57,7 +55,7 @@ export default {
   name: "EmployeePopup",
   components: { BranchFilter },
   props: ["employee", "branches", "branchOptions"],
-  emits: ["removeBranch", "togglePopup"],
+  emits: ["togglePopup"],
 }
 </script>
 
