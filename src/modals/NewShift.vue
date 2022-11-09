@@ -15,11 +15,29 @@
       <form class="new-schedule">
         <label for="title">Title</label>
         <input type="text" name="title" />
-        <label for="startDate">Starts From</label>
-        <input type="date" name="startDate" />
-        <label for="endDate">Ends On</label>
-        <input type="date" name="endDate" />
-        <div class="time-input">
+
+        <label v-if="repeating" for="repeatedDays">Repeats Every</label>
+        <Multiselect v-if="repeating"
+          v-model="selectedDays"
+          mode="tags"
+          placeholder="Select Days"
+          track-by="value"
+          label="value"
+          :close-on-select="false"
+          :options="days"
+          @select="selectToggle"
+          @deselect="removeToggle"
+        />
+
+        <label v-if="repeating" for="startDate">Starts From</label>
+        <input v-if="repeating" type="date" name="startDate" />
+        <label v-if="repeating" for="endDate">Ends On</label>
+        <input v-if="repeating" type="date" name="endDate" />
+
+        <label v-if="!repeating" for="date">Date</label>
+        <input v-if="!repeating" type="date" name="date" />
+
+        <div class="multi-input">
           <div class="column">
             <label for="startTime">Time In</label>
             <input type="time" name="startTime" />
@@ -46,9 +64,9 @@
         <div v-if="selectedTags.length == 0"><br /></div>
 
         <ol v-for="tag in selectedTags" :key="tag">
-          <font-awesome-icon icon="fa-user" class="fa-user" />
-          <label for="{{tag}}">{{ tag }} Qty:</label>
           <input class="manpower-qty" type="text" name="{{tag}}" />
+          <font-awesome-icon icon="fa-user" class="fa-user" />
+          <label for="{{tag}}"> x {{ tag }}</label>
         </ol>
         <div class="button-wrapper custom-action-row">
           <button class="action-button done" type="button" @click="createShift">
@@ -71,6 +89,8 @@ export default {
   data() {
     return {
       repeating: false,
+      days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      selectedDays: [],
       tags: [],
       selectedTags: [],
       Clerk: 0,
@@ -100,7 +120,7 @@ export default {
       const repeatingbtn = document.getElementById("repeatingbtn");
       repeatingbtn.style.backgroundColor = "white";
 
-      this.repeating=false;
+      this.repeating = false;
     },
 
     selectRepeating() {
@@ -110,7 +130,7 @@ export default {
       const repeatingbtn = document.getElementById("repeatingbtn");
       repeatingbtn.style.backgroundColor = "rgb(248, 213, 126)";
 
-      this.repeating=true;
+      this.repeating = true;
     },
   },
 };
@@ -159,7 +179,7 @@ input {
   overflow: hidden;
 }
 
-.time-input {
+.multi-input {
   display: flex;
 }
 
