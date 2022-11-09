@@ -8,6 +8,10 @@
           <p v-else>This option generates a single shift</p>
         </div>
       </div>
+      <div class="btn-group">
+        <button id="onetimebtn" @click="selectOneTime">One-Time</button>
+        <button id="repeatingbtn" @click="selectRepeating">Repeating</button>
+      </div>
       <form class="new-schedule">
         <label for="title">Title</label>
         <input type="text" name="title" />
@@ -39,7 +43,7 @@
         />
         <label>Manpower Detail</label>
 
-        <div v-if="selectedTags.length==0"><br></div>
+        <div v-if="selectedTags.length == 0"><br /></div>
 
         <ol v-for="tag in selectedTags" :key="tag">
           <font-awesome-icon icon="fa-user" class="fa-user" />
@@ -47,7 +51,9 @@
           <input class="manpower-qty" type="text" name="{{tag}}" />
         </ol>
         <div class="button-wrapper custom-action-row">
-          <button class="action-button done" type="button" @click="createShift">Publish</button>
+          <button class="action-button done" type="button" @click="createShift">
+            Publish
+          </button>
         </div>
       </form>
     </div>
@@ -85,6 +91,26 @@ export default {
   methods: {
     createShift() {
       console.log("test1");
+    },
+
+    selectOneTime() {
+      const onetimebtn = document.getElementById("onetimebtn");
+      onetimebtn.style.backgroundColor = "rgb(248, 213, 126)";
+
+      const repeatingbtn = document.getElementById("repeatingbtn");
+      repeatingbtn.style.backgroundColor = "white";
+
+      this.repeating=false;
+    },
+
+    selectRepeating() {
+      const onetimebtn = document.getElementById("onetimebtn");
+      onetimebtn.style.backgroundColor = "white";
+
+      const repeatingbtn = document.getElementById("repeatingbtn");
+      repeatingbtn.style.backgroundColor = "rgb(248, 213, 126)";
+
+      this.repeating=true;
     },
   },
 };
@@ -185,5 +211,26 @@ ol {
 .custom-action-row {
   margin-top: 20px;
   justify-content: flex-end;
+}
+
+.btn-group {
+  margin: 0 auto;
+  width: 80%;
+}
+
+#onetimebtn {
+  background-color: rgb(248, 213, 126);
+}
+
+.btn-group button {
+  width: 50%;
+  background-color: white;
+  padding: 10px 24px;
+  cursor: pointer;
+  float: left;
+}
+
+.btn-group button:not(:last-child) {
+  border-right: none;
 }
 </style>
