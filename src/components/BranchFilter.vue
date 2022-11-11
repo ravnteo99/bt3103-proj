@@ -23,7 +23,7 @@
 <script>
 import Multiselect from '@vueform/multiselect'
 import ConfirmationMessage from "@/modals/ConfirmationMessage";
-import { fetchBranchAssignment, createBranchAssignment, removeBranchAssignment } from "@/common/Employee";
+import { fetchBranchAssignment, createBranchAssignment, removeBranchAssignment } from "@/db/Employee";
 
 const CONFIRM_ACTION = {
   CREATE: "create",

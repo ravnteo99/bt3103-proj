@@ -7,7 +7,7 @@ const branchColRef = collection(db, "branch")
 const branchQuery = query(branchColRef)
 const dbBranchEmployee = collection(db, "branchEmployee")
 
-export const fetchEmployees = () => {
+const fetchEmployees = () => {
     const employees = ref([])
     const unsubscribe = onSnapshot(employeeQuery, (querySnapshot) => {
         employees.value = querySnapshot.docs.map((doc) => {
@@ -28,7 +28,7 @@ export const fetchEmployees = () => {
     return [unsubscribe, employees]
 }
 
-export const fetchBranches = () => {
+const fetchBranches = () => {
     const branches = ref([])
     const unsubscribe = onSnapshot(branchQuery, (querySnapshot) => {
         branches.value = querySnapshot.docs.map((doc) => {
@@ -38,6 +38,19 @@ export const fetchBranches = () => {
         })
 
     return [unsubscribe, branches]
+}
+
+const fetchAssignments = () => {
+    const assignments = ref([])
+    const q = query(dbBranchEmployee)
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        assignments.value = querySnapshot.docs.map((doc) => {
+            const assignment = doc.data()
+            return {"id": doc.id, "branchID": assignment.branchID, "employeeID": assignment.employeeID}
+          })
+        })
+
+    return [unsubscribe, assignments]
 }
 
 export const fetchBranchAssignment = (employeeID, branchOptions) => {
@@ -75,3 +88,8 @@ export const removeBranchAssignment = async (employeeID, branchID) => {
         deleteDoc(doc.ref)
       })
 }
+
+
+export const [unsubEmployee, employees] = fetchEmployees()
+export const [unsubBranch, branches] = fetchBranches()
+export const [unsubAssignments, assignments] = fetchAssignments()

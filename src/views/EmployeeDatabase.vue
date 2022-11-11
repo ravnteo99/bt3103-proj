@@ -46,29 +46,26 @@
 <script>
 import EmployeeCard from "@/components/EmployeeCard";
 import EmployeePopup from "@/modals/EmployeePopup";
-import { fetchBranches, fetchEmployees } from "@/common/Employee";
+import { unsubBranch, unsubEmployee, unsubAssignments, employees, branches, assignments } from "@/db/Employee";
 
 export default {
   name: "EmployeeDatabase",
   components: { EmployeePopup, EmployeeCard },
   data() {
     return {
-      unsubscribeListener: [],
-      employees: [],
-      employeeBranches: [],
+      unsubscribeListener: [unsubEmployee, unsubBranch, unsubAssignments],
+      employees: employees,
+      employeeBranches: assignments,
       employeeTags: [],
-      branches: [],
+      branches: branches,
       employeeSearch: "",
       selectedBranch: "",
       lastClick: null,
     }
   },
   created() {
-    const [unsubscribeEmployee, employees] = fetchEmployees()
-    const [unsubscribeBranch, branches] = fetchBranches()
     this.employees = employees
     this.branches = branches
-    this.unsubscribeListener.push(unsubscribeBranch, unsubscribeEmployee)
   },
   unmounted() {
     this.unsubscribeListener.forEach((callback) => {
