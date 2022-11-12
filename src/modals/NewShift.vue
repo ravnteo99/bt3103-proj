@@ -1,6 +1,14 @@
 <template>
   <div class="information-wrapper">
     <div class="newshift-popup">
+
+      <!-- cross icon on top right-->
+      <font-awesome-icon
+          icon="fa-solid fa-x"
+          class="cross-icon"
+          @click="this.$emit('togglePopup')"
+      />
+
       <div class="header-wrapper">
         <div class="header">
           <h2>New Schedule</h2>
@@ -101,6 +109,7 @@ const dbTags = collection(db, "tags");
 
 export default {
   name: "NewShift",
+
   data() {
     return {
       repeating: false,
@@ -138,6 +147,8 @@ export default {
       },
     };
   },
+
+  props: ["branch"],
 
   components: { Multiselect },
 
@@ -299,7 +310,7 @@ export default {
       try {
         const docRef = await addDoc(collection(db, "shifts"), {
           title: this.title,
-          branch: "Ang Mo Kio", // to be changed
+          branch: this.branch,
           date: this.date,
           startTime: this.startTime.replace(":", ""),
           endTime: this.endTime.replace(":", ""),
@@ -316,7 +327,7 @@ export default {
       try {
         const docRef = await addDoc(collection(db, "shifts"), {
           title: this.title,
-          branch: "Ang Mo Kio", // to be changed
+          branch: this.branch,
           date: date,
           startTime: this.startTime.replace(":", ""),
           endTime: this.endTime.replace(":", ""),
@@ -452,4 +463,11 @@ ol {
 .btn-group button:not(:last-child) {
   border-right: none;
 }
+
+.cross-icon {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    cursor: pointer;
+  }
 </style>
