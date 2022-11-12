@@ -80,7 +80,10 @@
           <label for="{{tag}}"> x {{ tag }}</label>
         </ol>
         <div class="button-wrapper custom-action-row">
-          <button class="action-button done" type="button" @click="createShift">
+          <button class="action-button draft" type="button" @click="saveDraft">
+            Save Draft
+          </button>
+          <button class="action-button done" type="button" @click="publish">
             Publish
           </button>
         </div>
@@ -146,7 +149,16 @@ export default {
   },
 
   methods: {
-    async createShift() {
+    saveDraft() {
+      this.createShift("draft");
+    },
+
+    publish() {
+      this.createShift("published");
+    },
+
+    async createShift(status) {
+      // check if fields are filled up
       if (this.title == "") {
         alert("Please fill in the Title!");
         return;
@@ -190,6 +202,7 @@ export default {
         return;
       }
 
+      // compile manpower
       let manpower = {};
 
       for (let i = 0; i < this.selectedTags.length; i++) {
@@ -198,12 +211,16 @@ export default {
       }
 
       if (!this.repeating) {
+        // check if fields are filled up
         if (this.date == "") {
           alert("Please fill in the Date!");
           return;
         }
-        this.pushData(manpower);
+
+        // push data
+        this.pushData(manpower, status);
       } else {
+        // check if fields are filled up
         if (this.selectedDays.length == 0) {
           alert("Please choose the repeated days!");
           return;
@@ -224,9 +241,8 @@ export default {
           alert("The End Date has to be after the Start Date!");
           return;
         }
-        if (this.title != "") {
-          return;
-        }
+
+        // algo for repeated days
         this.selectedDays.forEach((day) => {
           const dayIndex = this.dayIndex[day];
           const startDate = this.startDate;
@@ -239,13 +255,24 @@ export default {
             nextDay = dayjs(startDate).add(7 - startIndex + dayIndex, "day");
           }
           while (nextDay.isBefore(endDate)) {
-            this.pushRepeatedData(manpower, nextDay.format("YYYY-MM-DD"));
+            this.pushRepeatedData(
+              manpower,
+              nextDay.format("YYYY-MM-DD"),
+              status
+            );
             nextDay = nextDay.add(7, "day");
           }
         });
       }
 
+      if (status == "published") {
+        alert("The shift has been successfully published!");
+      } else {
+        alert("The draft has successfully been saved!");
+      }
       document.getElementById("shiftform").reset();
+      this.selectedTags = [];
+      this.selectedDays = [];
     },
 
     selectOneTime() {
@@ -268,7 +295,7 @@ export default {
       this.repeating = true;
     },
 
-    async pushData(manpower) {
+    async pushData(manpower, status) {
       try {
         const docRef = await addDoc(collection(db, "shifts"), {
           title: this.title,
@@ -277,6 +304,7 @@ export default {
           startTime: this.startTime.replace(":", ""),
           endTime: this.endTime.replace(":", ""),
           manpower: manpower,
+          status: status,
         });
         console.log("Document written with ID: ", docRef);
       } catch (error) {
@@ -374,6 +402,10 @@ input {
 
 .done:hover {
   background-color: var(--yellow-tone-3);
+}
+
+.draft:hover {
+  background-color: #d1d5db;
 }
 
 label {
