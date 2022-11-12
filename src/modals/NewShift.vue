@@ -31,9 +31,14 @@
         />
 
         <label v-if="repeating" for="startDate">Starts From</label>
-        <input v-if="repeating" type="date" name="startDate" />
+        <input
+          v-if="repeating"
+          type="date"
+          name="startDate"
+          v-model="startDate"
+        />
         <label v-if="repeating" for="endDate">Ends On</label>
-        <input v-if="repeating" type="date" name="endDate" />
+        <input v-if="repeating" type="date" name="endDate" v-model="endDate" />
 
         <label v-if="!repeating" for="date">Date</label>
         <input v-if="!repeating" type="date" name="date" v-model="date" />
@@ -86,8 +91,9 @@
 
 <script>
 import { db } from "@/firebase";
-import { collection, doc, getDocs, setDoc } from "firebase/firestore";
+import { collection, getDocs, addDoc } from "firebase/firestore";
 import Multiselect from "@vueform/multiselect/src/Multiselect";
+import dayjs from "dayjs";
 const dbTags = collection(db, "tags");
 
 export default {
@@ -116,6 +122,17 @@ export default {
         Barista: 1,
         Cashier: 1,
       },
+      startDate: "",
+      endDate: "",
+      dayIndex: {
+        Monday: 1,
+        Tuesday: 2,
+        Wednesday: 3,
+        Thursday: 4,
+        Friday: 5,
+        Saturday: 6,
+        Sunday: 0,
+      },
     };
   },
 
@@ -133,25 +150,29 @@ export default {
       let manpower = {};
 
       for (let i = 0; i < this.selectedTags.length; i++) {
-        console.log(i);
         const tag = this.selectedTags[i];
         manpower[tag] = this.manpower[tag];
       }
 
       if (!this.repeating) {
-        try {
-          const docRef = await setDoc(doc(db, "shifts", "test"), {
-            title: this.title,
-            branch: "Ang Mo Kio", // to be changed
-            date: this.date,
-            startTime: this.startTime.replace(":", ""),
-            endTime: this.endTime.replace(":", ""),
-            manpower: manpower,
-          });
-          console.log("Document written with ID: ", docRef);
-        } catch (error) {
-          console.error(error);
-        }
+        this.pushData(manpower);
+      } else {
+        this.selectedDays.forEach((day) => {
+          const dayIndex = this.dayIndex[day];
+          const startDate = this.startDate;
+          const endDate = dayjs(this.endDate).add(1, "day");
+          const startIndex = dayjs(startDate).day();
+          let nextDay;
+          if (startIndex <= dayIndex) {
+            nextDay = dayjs(startDate);
+          } else {
+            nextDay = dayjs(startDate).add(7 - startIndex + dayIndex, "day");
+          }
+          while (nextDay.isBefore(endDate)) {
+            this.pushRepeatedData(manpower, nextDay.format("YYYY-MM-DD"));
+            nextDay = nextDay.add(7, "day");
+          }
+        });
       }
     },
 
@@ -173,6 +194,39 @@ export default {
       repeatingbtn.style.backgroundColor = "rgb(248, 213, 126)";
 
       this.repeating = true;
+    },
+
+    async pushData(manpower) {
+      try {
+        const docRef = await addDoc(collection(db, "shifts"), {
+          title: this.title,
+          branch: "Ang Mo Kio", // to be changed
+          date: this.date,
+          startTime: this.startTime.replace(":", ""),
+          endTime: this.endTime.replace(":", ""),
+          manpower: manpower,
+        });
+        console.log("Document written with ID: ", docRef);
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async pushRepeatedData(manpower, date) {
+      try {
+        console.log("test");
+        const docRef = await addDoc(collection(db, "shifts"), {
+          title: this.title,
+          branch: "Ang Mo Kio", // to be changed
+          date: date,
+          startTime: this.startTime.replace(":", ""),
+          endTime: this.endTime.replace(":", ""),
+          manpower: manpower,
+        });
+        console.log("Document written with ID: ", docRef);
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
 };
