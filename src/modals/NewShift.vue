@@ -1,12 +1,11 @@
 <template>
   <div class="information-wrapper">
     <div class="newshift-popup">
-
       <!-- cross icon on top right-->
       <font-awesome-icon
-          icon="fa-solid fa-x"
-          class="cross-icon"
-          @click="this.$emit('togglePopup')"
+        icon="fa-solid fa-x"
+        class="cross-icon"
+        @click="this.$emit('togglePopup')"
       />
 
       <div class="header-wrapper">
@@ -149,6 +148,7 @@ export default {
   },
 
   props: ["branch"],
+  emit: ["togglePopup"],
 
   components: { Multiselect },
 
@@ -230,6 +230,7 @@ export default {
 
         // push data
         this.pushData(manpower, status);
+        this.selectedTags = [];
       } else {
         // check if fields are filled up
         if (this.selectedDays.length == 0) {
@@ -274,16 +275,15 @@ export default {
             nextDay = nextDay.add(7, "day");
           }
         });
+        this.selectedTags = [];
+        this.selectedDays = [];
       }
-
       if (status == "published") {
         alert("The shift has been successfully published!");
       } else {
         alert("The draft has successfully been saved!");
       }
-      document.getElementById("shiftform").reset();
-      this.selectedTags = [];
-      this.selectedDays = [];
+      this.$emit('togglePopup')
     },
 
     selectOneTime() {
@@ -323,7 +323,7 @@ export default {
       }
     },
 
-    async pushRepeatedData(manpower, date) {
+    async pushRepeatedData(manpower, date, status) {
       try {
         const docRef = await addDoc(collection(db, "shifts"), {
           title: this.title,
@@ -332,6 +332,7 @@ export default {
           startTime: this.startTime.replace(":", ""),
           endTime: this.endTime.replace(":", ""),
           manpower: manpower,
+          status: status,
         });
         console.log("Document written with ID: ", docRef);
       } catch (error) {
@@ -465,9 +466,9 @@ ol {
 }
 
 .cross-icon {
-    position: absolute;
-    top: 20px;
-    right: 30px;
-    cursor: pointer;
-  }
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  cursor: pointer;
+}
 </style>
