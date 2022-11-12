@@ -12,7 +12,7 @@
         <button id="onetimebtn" @click="selectOneTime">One-Time</button>
         <button id="repeatingbtn" @click="selectRepeating">Repeating</button>
       </div>
-      <form class="new-schedule" @submit.prevent="">
+      <form id="shiftform" class="new-schedule" @submit.prevent="">
         <label for="title">Title</label>
         <input type="text" name="title" v-model="title" />
 
@@ -147,6 +147,49 @@ export default {
 
   methods: {
     async createShift() {
+      if (this.title == "") {
+        alert("Please fill in the Title!");
+        return;
+      }
+      if (this.startTime == "") {
+        alert("Please fill in the Time In!");
+        return;
+      }
+      if (this.endStart == "") {
+        alert("Please fill in the Time Out!");
+        return;
+      }
+      if (
+        parseInt(this.endTime.replace(":", "")) -
+          parseInt(this.startTime.replace(":", "")) <=
+        0
+      ) {
+        alert("Your Time Out has to be after your Time In");
+        return;
+      }
+      if (this.selectedTags.length == 0) {
+        alert("Please select your Manpower!");
+        return;
+      }
+      if (
+        this.selectedTags.includes("Barista") &&
+        this.manpower["Barista"] <= 0
+      ) {
+        alert("The manpower allocated has to be more than 0");
+        return;
+      }
+      if (this.selectedTags.includes("Clerk") && this.manpower["Clerk"] <= 0) {
+        alert("The manpower allocated has to be more than 0");
+        return;
+      }
+      if (
+        this.selectedTags.includes("Cashier") &&
+        this.manpower["Cashier"] <= 0
+      ) {
+        alert("The manpower allocated has to be more than 0");
+        return;
+      }
+
       let manpower = {};
 
       for (let i = 0; i < this.selectedTags.length; i++) {
@@ -155,8 +198,35 @@ export default {
       }
 
       if (!this.repeating) {
+        if (this.date == "") {
+          alert("Please fill in the Date!");
+          return;
+        }
         this.pushData(manpower);
       } else {
+        if (this.selectedDays.length == 0) {
+          alert("Please choose the repeated days!");
+          return;
+        }
+        if (this.startDate == "") {
+          alert("Please fill in the Start Date!");
+          return;
+        }
+        if (dayjs(this.startDate).isBefore(dayjs())) {
+          alert("The Start Date has to be after today!");
+          return;
+        }
+        if (this.endDate == "") {
+          alert("Please fill in the End Date!");
+          return;
+        }
+        if (dayjs(this.endDate).isBefore(dayjs(this.startDate))) {
+          alert("The End Date has to be after the Start Date!");
+          return;
+        }
+        if (this.title != "") {
+          return;
+        }
         this.selectedDays.forEach((day) => {
           const dayIndex = this.dayIndex[day];
           const startDate = this.startDate;
@@ -174,6 +244,8 @@ export default {
           }
         });
       }
+
+      document.getElementById("shiftform").reset();
     },
 
     selectOneTime() {
@@ -214,7 +286,6 @@ export default {
 
     async pushRepeatedData(manpower, date) {
       try {
-        console.log("test");
         const docRef = await addDoc(collection(db, "shifts"), {
           title: this.title,
           branch: "Ang Mo Kio", // to be changed
