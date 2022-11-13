@@ -2,7 +2,7 @@
   <div v-if="show" class="req-card-wrapper">
     <div class="worker-information">
       <p class="name">{{ firstName }} {{ lastName }}</p>
-      <p :class="tagName" class="user-tag">{{ tagName }}</p>
+      <p :class="branchClass" class="user-tag">{{ branch }}</p>
     </div>
     <div class="button-wrapper custom-action-row">
       <button
@@ -21,32 +21,52 @@
 
 <script>
 import { db } from "@/firebase";
-import { deleteDoc, doc, collection, addDoc } from "@firebase/firestore";
-const dbTagRequest = collection(db, "tagRequest");
+import {
+  deleteDoc,
+  doc,
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+} from "@firebase/firestore";
+const dbBranchRequest = collection(db, "branchRequest");
 
 export default {
   data() {
     return {
       show: true,
+      branchID: "",
+      branchClass: this.branch.replace(/\s/g, ''),
     };
   },
-  props: ["firstName", "lastName", "tagName", "id", "employeeID"],
+  props: ["firstName", "lastName", "branch", "id", "employeeID"],
+
+  async mounted() {
+    const q = query(collection(db, "branch"), where("name", "==", this.branch));
+    getDocs(q).then((querySnap) => {
+      querySnap.forEach((doc) => {
+        this.branchID = doc.id;
+      });
+    });
+  },
+
   methods: {
     async rejectTagReq() {
-      await deleteDoc(doc(dbTagRequest, this.id));
+      await deleteDoc(doc(dbBranchRequest, this.id));
       alert("Tag request has been rejected!");
       this.show = false;
       this.$forceUpdate;
     },
     async approveTagReq() {
       try {
-        const docRef = await addDoc(collection(db, "employeeTag"), {
+        const docRef = await addDoc(collection(db, "branchEmployee"), {
           employeeID: this.employeeID,
-          tagName: this.tagName,
+          branchID: this.branchID,
         });
         console.log("Document written with ID: ", docRef);
-        await deleteDoc(doc(dbTagRequest, this.id));
-        alert("Tag request has been approved!");
+        await deleteDoc(doc(dbBranchRequest, this.id));
+        alert("Branch request has been approved!");
         this.show = false;
         this.$forceUpdate;
       } catch (error) {
@@ -127,5 +147,13 @@ h2 {
 .custom-action-row {
   margin-top: 20px;
   justify-content: center;
+}
+
+.AngMoKioHub {
+  background-color: rgb(244, 182, 187);
+}
+
+.Junction8 {
+  background-color: rgb(250, 224, 191);
 }
 </style>

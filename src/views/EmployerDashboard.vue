@@ -25,6 +25,15 @@
         :id="req.id"
         :employeeID="req.employeeID"
       />
+      <EmployeeBranchReqCard
+        v-for="req in branchRequests"
+        :key="req.tagName"
+        :firstName="req.firstName"
+        :lastName="req.lastName"
+        :branch="req.branch"
+        :id="req.id"
+        :employeeID="req.employeeID"
+      />
     </div>
   </div>
 </template>
@@ -32,6 +41,7 @@
 <script>
 import ShiftCard from "../components/ShiftCard.vue";
 import EmployeeTagReqCard from "../components/EmployeeTagReqCard.vue";
+import EmployeeBranchReqCard from "../components/EmployeeBranchReqCard.vue";
 import { db } from "@/firebase";
 import {
   collection,
@@ -44,17 +54,18 @@ import {
 import dayjs from "dayjs";
 const dbShifts = collection(db, "shifts");
 const dbTagRequest = collection(db, "tagRequest");
-// const dbBranchRequest = collection(db, "branchRequest");
+const dbBranchRequest = collection(db, "branchRequest");
 
 export default {
   data() {
     return {
       shifts: [],
       tagRequests: [],
+      branchRequests: [],
       count: 0,
     };
   },
-  components: { ShiftCard, EmployeeTagReqCard },
+  components: { ShiftCard, EmployeeTagReqCard, EmployeeBranchReqCard },
   async mounted() {
     for (let i = 0; i < 7; i++) {
       let date = dayjs().add(i, "day").format("YYYY-MM-DD");
@@ -102,6 +113,28 @@ export default {
           firstName: employee.firstName,
           lastName: employee.lastName,
           tagName: reqTag,
+          id: d.id,
+          employeeID: employeeID,
+        });
+      });
+    });
+
+    // branch requests
+
+    const qBranch = await query(dbBranchRequest);
+    const branchQuerySnapshot = await getDocs(qBranch);
+
+    branchQuerySnapshot.forEach((d) => {
+      const data = d.data();
+      const reqBranch = data.branch;
+      const employeeID = data.employeeID;
+      const employeeRef = doc(db, "employee", employeeID);
+      getDoc(employeeRef).then((docSnap) => {
+        const employee = docSnap.data();
+        this.branchRequests.push({
+          firstName: employee.firstName,
+          lastName: employee.lastName,
+          branch: reqBranch,
           id: d.id,
           employeeID: employeeID,
         });
