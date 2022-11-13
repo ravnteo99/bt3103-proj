@@ -7,6 +7,7 @@ import ForgotPassword from '@/views/ForgotPassword.vue'
 import Availability from "@/views/Availability";
 import EmployeeDatabase from "@/views/EmployeeDatabase";
 import EmployerShift from "@/views/EmployerShift";
+import EmployerDashboard from "@/views/EmployerDashboard.vue";
 
 const routes = [
   {
@@ -48,7 +49,12 @@ const routes = [
 		path: "/shifts",
 		name: "EmployerShift",
 		component: EmployerShift
-	}
+	},
+	{
+		path: "/employerdashboard",
+		name: "EmployerDashboard",
+		component: EmployerDashboard,
+	},
 ]
 
 const router = createRouter({
