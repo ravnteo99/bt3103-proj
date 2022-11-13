@@ -15,23 +15,43 @@
   </div>
   <div class="column right">
     <h1>Employees</h1>
+    <div class="request-wrapper">
+      <EmployeeTagReqCard
+        v-for="req in tagRequests"
+        :key="req"
+        :firstName="req.firstName"
+        :lastName="req.lastName"
+        :tagName="req.tagName"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import ShiftCard from "../components/ShiftCard.vue";
+import EmployeeTagReqCard from "../components/EmployeeTagReqCard.vue";
 import { db } from "@/firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  getDoc,
+} from "firebase/firestore";
 import dayjs from "dayjs";
 const dbShifts = collection(db, "shifts");
+const dbTagRequest = collection(db, "tagRequest");
+// const dbBranchRequest = collection(db, "branchRequest");
 
 export default {
   data() {
     return {
       shifts: [],
+      tagRequests: [],
     };
   },
-  components: { ShiftCard },
+  components: { ShiftCard, EmployeeTagReqCard },
   async mounted() {
     for (let i = 0; i < 7; i++) {
       let date = dayjs().add(i, "day").format("YYYY-MM-DD");
@@ -62,6 +82,24 @@ export default {
         }
       });
     }
+
+    const qTag = await query(dbTagRequest);
+    const tagQuerySnapshot = await getDocs(qTag);
+
+    tagQuerySnapshot.forEach((d) => {
+      const data = d.data();
+      const reqTag = data.tagName;
+      const employeeID = data.employeeID;
+      const employeeRef = doc(db, "employee", employeeID);
+      getDoc(employeeRef).then((docSnap) => {
+        const employee = docSnap.data();
+        this.tagRequests.push({
+          firstName: employee.firstName,
+          lastName: employee.lastName,
+          tagName: reqTag,
+        });
+      });
+    });
   },
 };
 </script>
@@ -74,7 +112,7 @@ export default {
 
 .left {
   width: 65%;
-  padding-right: 5%
+  padding-right: 5%;
 }
 
 .right {
@@ -82,6 +120,14 @@ export default {
 }
 
 .shift-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.request-wrapper {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
