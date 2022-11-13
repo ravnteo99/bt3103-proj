@@ -12,7 +12,7 @@ export default {
   data() {
     return {
       popup: false,
-      branch: "Ang Mo Kio", // to be changed
+      branch: "Ang Mo Kio Hub", // to be changed
     };
   },
 

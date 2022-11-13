@@ -87,10 +87,7 @@
           <label for="{{tag}}"> x {{ tag }}</label>
         </ol>
         <div class="button-wrapper custom-action-row">
-          <button class="action-button draft" type="button" @click="saveDraft">
-            Save Draft
-          </button>
-          <button class="action-button done" type="button" @click="publish">
+          <button class="action-button done" type="button" @click="createShift">
             Publish
           </button>
         </div>
@@ -160,15 +157,7 @@ export default {
   },
 
   methods: {
-    saveDraft() {
-      this.createShift("draft");
-    },
-
-    publish() {
-      this.createShift("published");
-    },
-
-    async createShift(status) {
+    async createShift() {
       // check if fields are filled up
       if (this.title == "") {
         alert("Please fill in the Title!");
@@ -215,10 +204,12 @@ export default {
 
       // compile manpower
       let manpower = {};
+      let filledManpower = {};
 
       for (let i = 0; i < this.selectedTags.length; i++) {
         const tag = this.selectedTags[i];
         manpower[tag] = this.manpower[tag];
+        filledManpower[tag] = 0;
       }
 
       if (!this.repeating) {
@@ -229,7 +220,7 @@ export default {
         }
 
         // push data
-        this.pushData(manpower, status);
+        this.pushData(manpower, filledManpower);
         this.selectedTags = [];
       } else {
         // check if fields are filled up
@@ -270,7 +261,7 @@ export default {
             this.pushRepeatedData(
               manpower,
               nextDay.format("YYYY-MM-DD"),
-              status
+              filledManpower
             );
             nextDay = nextDay.add(7, "day");
           }
@@ -278,12 +269,8 @@ export default {
         this.selectedTags = [];
         this.selectedDays = [];
       }
-      if (status == "published") {
-        alert("The shift has been successfully published!");
-      } else {
-        alert("The draft has successfully been saved!");
-      }
-      this.$emit('togglePopup')
+      alert("The shift has successfully been published!");
+      this.$emit("togglePopup");
     },
 
     selectOneTime() {
@@ -306,7 +293,7 @@ export default {
       this.repeating = true;
     },
 
-    async pushData(manpower, status) {
+    async pushData(manpower, filledManpower) {
       try {
         const docRef = await addDoc(collection(db, "shifts"), {
           title: this.title,
@@ -315,7 +302,7 @@ export default {
           startTime: this.startTime.replace(":", ""),
           endTime: this.endTime.replace(":", ""),
           manpower: manpower,
-          status: status,
+          filledManpower: filledManpower,
         });
         console.log("Document written with ID: ", docRef);
       } catch (error) {
@@ -323,7 +310,7 @@ export default {
       }
     },
 
-    async pushRepeatedData(manpower, date, status) {
+    async pushRepeatedData(manpower, date, filledManpower) {
       try {
         const docRef = await addDoc(collection(db, "shifts"), {
           title: this.title,
@@ -332,7 +319,7 @@ export default {
           startTime: this.startTime.replace(":", ""),
           endTime: this.endTime.replace(":", ""),
           manpower: manpower,
-          status: status,
+          filledManpower: filledManpower,
         });
         console.log("Document written with ID: ", docRef);
       } catch (error) {
