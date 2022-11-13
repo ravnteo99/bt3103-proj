@@ -34,7 +34,7 @@ export default {
   font-size: 13px;
 }
 
-.AngMoKio {
+.AngMoKioHub {
   background-color: rgb(244, 182, 187);
   padding: 10px;
   border-radius: 5px;

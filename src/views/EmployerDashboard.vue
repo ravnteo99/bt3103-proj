@@ -7,6 +7,9 @@
         :key="shift"
         :branch="shift.branch"
         :title="shift.title"
+        :date="shift.date"
+        :startTime="shift.startTime"
+        :endTime="shift.endTime"
       />
     </div>
   </div>
@@ -48,7 +51,13 @@ export default {
             }
           }
           if (!filled) {
-            this.shifts.push({ branch: data.branch, title: data.title });
+            this.shifts.push({
+              branch: data.branch,
+              title: data.title,
+              date: data.date,
+              startTime: data.startTime,
+              endTime: data.endTime,
+            });
           }
         }
       });
@@ -64,11 +73,12 @@ export default {
 }
 
 .left {
-  width: 75%;
+  width: 65%;
+  padding-right: 5%
 }
 
 .right {
-  width: 25%;
+  width: 30%;
 }
 
 .shift-wrapper {
