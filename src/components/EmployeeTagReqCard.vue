@@ -1,8 +1,20 @@
 <template>
-  <div :class="tagName">
-    <div class="req-card-wrapper">
-      <h2>{{ firstName }} {{ lastName }}</h2>
-      <p>{{ tagName }}</p>
+  <div class="req-card-wrapper">
+    <div class="worker-information">
+      <p class="name">{{ firstName }} {{ lastName }}</p>
+      <p :class="tagName" class="user-tag">{{ tagName }}</p>
+    </div>
+    <div class="button-wrapper custom-action-row">
+      <button
+        class="action-button approve"
+        type="button"
+        @click="approveTagReq"
+      >
+        Approve
+      </button>
+      <button class="action-button reject" type="button" @click="rejectTagReq">
+        Reject
+      </button>
     </div>
   </div>
 </template>
@@ -17,6 +29,7 @@ export default {
 .req-card-wrapper {
   display: flex;
   flex-direction: column;
+  background-color: #fbfbfd;
   border-radius: 10px;
   width: 300px;
   height: 150px;
@@ -31,21 +44,52 @@ h2 {
   margin-bottom: 0px;
 }
 
-.Barista {
-  background-color: #787161;
-  color: white;
+.employee-card-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fbfbfd;
   border-radius: 10px;
+  padding-top: 20px;
 }
 
-.Cashier {
-  background-color: black;
-  color: white;
-  border-radius: 10px;
+.worker-information {
+  text-align: center;
+  width: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.Clerk {
-  background-color: #ffb100;
-  color: black;
-  border-radius: 10px;
+.worker-information p {
+  margin: 5px;
+}
+
+.user-tag {
+  border-radius: 5px;
+  font-weight: bold;
+  padding: 3px;
+  width: 200px;
+}
+
+.approve {
+  background-color: var(--yellow-tone-2);
+}
+
+.approve:hover {
+  background-color: var(--yellow-tone-3);
+}
+
+.reject {
+  background-color: #fbfbfd;
+}
+
+.reject:hover {
+  background-color: antiquewhite;
+}
+
+.custom-action-row {
+  margin-top: 20px;
+  justify-content: center;
 }
 </style>
