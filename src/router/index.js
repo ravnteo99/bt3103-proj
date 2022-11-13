@@ -4,7 +4,8 @@ import EmployeeCalendar from "@/views/EmployeeCalendar.vue";
 import Signup from '@/views/Signup.vue'
 // import ForgotPassword from '@/views/ForgotPassword.vue'
 // import Availability from "@/views/Availability";
-// import EmployeeDatabase from "@/views/EmployeeDatabase";
+import EmployeeDatabase from "@/views/EmployeeDatabase";
+import EmployerDashboard from "@/views/EmployerDashboard.vue"
 
 const routes = [
 	{
@@ -21,6 +22,16 @@ const routes = [
 		path: "/employeecalendar",
 		name: "EmployeeCalendar",
 		component: EmployeeCalendar,
+	},
+	{
+		path: "/employerdashboard",
+		name: "EmployerDashboard",
+		component: EmployerDashboard,
+	},
+	{
+		path: "/employees",
+		name: "EmployeeDatabase",
+		component: EmployeeDatabase,
 	},
 ];
 
