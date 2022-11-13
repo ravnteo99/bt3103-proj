@@ -1,5 +1,5 @@
 <template>
-  <div class="req-card-wrapper">
+  <div v-if="show" class="req-card-wrapper">
     <div class="worker-information">
       <p class="name">{{ firstName }} {{ lastName }}</p>
       <p :class="tagName" class="user-tag">{{ tagName }}</p>
@@ -20,8 +20,40 @@
 </template>
 
 <script>
+import { db } from "@/firebase";
+import { deleteDoc, doc, collection, addDoc } from "@firebase/firestore";
+const dbTagRequest = collection(db, "tagRequest");
+
 export default {
-  props: ["firstName", "lastName", "tagName"],
+  data() {
+    return {
+      show: true,
+    };
+  },
+  props: ["firstName", "lastName", "tagName", "id", "employeeID"],
+  methods: {
+    async rejectTagReq() {
+      await deleteDoc(doc(dbTagRequest, this.id));
+      alert("Tag request has been rejected!");
+      this.show = false;
+      this.$forceUpdate;
+    },
+    async approveTagReq() {
+      try {
+        const docRef = await addDoc(collection(db, "employeeTag"), {
+          employeeID: this.employeeID,
+          tagName: this.tagName,
+        });
+        console.log("Document written with ID: ", docRef);
+        await deleteDoc(doc(dbTagRequest, this.id));
+        alert("Tag request has been approved!");
+        this.show = false;
+        this.$forceUpdate;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
 };
 </script>
 
