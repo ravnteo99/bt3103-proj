@@ -18,10 +18,12 @@
     <div class="request-wrapper">
       <EmployeeTagReqCard
         v-for="req in tagRequests"
-        :key="req"
+        :key="req.tagName"
         :firstName="req.firstName"
         :lastName="req.lastName"
         :tagName="req.tagName"
+        :id="req.id"
+        :employeeID="req.employeeID"
       />
     </div>
   </div>
@@ -49,6 +51,7 @@ export default {
     return {
       shifts: [],
       tagRequests: [],
+      count: 0,
     };
   },
   components: { ShiftCard, EmployeeTagReqCard },
@@ -83,6 +86,8 @@ export default {
       });
     }
 
+    // tag requests
+
     const qTag = await query(dbTagRequest);
     const tagQuerySnapshot = await getDocs(qTag);
 
@@ -97,9 +102,16 @@ export default {
           firstName: employee.firstName,
           lastName: employee.lastName,
           tagName: reqTag,
+          id: d.id,
+          employeeID: employeeID,
         });
       });
     });
+  },
+  methods: {
+    forceUpdate() {
+      this.$forceUpdate;
+    },
   },
 };
 </script>
