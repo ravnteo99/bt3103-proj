@@ -1,18 +1,13 @@
 <template>
   <div class="shift-card-wrapper">
     <h2>{{ branch }}</h2>
-    <h2>{{ title }}</h2>
+    <p>{{ title }}</p>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      branch: "Ang Mo Kio Hub",
-      title: "Morning Shift",
-    };
-  },
+  props: ["branch", "title"],
 };
 </script>
 
