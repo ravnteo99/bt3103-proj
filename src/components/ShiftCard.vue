@@ -1,10 +1,8 @@
 <template>
-  <div :class="branchclass">
-    <div class="shift-card-wrapper">
-      <h2>{{ branch }}</h2>
-      <p>{{ title }}</p>
-      Date: {{ date }}
-    </div>
+  <div class="shift-card-wrapper">
+    <h2 :class="branchclass">{{ branch }}</h2>
+    <p>{{ title }}</p>
+    {{ date }}
   </div>
 </template>
 
@@ -27,6 +25,8 @@ export default {
   width: 300px;
   height: 150px;
   padding: 5px;
+  text-align: center;
+  background-color: #fbfbfd;
 }
 
 .shift-card-wrapper:hover {
