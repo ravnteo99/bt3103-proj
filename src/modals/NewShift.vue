@@ -74,7 +74,7 @@
         />
         <label>Manpower Detail</label>
 
-        <div v-if="selectedTags.length == 0"><br /></div>
+        <div v-if="selectedTags.length === 0"><br /></div>
 
         <ol v-for="tag in selectedTags" :key="tag">
           <input
@@ -125,11 +125,7 @@ export default {
       selectedDays: [],
       tags: [],
       selectedTags: [],
-      manpower: {
-        Clerk: 1,
-        Barista: 1,
-        Cashier: 1,
-      },
+      manpower: {},
       startDate: "",
       endDate: "",
       dayIndex: {
@@ -152,8 +148,11 @@ export default {
   async mounted() {
     const tagsQuery = await getDocs(dbTags);
     tagsQuery.forEach((doc) => {
-      this.tags.push(doc.data().tag);
+      const tag = doc.data().tag;
+      this.tags.push(tag);
+      this.manpower[tag] = 1;
     });
+    console.log(this.manpower);
   },
 
   methods: {
@@ -179,7 +178,7 @@ export default {
         alert("Your Time Out has to be after your Time In");
         return;
       }
-      if (this.selectedTags.length == 0) {
+      if (this.selectedTags.length === 0) {
         alert("Please select your Manpower!");
         return;
       }
@@ -203,7 +202,7 @@ export default {
 
       if (!this.repeating) {
         // check if fields are filled up
-        if (this.date == "") {
+        if (this.date === "") {
           alert("Please fill in the Date!");
           return;
         }
