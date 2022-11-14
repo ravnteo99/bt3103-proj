@@ -1,4 +1,5 @@
 <template>
+        <p class="login">Have an account? Sign in <router-link to="/">here</router-link>!</p>
         <h1 class="signup">Sign Up</h1>
         <br>
         <form id="signup" @submit.prevent="signup()">
@@ -94,6 +95,7 @@ export default {
                     } else {
                         alert("Successfully signed up!");
                         this.registerUser(cred.user.uid);
+                        this.$router.push({path: '/'});
                     }
                 })
                 .catch((error) => {
@@ -181,5 +183,10 @@ button:active {
     opacity: 0.6;
     transform: translateY(3px);
 }
-
+a {
+  color: black;
+}
+a:hover {
+  color: grey;
+}
 </style>

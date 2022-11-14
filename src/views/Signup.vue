@@ -1,6 +1,6 @@
 <template>
 <div id="wrapper">
-    <img :src="logo" />
+    <img :src="signup" />
     <div id="signup">
         <SignupForm />
     </div>
@@ -13,7 +13,7 @@ export default {
     name: 'Signup',
     data() {
         return {
-            logo: require('@/assets/logo.png')
+            signup: require('@/assets/signup.png')
         }
     },
     components: {
@@ -35,7 +35,7 @@ export default {
     justify-content: center;
 }
 img {
-    width: 300px;
+    width: 381px;
     height: 300px;
     float: left;
     padding: 20px;
