@@ -27,7 +27,7 @@
         class="employee-card"
         :key="employee.firstName"
         :full-name="employee.fullName"
-        :tags="employee.tags"
+        :tags="employeeTags[employee.id]"
         :email-address="employee.emailAddress"
         :profile-link="require(`@/assets/${employee.firstName}.svg`)"
         @click="toggleModal(employee)"
@@ -38,6 +38,7 @@
   <EmployeePopup
         v-if="lastClick"
         :employee="lastClick"
+        :tags="employeeTags[lastClick.id]"
         :branch-options="branchOptions"
         @togglePopup="this.lastClick=null"
     />
@@ -46,26 +47,23 @@
 <script>
 import EmployeeCard from "@/components/EmployeeCard";
 import EmployeePopup from "@/modals/EmployeePopup";
-import { unsubBranch, unsubEmployee, unsubAssignments, employees, branches, assignments } from "@/db/Employee";
+import { unsubBranch, unsubEmployee, unsubAssignments,
+  employees, branches, assignments } from "@/db/Employee";
+import { unsubTag, tags } from "@/db/Tags";
 
 export default {
   name: "EmployeeDatabase",
   components: { EmployeePopup, EmployeeCard },
   data() {
     return {
-      unsubscribeListener: [unsubEmployee, unsubBranch, unsubAssignments],
+      unsubscribeListener: [unsubEmployee, unsubBranch, unsubAssignments, unsubTag],
       employees: employees,
       employeeBranches: assignments,
-      employeeTags: [],
       branches: branches,
       employeeSearch: "",
       selectedBranch: "",
       lastClick: null,
     }
-  },
-  created() {
-    this.employees = employees
-    this.branches = branches
   },
   unmounted() {
     this.unsubscribeListener.forEach((callback) => {
@@ -104,6 +102,18 @@ export default {
       })
 
       return result
+    },
+    employeeTags() {
+      const tagAssignment = {}
+      tags.value.forEach((tag) => {
+        if (tag.employeeID in tagAssignment) {
+          tagAssignment[tag.employeeID].push(tag.tagName)
+        } else {
+          tagAssignment[tag.employeeID] = [tag.tagName]
+        }
+      })
+
+      return tagAssignment
     }
   },
   methods: {

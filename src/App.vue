@@ -30,6 +30,11 @@ export default {
   --ms-ring-color: #F9EBC9;
 }
 
+body {
+  padding: 0;
+  margin: 0;
+}
+
 /* input boxes to have the same font size */
 input {
   font-family: inherit;
@@ -70,6 +75,7 @@ li {
 .custom-action-row {
     display: flex;
     align-items: center;
+    justify-content: space-around;
     flex-direction: row;
 }
 
@@ -80,7 +86,7 @@ li {
     margin: 10px;
     cursor: pointer;
     font-family: 'Poppins', sans-serif;
-    width: 30%;
+    /*width: 30%;*/
 }
 
 .done {
