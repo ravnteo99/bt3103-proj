@@ -1,14 +1,16 @@
 <template>
-    <h1 class="newbranch">New Branch</h1>
+<div class="information-wrapper">
+    <div class="new-branch-popup">
+    <h1 class="new-branch">New Branch</h1>
     <br>
-    <form id="newbranch" @submit.prevent="signup()">
+    <form id="new-branch" @submit.prevent="signup()">
         <label for="name">Name</label><br>
         <input 
             type="text"
             name="name"
             id="name"
             v-model="name"
-            placeholder="Branch Name" required 
+            placeholder="Branch Name" required
         />
         <br><br>
         <label for="address">Address</label><br>
@@ -17,34 +19,34 @@
             name="address1"
             id="address1"
             v-model="address1"
-            placeholder="Address Line 1"
-            required
+            placeholder="Address Line 1" required
         /><br>
         <input 
             type="text"
             name="address2"
             id="address2"
             v-model="address2"
-            placeholder="Address Line 2"
-            required
+            placeholder="Address Line 2" required
         /><br>
         <input 
             type="text"
             name="address3"
             id="address3"
             v-model="address3"
-            placeholder="Address Line 3"
-            required
+            placeholder="Address Line 3" required
         />
         <br><br>
-        <button class="cancel">Cancel</button>
+        <button class="cancel" @click="this.$emit('toggleNewBranchPopup')">Cancel</button>
         <button type="submit" class="publish">Publish</button><br>
     </form>
+    </div>
+</div>
 </template>
 
 <script>
 export default {
     name:'NewBranch',
+    emits: ["toggleNewBranchPopup"],
     data() {
         return {
             name: "",
@@ -53,13 +55,34 @@ export default {
             address3: ""
         }
     },
-    methods:{
-
-    }
 }
 </script>
 
 <style scoped>
+.information-wrapper {
+    z-index: 99;
+    background-color: rgb(0, 0, 0, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.new-branch-popup { 
+    background-color: white;
+    border-radius: 20px;
+    width: 50%;
+    height: 300px;
+    gap: 20px;
+    padding: 30px;
+    width: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 h1 {
     margin-bottom: 0px;
 }
