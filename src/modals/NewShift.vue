@@ -159,15 +159,15 @@ export default {
   methods: {
     async createShift() {
       // check if fields are filled up
-      if (this.title == "") {
+      if (this.title === "") {
         alert("Please fill in the Title!");
         return;
       }
-      if (this.startTime == "") {
+      if (this.startTime === "") {
         alert("Please fill in the Time In!");
         return;
       }
-      if (this.endStart == "") {
+      if (this.endStart === "") {
         alert("Please fill in the Time Out!");
         return;
       }
@@ -183,23 +183,12 @@ export default {
         alert("Please select your Manpower!");
         return;
       }
-      if (
-        this.selectedTags.includes("Barista") &&
-        this.manpower["Barista"] <= 0
-      ) {
-        alert("The manpower allocated has to be more than 0");
-        return;
-      }
-      if (this.selectedTags.includes("Clerk") && this.manpower["Clerk"] <= 0) {
-        alert("The manpower allocated has to be more than 0");
-        return;
-      }
-      if (
-        this.selectedTags.includes("Cashier") &&
-        this.manpower["Cashier"] <= 0
-      ) {
-        alert("The manpower allocated has to be more than 0");
-        return;
+
+      for (const tag of this.tags) {
+        if (this.selectedTags.includes(tag) && this.manpower[tag] <= 0) {
+          alert("The manpower allocated has to be more than 0");
+          return;
+        }
       }
 
       // compile manpower
@@ -224,11 +213,11 @@ export default {
         this.selectedTags = [];
       } else {
         // check if fields are filled up
-        if (this.selectedDays.length == 0) {
+        if (this.selectedDays.length === 0) {
           alert("Please choose the repeated days!");
           return;
         }
-        if (this.startDate == "") {
+        if (this.startDate === "") {
           alert("Please fill in the Start Date!");
           return;
         }
@@ -236,7 +225,7 @@ export default {
           alert("The Start Date has to be after today!");
           return;
         }
-        if (this.endDate == "") {
+        if (this.endDate === "") {
           alert("Please fill in the End Date!");
           return;
         }
