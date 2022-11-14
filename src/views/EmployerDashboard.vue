@@ -1,6 +1,6 @@
 <template>
   <div class="column left">
-    <h1>Shifts</h1>
+    <h1>Shifts Requiring Attention</h1>
     <div class="shift-wrapper">
       <ShiftCard
         v-for="shift in shifts"
@@ -14,7 +14,7 @@
     </div>
   </div>
   <div class="column right">
-    <h1>Employees</h1>
+    <h1>Employee Requests</h1>
     <div class="request-wrapper">
       <EmployeeTagReqCard
         v-for="req in tagRequests"
