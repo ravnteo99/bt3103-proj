@@ -45,9 +45,13 @@ export default {
         login() {
             signInWithEmailAndPassword(auth, this.email, this.password)
             .then(() => {
-                console.log("Login")
-                // push to home page
-                this.$router.push('/home');
+                if (auth.currentUser.uid == 'VfHalcySARX2QPnbOPRXLl39dLQ2') {
+                    console.log("Employer Login")
+                    this.$router.push('/employerdashboard');
+                } else {
+                    console.log("Employee Login")
+                    this.$router.push('/availability');
+                }
             })
             .catch((error) => {
                 if (error.code == "auth/invalid-email") {
