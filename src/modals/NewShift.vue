@@ -268,7 +268,7 @@ export default {
       try {
         const docRef = await addDoc(collection(db, "shifts"), {
           title: this.title,
-          branch: this.branch,
+          branch: this.branch[0],
           date: this.date,
           startTime: this.startTime.replace(":", ""),
           endTime: this.endTime.replace(":", ""),
@@ -285,7 +285,7 @@ export default {
       try {
         const docRef = await addDoc(collection(db, "shifts"), {
           title: this.title,
-          branch: this.branch,
+          branch: this.branch[0],
           date: date,
           startTime: this.startTime.replace(":", ""),
           endTime: this.endTime.replace(":", ""),
