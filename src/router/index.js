@@ -2,10 +2,11 @@ import { createRouter, createWebHistory } from "vue-router";
 import Login from "@/views/Login.vue";
 import EmployeeCalendar from "@/views/EmployeeCalendar.vue";
 import Signup from '@/views/Signup.vue'
+import Temporary from "@/views/Temporary"
 import ForgotPassword from '@/views/ForgotPassword.vue'
 import Availability from "@/views/Availability";
 import EmployeeDatabase from "@/views/EmployeeDatabase";
-import Temporary from "@/views/Temporary"
+import EmployerShift from "@/views/EmployerShift";
 
 const routes = [
   {
@@ -43,6 +44,11 @@ const routes = [
     name: 'Temporary',
     component: Temporary
   },
+	{
+		path: "/shifts",
+		name: "EmployerShift",
+		component: EmployerShift
+	}
 ]
 
 const router = createRouter({

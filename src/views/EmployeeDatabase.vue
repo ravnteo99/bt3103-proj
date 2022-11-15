@@ -9,7 +9,7 @@
       >
       <font-awesome-icon
           icon="fa-solid fa-x"
-          class="crfross-icon"
+          class="cross-icon"
           v-if="employeeSearch.length > 0"
           @click="clearSearchBar"
       />
@@ -27,7 +27,7 @@
         class="employee-card"
         :key="employee.firstName"
         :full-name="employee.fullName"
-        :tags="employee.tags"
+        :tags="employeeTags[employee.id]"
         :email-address="employee.emailAddress"
         :profile-link="require(`@/assets/${employee.firstName}.svg`)"
         @click="toggleModal(employee)"
@@ -38,105 +38,37 @@
   <EmployeePopup
         v-if="lastClick"
         :employee="lastClick"
-        :branches="employeeBranches.filter((obj) => {
-          return (obj.employeeID === lastClick.id)
-        })"
+        :tags="employeeTags[lastClick.id]"
         :branch-options="branchOptions"
         @togglePopup="this.lastClick=null"
-        @removeBranch="this.key += 1"
     />
 </template>
 
 <script>
-import { db } from "@/firebase"
-import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import EmployeeCard from "@/components/EmployeeCard";
 import EmployeePopup from "@/modals/EmployeePopup";
+import { unsubBranch, unsubEmployee, unsubAssignments,
+  employees, branches, assignments } from "@/db/Employee";
+import { unsubTag, tags } from "@/db/Tags";
 
 export default {
   name: "EmployeeDatabase",
   components: { EmployeePopup, EmployeeCard },
   data() {
     return {
-      employees: [],
-      employeeBranches: [],
-      employeeTags: [],
-      branches: [],
+      unsubscribeListener: [unsubEmployee, unsubBranch, unsubAssignments, unsubTag],
+      employees: employees,
+      employeeBranches: assignments,
+      branches: branches,
       employeeSearch: "",
       selectedBranch: "",
       lastClick: null,
-      key: 0
     }
   },
-  async created() {
-    const employeeQuery = await getDocs(collection(db, "employee"));
-    employeeQuery.forEach((doc) => {
-      onSnapshot(doc.ref, (doc) => {
-        const employee = doc.data()
-        this.employees.push({
-          "id": doc.id,
-          "firstName": employee.firstName,
-          "fullName": `${employee.firstName} ${employee.lastName}`,
-          "emailAddress": employee.emailAddress,
-          "contactNo": employee.contactNo,
-          "address1": employee.address1,
-          "address2": employee.address2,
-          "address3": employee.address3,
-        })
-      })
-
-    });
-
-    const branchQuery = await getDocs(collection(db, "branch"));
-    branchQuery.forEach((doc) => {
-      const branch = doc.data()
-      this.branches.push({
-        "id": doc.id,
-        "name": branch.name
-      })
-    });
-
-    const employeeBranchQuery = await getDocs(collection(db, "branchEmployee"));
-    employeeBranchQuery.forEach((doc) => {
-      const assignment = doc.data()
-      // get current branch name
-      let branchNames = []
-      this.branches.filter((branch) => {
-        if (branch.id === assignment.branchID) {
-          branchNames.push(branch.name)
-        }
-      })
-      this.employeeBranches.push({
-        "employeeID": assignment.employeeID,
-        "branchID": assignment.branchID,
-        "branchName": branchNames
-      })
-    });
-
-    const employeeTagQuery = await getDocs(collection(db, "employeeTag"));
-    employeeTagQuery.forEach((doc) => {
-      const employeeTag = doc.data()
-      this.employeeTags.push({
-        "employeeID": employeeTag.employeeID,
-        "tagName": employeeTag.tagName
-      })
-    });
-
-    // find out all the tags each employee has
-    this.employees.forEach((employee) => {
-      const tags = []
-      this.employeeTags.filter((obj) => {
-        if  (obj.employeeID === employee.id) {
-          tags.push(obj.tagName)
-        }
-      })
-      if (tags.length === 0) {
-        employee.tags = ["none"]
-      } else {
-        employee.tags = tags
-      }
+  unmounted() {
+    this.unsubscribeListener.forEach((callback) => {
+      callback()
     })
-
   },
   computed: {
     filteredEmployees() {
@@ -166,10 +98,22 @@ export default {
     branchOptions() {
       const result = []
       this.branches.forEach((branch) => {
-        result.push({"value": branch.name})
+        result.push({"id": branch.id, "value": branch.name})
       })
 
       return result
+    },
+    employeeTags() {
+      const tagAssignment = {}
+      tags.value.forEach((tag) => {
+        if (tag.employeeID in tagAssignment) {
+          tagAssignment[tag.employeeID].push(tag.tagName)
+        } else {
+          tagAssignment[tag.employeeID] = [tag.tagName]
+        }
+      })
+
+      return tagAssignment
     }
   },
   methods: {

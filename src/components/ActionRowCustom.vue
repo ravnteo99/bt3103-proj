@@ -1,6 +1,5 @@
 <template>
     <div class="custom-action-row">
-        <button class="action-button reset" @click="$emit('closePicker')">{{ cancelText }}</button>
         <button class="action-button done" @click="$emit('selectDate')">{{ selectText }}</button>
     </div>
 </template>
@@ -17,6 +16,8 @@
     });
 </script>
 
-<style>
-
+<style scoped>
+.action-button {
+  margin-left: auto;
+}
 </style>

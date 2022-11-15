@@ -15,9 +15,9 @@
           <h2> {{ employee.fullName }} </h2>
           <p> {{ employee.emailAddress }} </p>
           <div class="user-tag">
-            <p v-for="tag in employee.tags" :class="tag" :key="tag">
+            <p v-for="tag in tags" :class="tag" :key="tag">
               {{ tag }}
-              <span class="remove-class-button"><font-awesome-icon icon="fa-solid fa-x fa-2xs" /></span>
+              <span class="remove-class-button" @click="removeTagAssignment(tag)"><font-awesome-icon icon="fa-solid fa-x fa-2xs" /></span>
             </p>
             <span class="add-button"><font-awesome-icon icon="fa-solid fa-plus" /></span>
           </div>
@@ -35,10 +35,8 @@
         <input type="text" name="contactNumber" :value="employee.contactNo" disabled>
         <label for="branches">Branches</label>
         <branch-filter
-          :branches="branches"
           :branchOptions="branchOptions"
           :employeeID="employee.id"
-          @removeBranch="$emit('removeBranch')"
         />
 
         <div class="button-wrapper custom-action-row">
@@ -52,12 +50,21 @@
 
 <script>
 import BranchFilter from "@/components/BranchFilter";
+import {removeTag, addTag} from "@/db/Tags";
 
 export default {
   name: "EmployeePopup",
   components: { BranchFilter },
-  props: ["employee", "branches", "branchOptions"],
-  emits: ["removeBranch", "togglePopup"],
+  props: ["employee", "tags", "branches", "branchOptions"],
+  emits: ["togglePopup"],
+  methods: {
+    async removeTagAssignment(tagName) {
+      await removeTag(this.employee.id, tagName)
+    },
+    async postTagAssignment(tagName) {
+      await addTag(this.employee.id, tagName)
+    }
+  }
 }
 </script>
 
@@ -124,8 +131,9 @@ export default {
 
   .user-tag {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
     gap: 10px;
   }
 
@@ -155,6 +163,7 @@ export default {
     border-radius: 3px;
     padding: 4px 6px;
     cursor: pointer;
+    width: 25px;
   }
 
   .add-button:hover {
