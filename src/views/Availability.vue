@@ -70,8 +70,9 @@ export default {
   methods: {
       async getBranchName(branchID) {
       //query for branch based on brandID
+      let userBranch = []
+      if (branchID)
       const queryBranch =  await getDocs(query(collection(db, "branch"), where(documentId(), "in", branchID)))
-      let userBranch = [] 
       queryBranch.forEach((doc) => {
           userBranch.push(doc.data().name)
       })
