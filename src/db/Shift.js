@@ -6,7 +6,8 @@ const db_shifts = collection(db, "shifts")
 const shiftQuery = query(db_shifts);
 const db_eAssignment = collection(db, "employeeAssignments")
 const db_eAvailability = collection(db, "employeeAvailability")
-const as
+const queryAssignments = query(db_eAssignment)
+const queryAvailability = query(db_eAvailability)
 
 const fetchShifts = () => {
     const shifts = ref([])
