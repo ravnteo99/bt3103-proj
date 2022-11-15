@@ -1,13 +1,21 @@
 import { ref } from 'vue';
 import { db } from "@/firebase"
-import {collection, query, onSnapshot, where, addDoc, getDocs, deleteDoc } from "firebase/firestore";
+import {collection, query, onSnapshot, where, addDoc, getDocs, deleteDoc, doc, getDoc} from "firebase/firestore";
 
 const employeeQuery = query(collection(db, "employee"))
 const branchColRef = collection(db, "branch")
 const branchQuery = query(branchColRef)
 const dbBranchEmployee = collection(db, "branchEmployee")
 
-const fetchEmployees = () => {
+
+export const getEmployee =  async (pk) => {
+    const docRef = doc(db, "employee", pk);
+    const docSnap = await getDoc(docRef);
+
+    return docSnap.data()
+}
+
+const listEmployees = () => {
     const employees = ref([])
     const unsubscribe = onSnapshot(employeeQuery, (querySnapshot) => {
         employees.value = querySnapshot.docs.map((doc) => {
@@ -90,6 +98,6 @@ export const removeBranchAssignment = async (employeeID, branchID) => {
 }
 
 
-export const [unsubEmployee, employees] = fetchEmployees()
+export const [unsubEmployee, employees] = listEmployees()
 export const [unsubBranch, branches] = fetchBranches()
 export const [unsubAssignments, assignments] = fetchAssignments()
