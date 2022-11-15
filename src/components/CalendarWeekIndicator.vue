@@ -41,6 +41,7 @@ export default {
   border: 1px;
   border-style: solid;
   padding: 5px;
+  text-align: center;
 }
 
 .fa-calendar {

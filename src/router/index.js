@@ -7,44 +7,44 @@ import ForgotPassword from '@/views/ForgotPassword.vue'
 import Availability from "@/views/Availability";
 import EmployeeDatabase from "@/views/EmployeeDatabase";
 import EmployerShift from "@/views/EmployerShift";
-import EmployerDashboard from "@/views/EmployerDashboard.vue";
+import EmployerDashboard from "@/views/EmployerDashboard.vue"
 
 const routes = [
-  {
-    path:'/',
-    name: 'Login',
-    component: Login
-  },
-  {
-    path:'/signup',
-    name: 'Signup',
-    component: Signup
-  },
-  {
-    path:'/forgotpassword',
-    name: 'ForgotPassword',
-    component: ForgotPassword
-  },
-  {
-    path:'/availability',
-    name: 'Availability',
-    component: Availability
-  },
-  {
-    path:'/employee',
-    name: 'EmployeeDatabase',
-    component: EmployeeDatabase
-  },
-  {
-      path: "/employeecalendar",
-      name: "EmployeeCalendar",
-      component: EmployeeCalendar,
-  },
-  {
-    path:'/temporary',
-    name: 'Temporary',
-    component: Temporary
-  },
+	{
+		path:'/',
+		name: 'Login',
+		component: Login
+	},
+	{
+		path:'/signup',
+		name: 'Signup',
+		component: Signup
+	},
+	{
+		path:'/forgotpassword',
+		name: 'ForgotPassword',
+		component: ForgotPassword
+	},
+	{
+		path:'/availability',
+		name: 'Availability',
+		component: Availability
+	},
+	{
+		path:'/employee',
+		name: 'EmployeeDatabase',
+		component: EmployeeDatabase
+	},
+	{
+		path: "/employeecalendar",
+		name: "EmployeeCalendar",
+		component: EmployeeCalendar,
+	},
+	{
+		path:'/temporary',
+		name: 'Temporary',
+		component: Temporary
+	},
 	{
 		path: "/shifts",
 		name: "EmployerShift",
