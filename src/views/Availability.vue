@@ -2,61 +2,83 @@
   <Calendar />
   <h3>{{ userBranchID }}</h3>
   <h3>{{ userTag }}</h3>
-  <h3>{{ userAssign }}</h3>
+  <h3>{{ userID }}</h3>
+  <h3>{{ userBranchName }}</h3>
+  <h3>{{ assignment }}</h3>
+  <h3>{{ availability }}</h3>
 </template>
 
 <script>
 import Calendar from '@/components/Calendar.vue'
-// import { getAuth, onAuthStateChanged } from "firebase/auth";
-// import { getAuth } from "firebase/auth";
-
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { db } from "@/firebase"
-import { collection, query, where, getDocs } from "firebase/firestore";
-// const auth = getAuth();
-// onAuthStateChanged(auth, (user) => {
-//     if (user) {
-//     const userID = user.uid;
-//   } else {
-//     const userID = null;
-//   }
-// });
-// const userID = "IIDJA"
-// console.log({{ userID }})
+import { collection, query, where, getDocs, documentId } from "firebase/firestore"; 
+import {unsubAssignments, unsubAvailability, assignment, availability} from "@/db/Shift"
+import {fetchBranches, fetchTags} from "@/db/Branch"
+import {filterShifts} from "@/db/test"
+
 export default {
     name: "Availability",
     components: {Calendar},
     data() {
     return {
-      userID : "NUTIYBOtubFTnwLi4990",
+      unsubscribeListener: [unsubAssignments, unsubAvailability],
+      userID : "",
       userBranchID : [],
       userTag : [],
-      date : "2022-10-25",
+      shifts: [],
+      assignment: [],
+      availability: [],
+      userShifts : [],
       userAssign : [],
-      shifts : [],
-      userAvailability : []
+      userAvailability : [],
+      startDate: "2022-11-14",
+      endDate: null,
+      userBranchName: []
     }
   },
+
   async created() {
-      const q = query(collection(db, "branchEmployee"), where("employeeID", "==", this.userID));
-      const queryBranchID = await getDocs(q);
-      queryBranchID.forEach((doc) => {
-        this.userBranchID.push(doc.data().branchID)
+
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+          this.userID = user.uid
+          const [unsubBranch, branchID] = fetchBranches(user.uid)
+          const [unsubTag, userTags] = fetchTags(user.uid)
+          this.unsubscribeListener.push(unsubBranch, unsubTag)
+          this.userBranchID = branchID
+          this.userTag = userTags
+
+      } else {
+          this.userID = null;
+      }
+    });
+    this.userBranchName = this.branchName
+    this.shifts = this.filteredShifts
+    this.assignment = assignment
+    this.availability = availability
+  },
+
+  computed: {
+    branchName() {
+       return this.getBranchName(this.userBranchID)
+    },
+    filteredShifts() {
+      return filterShifts(this.userBranchName, this.userTag, this.startDate, this.endDate)
+    },
+  },
+  methods: {
+     async getBranchName() {
+      //query for branch based on brandID
+      const queryBranch = await getDocs(query(collection(db, "branch"), where(documentId(), "in", this.userBranchID)))
+      let userBranch = [] 
+      queryBranch.forEach((doc) => {
+          userBranch.push(doc.data().name)
       })
-
-      const q2 = query(collection(db, "employeeTag"), where("employeeID", "==", this.userID));
-      const queryEmployeeTag = await getDocs(q2);
-      queryEmployeeTag.forEach((doc) => {
-        this.userTag.push(doc.data().tagName)
-      })
-
-      const q3 = query(collection(db, "EmployeeAssignments"), where("employeeID", "==", this.userID))
-      const assignQuery = await getDocs(q3);
-      assignQuery.forEach((doc) => {
-        this.userAssign.push(doc.data().shiftID)
-      })
-      
-
-
+      // Get Branch that user belongs to.
+      return userBranch;
+    }
   }
 }
 </script>

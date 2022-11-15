@@ -2,11 +2,13 @@ import { ref } from 'vue';
 import { db } from "@/firebase"
 import { collection, query, onSnapshot } from "firebase/firestore";
 
-const q = query(collection(db, "shifts"));
+const queryShift = query(collection(db, "shifts"));
+const queryAvailability = query(collection(db, "employeeAvailability"));
+const queryAssignments = query(collection(db, "employeeAssignments"));
 
 const fetchShifts = () => {
     const shifts = ref([])
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const unsubscribe = onSnapshot(queryShift, (querySnapshot) => {
         shifts.value = querySnapshot.docs.map((doc) => {
             const shift = doc.data()
             return {
@@ -17,7 +19,8 @@ const fetchShifts = () => {
                 'startTime': shift.startTime,
                 'endTime': shift.endTime,
                 'branch': shift.branch,
-                'manpower': shift.manpower
+                'manpower': shift.manpower,
+                'filledManpower': shift.filledManpower
             }
         })
     })
@@ -25,12 +28,46 @@ const fetchShifts = () => {
     return [unsubscribe, shifts]
 }
 
-export const filterShiftAvailability = (shiftID, assignedEmployeeIDs) => {
+const fetchAvailability = () => {
+    const availability = ref([])
+    const unsubscribe = onSnapshot(queryAvailability, (querySnapshot) => {
+        availability.value = querySnapshot.docs.map((doc) => {
+            const available = doc.data()
+            return {
+                'id': doc.id,
+                'employeeID': available.employeeID,
+                'shiftID': available.shiftID,
+            }
+        })
+    })
 
+    return [unsubscribe, availability]
 }
 
-export const filterShiftAssignee = (shiftID) => {
+const fetchAssignment = () => {
+    const assignment = ref([])
+    const unsubscribe = onSnapshot(queryAssignments, (querySnapshot) => {
+        assignment.value = querySnapshot.docs.map((doc) => {
+            const assign = doc.data()
+            return {
+                'id': doc.id,
+                'employeeID': assign.employeeID,
+                'shiftID': assign.shiftID,
+            }
+        })
+    })
 
+    return [unsubscribe, assignment]
 }
 
-export const [unsubscribe, shifts] = fetchShifts()
+// export const filterShiftAvailability = (shiftID, assignedEmployeeIDs) => {
+
+// }
+
+// export const filterShiftAssignee = (shiftID) => {
+
+// }
+
+export const [unsubShift, shifts] = fetchShifts();
+export const [unsubAvailable, availability] = fetchAvailability();
+export const [unsubAssignment, assignment] = fetchAssignment();
