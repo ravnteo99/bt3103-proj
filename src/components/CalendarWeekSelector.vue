@@ -76,6 +76,7 @@ export default {
   cursor: pointer;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+  margin-left: 15%;
 }
 
 .week-selector {
