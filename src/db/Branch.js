@@ -20,6 +20,7 @@ export const fetchBranches = (employeeID) => {
     return [unsubscribe, branchID]
 }
 
+
 export const fetchTags = (employeeID) => {
     const tagNames = ref([])
 	const tagQuery = query(dbEmployeeTag, where("employeeID", "==", employeeID))

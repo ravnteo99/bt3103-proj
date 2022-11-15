@@ -4,8 +4,6 @@
   <h3>{{ userTag }}</h3>
   <h3>{{ userID }}</h3>
   <h3>{{ userBranchName }}</h3>
-  <h3>{{ assignment }}</h3>
-  <h3>{{ availability }}</h3>
 </template>
 
 <script>
@@ -54,24 +52,24 @@ export default {
           this.userID = null;
       }
     });
-    this.userBranchName = this.branchName
+    // this.userBranchName = this.branchName
     this.shifts = this.filteredShifts
     this.assignment = assignment
     this.availability = availability
   },
 
   computed: {
-    branchName() {
-       return this.getBranchName(this.userBranchID)
-    },
+    // branchName() {
+    //    return this.getBranchName(this.userBranchID)
+    // },
     filteredShifts() {
       return filterShifts(this.userBranchName, this.userTag, this.startDate, this.endDate)
     },
   },
   methods: {
-     async getBranchName() {
+      async getBranchName(branchID) {
       //query for branch based on brandID
-      const queryBranch = await getDocs(query(collection(db, "branch"), where(documentId(), "in", this.userBranchID)))
+      const queryBranch =  await getDocs(query(collection(db, "branch"), where(documentId(), "in", branchID)))
       let userBranch = [] 
       queryBranch.forEach((doc) => {
           userBranch.push(doc.data().name)
