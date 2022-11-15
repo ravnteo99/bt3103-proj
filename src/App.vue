@@ -14,6 +14,12 @@ export default {
   --yellow-tone-1: #F9EBC9;
   --yellow-tone-2: #F8D57E;
   --yellow-tone-3: #FFB100;
+  --grey-100: #e4e9f0;
+  --grey-200: #cfd7e3;
+  --grey-300: #b5c0cd;
+  --grey-800: #3e4e63;
+  --grid-gap: 1px;
+  --day-label-size: 20px;
 }
 
 :root {
@@ -22,6 +28,11 @@ export default {
   --ms-tag-color: black;
   --ms-option-bg-pointed: #F9EBC9;
   --ms-ring-color: #F9EBC9;
+}
+
+body {
+  padding: 0;
+  margin: 0;
 }
 
 /* input boxes to have the same font size */
@@ -34,25 +45,6 @@ input {
 .Barista {
   background-color: #787161;
   color: white;
-}
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
-body {
-  font-family: sans-serif;
-  font-weight: 100;
-  --grey-100: #e4e9f0;
-  --grey-200: #cfd7e3;
-  --grey-300: #b5c0cd;
-  --grey-800: #3e4e63;
-  --grid-gap: 1px;
-  --day-label-size: 20px;
 }
 
 ol,
@@ -68,6 +60,7 @@ li {
   background-color: #fff;
   padding: 10px;
 }
+
 .Cashier {
   background-color: black;
   color: white;
@@ -82,6 +75,7 @@ li {
 .custom-action-row {
     display: flex;
     align-items: center;
+    justify-content: space-around;
     flex-direction: row;
 }
 
@@ -92,7 +86,7 @@ li {
     margin: 10px;
     cursor: pointer;
     font-family: 'Poppins', sans-serif;
-    width: 30%;
+    /*width: 30%;*/
 }
 
 .done {

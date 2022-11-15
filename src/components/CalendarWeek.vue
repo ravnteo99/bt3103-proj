@@ -23,12 +23,10 @@ import dayjs from "dayjs";
 import CalendarWeekSelector from "./CalendarWeekSelector.vue";
 import CalendarDays from "./CalendarDays.vue";
 import CalendarDayItem from "./CalendarDayItem.vue";
-import firebaseApp from "../firebase.js";
-import { getFirestore } from "firebase/firestore";
+import { db } from "@/firebase.js";
 import { collection, query, where, getDoc, getDocs, doc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-const db = getFirestore(firebaseApp);
 
 export default {
   components: {
