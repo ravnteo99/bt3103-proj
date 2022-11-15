@@ -14,8 +14,7 @@ const fetchShifts = () => {
             return {
                 'id': doc.id,
                 'title': shift.title,
-                // hacky way to retrieve date out of firestore timestamp
-                'date': new Date(shift.startTime.seconds*1000).toDateString(),
+                'date': shift.date,
                 'startTime': shift.startTime,
                 'endTime': shift.endTime,
                 'branch': shift.branch,
@@ -60,13 +59,51 @@ const fetchAssignment = () => {
     return [unsubscribe, assignment]
 }
 
-// export const filterShiftAvailability = (shiftID, assignedEmployeeIDs) => {
+export const filterShift = (shifts, branchNames, tags, startDate, endDate=null, assigned, userID) => {
+    let filteredShifts = shifts.filter((shift) => {
+        let result = true
+        //filter by startDate & endDate
+        if (shift.date <= startDate) {
+            return false
+        }
+        if (endDate !== null && shift.date >= endDate) {
+            return false
+        }
+        if (!branchNames.includes(shift.branch)) {
+            return false
+        }
+        //filter by whether shift has been fully assigned
+        let tempResult = false
+        tags.forEach((tag) => {
+            if (shift.filledManpower[tag] < shift.manpower[tag]) {
+                tempResult = true
+            }
+        })
+        result = tempResult
+        //filter by whether shift has already been assigned to employee
+        assigned.forEach((assign) => {
+            if (shift.id == assign.shiftID && userID == assign.employeeID) {
+                result = false
+            }
+        })
+        return result
+    })
 
-// }
+    return filteredShifts
+}
 
-// export const filterShiftAssignee = (shiftID) => {
-
-// }
+export const availShift = (filteredShifts, available, userID) => {
+    let availShifts = filteredShifts.filter((shift) => {
+        let result = false
+        available.forEach((avail) => {
+            if (shift.id == avail.shiftID && userID == avail.employeeID) {
+                result = true
+            }
+        })
+        return result
+    })
+    return availShifts
+}
 
 export const [unsubShift, shifts] = fetchShifts();
 export const [unsubAvailable, availability] = fetchAvailability();

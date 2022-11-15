@@ -1,38 +1,45 @@
 <template>
   <Calendar />
-  <h3>{{ userBranchID }}</h3>
-  <h3>{{ userTag }}</h3>
-  <h3>{{ userID }}</h3>
-  <h3>{{ userBranchName }}</h3>
-  <h3>{{ assignment }}</h3>
-  <h3>{{ availability }}</h3>
-  
+
+  <div class="canvas">  
+    <AvailabilityCard
+      v-for="shift in filteredShifts"
+      :key="shift.id"
+      :title="shift.title"
+      :date="shift.date"
+      :startTime="shift.startTime"
+      :endTime="shift.endTime"
+      :displayPicture="require('@/assets/AngMoKioHub.svg')"
+      :isAvailable="checkAvailable(shift.id)"
+      />
+  </div>
+  <div class="button-wrapper custom-action-row">
+        <button class="action-button done" type="button">Confirm</button>
+  </div>
+
+
+
 </template>
 
 <script>
 import Calendar from '@/components/Calendar.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-// import { db } from "@/firebase"
-// import { collection, query, where, getDocs, documentId } from "firebase/firestore"; 
-import {unsubAssignments, unsubAvailability, assignment, availability} from "@/db/Shift"
+import AvailabilityCard from "@/components/AvailabilityCard.vue"
+import {unsubAssignments, unsubAvailability, unsubShift, assignment, availability, shifts, filterShift, availShift} from "@/db/Shift"
 import {fetchBranches, fetchTags, getBranchName} from "@/db/Branch"
-import {filterShifts} from "@/db/test"
 
 export default {
     name: "Availability",
-    components: {Calendar},
+    components: {Calendar, AvailabilityCard},
     data() {
     return {
-      unsubscribeListener: [unsubAssignments, unsubAvailability],
+      unsubscribeListener: [unsubAssignments, unsubAvailability, unsubShift],
       userID : "",
       userBranchID : [],
       userTag : [],
       shifts: [],
       assignment: [],
       availability: [],
-      userShifts : [],
-      userAssign : [],
-      userAvailability : [],
       startDate: "2022-11-14",
       endDate: null,
       userBranchName: []
@@ -42,6 +49,7 @@ export default {
   async created() {
     this.assignment = assignment
     this.availability = availability
+    this.shifts = shifts
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -55,8 +63,6 @@ export default {
           this.userID = null;
       }
     });
-    this.shifts = this.filteredShifts
-
   },
 
   watch: {
@@ -64,20 +70,47 @@ export default {
         getBranchName(newValue).then((arr) => {
           this.userBranchName = arr
         })
-      }
+      },
+      // userBranchName(newValue) {
+      //   [unsubShift, filteredShift] = filterShifts(newValue, this.userTag, this.startDate, this.endDate)
+      //   this.unsubscribeListener.filter()
+      // }
   },
 
   computed: {
     filteredShifts() {
-      return filterShifts(this.userBranchName, this.userTag, this.startDate, this.endDate)
+      return filterShift(this.shifts, this.userBranchName, this.userTag, this.startDate, this.endDate, this.assignment, this.userID)
     },
+    availableShifts() {
+      return availShift(this.filteredShifts, this.availability, this.userID)
+    }
   },
 
   methods: {
+    checkAvailable(shiftID) {
+      for (let i=0; i<this.availableShifts.length; i++) {
+        if (this.availableShifts[i].id === shiftID) {
+          return true
+        }
+      }
+      return false
+    }
   }
 }
 </script>
 
 <style scoped>
+  .canvas {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .custom-action-row {
+    justify-content: flex-end;
+  }
 
+  .action-button {
+    font-weight: 600;
+  }
 </style>
