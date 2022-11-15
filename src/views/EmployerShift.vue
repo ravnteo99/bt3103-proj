@@ -48,7 +48,7 @@
       </Datepicker>
     </div>
 
-    <NewShift v-if="toggleCreateShift" @togglePopup="toggleCreateShift=false"/>
+    <NewShift v-if="toggleCreateShift" @toggleCreateShift="toggleCreateShift=false"/>
   </div>
 
 

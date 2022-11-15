@@ -241,7 +241,7 @@ export default {
         this.selectedDays = [];
       }
       alert("The shift has successfully been published!");
-      this.$emit("togglePopup");
+      this.$emit("toggleCreateShift");
     },
 
     selectOneTime() {
