@@ -7,6 +7,14 @@
     <option v-for="branch in branches" :value="branch" :key="branch.name"> {{ branch.name }} </option>
   </select>
 
+  <div class="date-indicator">
+    <div class="date-input">
+      <span>Viewing Shifts from: </span>
+      <input type="text" :value="date !== null ? date[0].toDateString() : 'None'" disabled>
+      <span>to</span>
+      <input type="text" :value="date !== null ? date[1].toDateString() : 'None'" disabled>
+    </div>
+  </div>
 
   <div class="section-wrapper">
     <div class="shift-wrapper">
@@ -27,6 +35,9 @@
 
     <div class="right-wrapper">
       <button class="create-button action-button">Create Shift</button>
+      <div class="custom-action-row">
+        <button class="clear-button action-button" @click="this.date = null">Clear Dates</button>
+      </div>
       <Datepicker
           v-model="date"
           inline
@@ -35,10 +46,6 @@
           :action-row-component="actionRow"
       >
       </Datepicker>
-      <div class="custom-action-row">
-        <button class="clear-button action-button" @click="this.date = null">Display All Shifts</button>
-      </div>
-
     </div>
   </div>
 
@@ -125,6 +132,20 @@ export default {
   overflow: auto;
   flex: 3;
   min-width: 500px;
+}
+
+.date-input {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 0;
+  margin-bottom: 20px
+}
+
+.date-input input {
+  padding: 7px 12px 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
 }
 
 .right-wrapper {
