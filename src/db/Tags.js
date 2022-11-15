@@ -20,6 +20,18 @@ export const fetchTags = () => {
     return [unsubscribe, tags]
 }
 
+export const getTag = (employeeID) => {
+    const tags = ref([])
+    const tagQ = query(tagQuery, where("employeeID", "==", employeeID))
+    const unsubscribe = onSnapshot(tagQ, (querySnapshot) => {
+        tags.value = querySnapshot.docs.map((doc) => {
+            return doc.data().tagName
+        })
+    })
+
+    return [unsubscribe, tags]
+}
+
 export const removeTag = async (employeeID, tagName) => {
     const q = query(tagQuery,
         where("employeeID", "==", employeeID),
