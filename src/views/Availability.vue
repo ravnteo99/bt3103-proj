@@ -4,6 +4,8 @@
   <h3>{{ userTag }}</h3>
   <h3>{{ userID }}</h3>
   <h3>{{ userBranchName }}</h3>
+  <h3>{{ assignment }}</h3>
+  <h3>{{ availability }}</h3>
 </template>
 
 <script>
@@ -37,7 +39,8 @@ export default {
   },
 
   async created() {
-
+    this.assignment = assignment
+    this.availability = availability
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -47,21 +50,19 @@ export default {
           this.unsubscribeListener.push(unsubBranch, unsubTag)
           this.userBranchID = branchID
           this.userTag = userTags
-
+          // this.userBranchName = this.branchName
       } else {
           this.userID = null;
       }
     });
-    // this.userBranchName = this.branchName
     this.shifts = this.filteredShifts
-    this.assignment = assignment
-    this.availability = availability
+
   },
 
   computed: {
-    // branchName() {
-    //    return this.getBranchName(this.userBranchID)
-    // },
+    branchName() {
+       return this.getBranchName(this.userBranchID)
+    },
     filteredShifts() {
       return filterShifts(this.userBranchName, this.userTag, this.startDate, this.endDate)
     },

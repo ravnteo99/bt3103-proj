@@ -41,7 +41,7 @@ export const filterShifts = (branchNames, tags, startDate, endDate=null) => {
 	}
 
 	// branch filter
-	q = query(q, where("branch", "in", branchNames))
+    if (branchNames.length > 0) {q = query(q, where("branch", "in", branchNames))}	
 
 	// tag filter
 	tags.forEach((tag) => {
