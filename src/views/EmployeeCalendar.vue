@@ -1,5 +1,7 @@
 <template>
-  <CalendarWeek />
+  <div class="page">
+    <CalendarWeek />
+  </div>
 </template>
 
 <script>
@@ -11,6 +13,10 @@ export default {
 </script>
 
 <style scoped>
+.page {
+  margin-top: 50px;
+}
+
 body {
   font-family: sans-serif;
   font-weight: 100;
