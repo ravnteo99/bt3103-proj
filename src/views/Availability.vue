@@ -6,15 +6,16 @@
   <h3>{{ userBranchName }}</h3>
   <h3>{{ assignment }}</h3>
   <h3>{{ availability }}</h3>
+  
 </template>
 
 <script>
 import Calendar from '@/components/Calendar.vue'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { db } from "@/firebase"
-import { collection, query, where, getDocs, documentId } from "firebase/firestore"; 
+// import { db } from "@/firebase"
+// import { collection, query, where, getDocs, documentId } from "firebase/firestore"; 
 import {unsubAssignments, unsubAvailability, assignment, availability} from "@/db/Shift"
-import {fetchBranches, fetchTags} from "@/db/Branch"
+import {fetchBranches, fetchTags, getBranchName} from "@/db/Branch"
 import {filterShifts} from "@/db/test"
 
 export default {
@@ -50,7 +51,6 @@ export default {
           this.unsubscribeListener.push(unsubBranch, unsubTag)
           this.userBranchID = branchID
           this.userTag = userTags
-          // this.userBranchName = this.branchName
       } else {
           this.userID = null;
       }
@@ -59,26 +59,21 @@ export default {
 
   },
 
+  watch: {
+      userBranchID(newValue) {
+        getBranchName(newValue).then((arr) => {
+          this.userBranchName = arr
+        })
+      }
+  },
+
   computed: {
-    branchName() {
-       return this.getBranchName(this.userBranchID)
-    },
     filteredShifts() {
       return filterShifts(this.userBranchName, this.userTag, this.startDate, this.endDate)
     },
   },
+
   methods: {
-      async getBranchName(branchID) {
-      //query for branch based on brandID
-      let userBranch = []
-      if (branchID)
-      const queryBranch =  await getDocs(query(collection(db, "branch"), where(documentId(), "in", branchID)))
-      queryBranch.forEach((doc) => {
-          userBranch.push(doc.data().name)
-      })
-      // Get Branch that user belongs to.
-      return userBranch;
-    }
   }
 }
 </script>

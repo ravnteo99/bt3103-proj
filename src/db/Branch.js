@@ -63,23 +63,36 @@ export const filterShifts = (branchNames, tags, startDate, endDate=null) => {
     return [unsubscribe, shifts]
 }
 
-export async function fetchUserBranch(employeeID) {
-    //query for branchID based on employeeID
-    const queryUserBranch = query(collection(db, "branchEmployee"), where("employeeID", "==", employeeID));
-    const queryBranchID = await getDocs(queryUserBranch);
-    let userBranchID = []
-    queryBranchID.forEach((doc) => {
-      userBranchID.push(doc.data().branchID)
-    })
-
+export async function getBranchName(branchID) {
     //query for branch based on brandID
-    const queryBranch = await getDocs(query(collection(db, "branch"), where(documentId(), "in", userBranchID)))
     let userBranch = []
-    queryBranch.forEach((doc) => {
+    if (branchID.length > 0) {
+      const queryBranch = await getDocs(query(collection(db, "branch"), where(documentId(), "in", branchID)))
+      queryBranch.forEach((doc) => {
         userBranch.push(doc.data().name)
-    })
-
+      })
+    }
     // Get Branch that user belongs to.
     return userBranch;
 }
+// defunc, replaced with getBranchName()
+// export async function fetchUserBranch(employeeID) {
+//     //query for branchID based on employeeID
+//     const queryUserBranch = query(collection(db, "branchEmployee"), where("employeeID", "==", employeeID));
+//     const queryBranchID = await getDocs(queryUserBranch);
+//     let userBranchID = []
+//     queryBranchID.forEach((doc) => {
+//       userBranchID.push(doc.data().branchID)
+//     })
+
+//     //query for branch based on brandID
+//     const queryBranch = await getDocs(query(collection(db, "branch"), where(documentId(), "in", userBranchID)))
+//     let userBranch = []
+//     queryBranch.forEach((doc) => {
+//         userBranch.push(doc.data().name)
+//     })
+
+//     // Get Branch that user belongs to.
+//     return userBranch;
+// }
 
