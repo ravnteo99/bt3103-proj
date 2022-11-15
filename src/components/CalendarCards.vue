@@ -28,6 +28,9 @@ export default {
   padding: 10px;
   border-radius: 5px;
   margin: 10px 0px 10px 0px;
+  text-align: center;
+  height: 50px;
+  overflow: hidden;
 }
 
 .card span {
