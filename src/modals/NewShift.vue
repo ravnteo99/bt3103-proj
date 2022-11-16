@@ -2,11 +2,7 @@
   <div class="information-wrapper">
     <div class="newshift-popup">
       <!-- cross icon on top right-->
-      <font-awesome-icon
-        icon="fa-solid fa-x"
-        class="cross-icon"
-        @click="this.$emit('togglePopup')"
-      />
+      <font-awesome-icon icon="fa-solid fa-x" class="cross-icon" @click="this.$emit('toggleCreateShift')" />
 
       <div class="header-wrapper">
         <div class="header">
@@ -23,27 +19,17 @@
         <label for="title">Title</label>
         <input type="text" name="title" v-model="title" />
 
+        <label for="branch">Branch</label>
+        <select v-model="branch" multiple>
+          <option v-for="branch in branches" :key="branch">{{ branch }}</option>
+        </select>
+
         <label v-if="repeating" for="repeatedDays">Repeats Every</label>
-        <Multiselect
-          v-if="repeating"
-          v-model="selectedDays"
-          mode="tags"
-          placeholder="Select Days"
-          track-by="value"
-          label="value"
-          :close-on-select="false"
-          :options="days"
-          @select="selectToggle"
-          @deselect="removeToggle"
-        />
+        <Multiselect v-if="repeating" v-model="selectedDays" mode="tags" placeholder="Select Days" track-by="value"
+          label="value" :close-on-select="false" :options="days" @select="selectToggle" @deselect="removeToggle" />
 
         <label v-if="repeating" for="startDate">Starts From</label>
-        <input
-          v-if="repeating"
-          type="date"
-          name="startDate"
-          v-model="startDate"
-        />
+        <input v-if="repeating" type="date" name="startDate" v-model="startDate" />
         <label v-if="repeating" for="endDate">Ends On</label>
         <input v-if="repeating" type="date" name="endDate" v-model="endDate" />
 
@@ -61,28 +47,14 @@
           </div>
         </div>
         <label for="manpower">Manpower</label>
-        <Multiselect
-          v-model="selectedTags"
-          mode="tags"
-          placeholder="Select Manpower"
-          track-by="value"
-          label="value"
-          :close-on-select="false"
-          :options="tags"
-          @select="selectToggle"
-          @deselect="removeToggle"
-        />
+        <Multiselect v-model="selectedTags" mode="tags" placeholder="Select Manpower" track-by="value" label="value"
+          :close-on-select="false" :options="tags" @select="selectToggle" @deselect="removeToggle" />
         <label>Manpower Detail</label>
 
         <div v-if="selectedTags.length === 0"><br /></div>
 
         <ol v-for="tag in selectedTags" :key="tag">
-          <input
-            class="manpower-qty"
-            type="number"
-            name="{{tag}}"
-            v-model="manpower[tag]"
-          />
+          <input class="manpower-qty" type="number" name="{{tag}}" v-model="manpower[tag]" />
           <font-awesome-icon icon="fa-user" class="fa-user" />
           <label for="{{tag}}"> x {{ tag }}</label>
         </ol>
@@ -102,6 +74,7 @@ import { collection, getDocs, addDoc } from "firebase/firestore";
 import Multiselect from "@vueform/multiselect/src/Multiselect";
 import dayjs from "dayjs";
 const dbTags = collection(db, "tags");
+const dbBranch = collection(db, "branch");
 
 export default {
   name: "NewShift",
@@ -137,10 +110,11 @@ export default {
         Saturday: 6,
         Sunday: 0,
       },
+      branches: [],
+      branch: "",
     };
   },
 
-  props: ["branch"],
   emit: ["togglePopup"],
 
   components: { Multiselect },
@@ -152,7 +126,12 @@ export default {
       this.tags.push(tag);
       this.manpower[tag] = 1;
     });
-    console.log(this.manpower);
+
+    const branchQuery = await getDocs(dbBranch);
+    branchQuery.forEach((doc) => {
+      const branch = doc.data().name;
+      this.branches.push(branch);
+    });
   },
 
   methods: {
@@ -160,6 +139,10 @@ export default {
       // check if fields are filled up
       if (this.title === "") {
         alert("Please fill in the Title!");
+        return;
+      }
+      if (this.branch === "") {
+        alert("Please pick a Branch!");
         return;
       }
       if (this.startTime === "") {
@@ -172,7 +155,7 @@ export default {
       }
       if (
         parseInt(this.endTime.replace(":", "")) -
-          parseInt(this.startTime.replace(":", "")) <=
+        parseInt(this.startTime.replace(":", "")) <=
         0
       ) {
         alert("Your Time Out has to be after your Time In");
@@ -258,7 +241,7 @@ export default {
         this.selectedDays = [];
       }
       alert("The shift has successfully been published!");
-      this.$emit("togglePopup");
+      this.$emit("toggleCreateShift");
     },
 
     selectOneTime() {
@@ -285,7 +268,7 @@ export default {
       try {
         const docRef = await addDoc(collection(db, "shifts"), {
           title: this.title,
-          branch: this.branch,
+          branch: this.branch[0],
           date: this.date,
           startTime: this.startTime.replace(":", ""),
           endTime: this.endTime.replace(":", ""),
@@ -302,7 +285,7 @@ export default {
       try {
         const docRef = await addDoc(collection(db, "shifts"), {
           title: this.title,
-          branch: this.branch,
+          branch: this.branch[0],
           date: date,
           startTime: this.startTime.replace(":", ""),
           endTime: this.endTime.replace(":", ""),
@@ -337,6 +320,7 @@ export default {
   border-radius: 20px;
   width: 50%;
   min-height: 500px;
+  max-height: 600px;
   flex-direction: row;
   align-items: center;
   /* gap: 20px; */
@@ -344,6 +328,7 @@ export default {
   position: relative;
   max-width: 400px;
   min-width: 300px;
+  overflow: auto;
 }
 
 .new-schedule {
@@ -359,6 +344,12 @@ input {
   border: 1px solid #d1d5db;
   border-radius: 4px;
   overflow: hidden;
+}
+
+select {
+  padding: 7px 12px 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
 }
 
 .multi-input {

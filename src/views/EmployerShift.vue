@@ -34,7 +34,7 @@
     </div>
 
     <div class="right-wrapper">
-      <button class="create-button action-button">Create Shift</button>
+      <button class="create-button action-button" @click="toggleCreateShiftPopup">Create Shift</button>
       <div class="custom-action-row">
         <button class="clear-button action-button" @click="this.date = null">Clear Dates</button>
       </div>
@@ -47,6 +47,8 @@
       >
       </Datepicker>
     </div>
+
+    <NewShift v-if="toggleCreateShift" @toggleCreateShift="toggleCreateShift=false"/>
   </div>
 
 
@@ -62,6 +64,7 @@
 import { branches } from "@/db/Employee";
 import { unsubscribe, shifts } from "@/db/Shift";
 import ShiftDetails from "@/modals/ShiftDetails";
+import NewShift from "../modals/NewShift.vue";
 
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
@@ -71,7 +74,8 @@ export default {
   name: "EmployerShift",
   components: {
     ShiftDetails,
-    Datepicker
+    Datepicker,
+    NewShift
   },
   data() {
     return {
@@ -81,6 +85,7 @@ export default {
       selectedBranch: null,
       selectedShift: null,
       date: null,
+      toggleCreateShift: false
     }
   },
   unmounted() {
@@ -117,6 +122,11 @@ export default {
         if (keyA > keyB) return 1;
         return 0;
       })
+    }
+  },
+  methods: {
+    toggleCreateShiftPopup() {
+      this.toggleCreateShift = true
     }
   }
 }
