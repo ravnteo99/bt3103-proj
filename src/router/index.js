@@ -7,8 +7,15 @@ import Availability from "@/views/Availability";
 import EmployeeDatabase from "@/views/EmployeeDatabase";
 import EmployerShift from "@/views/EmployerShift";
 import EmployerDashboard from "@/views/EmployerDashboard.vue"
+import SettingDefault from "@/views/SettingDefault.vue"
+import Home from "@/views/Home.vue"
 
 const routes = [
+	{
+		path:'/home',
+		name: 'Home',
+		component: Home
+	},
 	{
 		path:'/',
 		name: 'Login',
@@ -23,6 +30,11 @@ const routes = [
 		path:'/forgotpassword',
 		name: 'ForgotPassword',
 		component: ForgotPassword
+	},
+	{
+		path:'/setting',
+		name: 'SettingDefault',
+		component: SettingDefault
 	},
 	{
 		path:'/availability',
@@ -49,6 +61,7 @@ const routes = [
 		name: "EmployerDashboard",
 		component: EmployerDashboard,
 	},
+
 ]
 
 const router = createRouter({
