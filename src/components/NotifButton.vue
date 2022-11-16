@@ -52,6 +52,7 @@ export default {
   flex-direction: column;
   align-items: flex-end;
   height: 100px;
+  margin-top: 30px;
 }
 
 p {
