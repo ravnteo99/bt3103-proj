@@ -47,5 +47,23 @@ h2 {
   border-radius: 10px;
 }
 
-/* 255,255,193 201,253,205 194,224,252 */
+.BedokMall {
+  background-color: rgb(255, 255, 193);
+  border-radius: 10px;
+}
+
+.ClementiMall {
+  background-color: rgb(201, 253, 205);
+  border-radius: 10px;
+}
+
+.TampinesHub {
+  background-color: rgb(194, 224, 252);
+  border-radius: 10px;
+}
+
+.Westgate {
+  background-color: rgb(180, 211, 178);
+  border-radius: 10px;
+}
 </style>
