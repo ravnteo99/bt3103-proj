@@ -30,16 +30,28 @@
       </div>
     </div>
     <div class="right-wrapper">
-      <Calendar/>
+      <Datepicker
+            v-model="date"
+            inline
+            range
+            :enableTimePicker="false"
+            :action-row-component="actionRow"
+        >
+        </Datepicker>
+        <div class="custom-action-row">
+          <button class="clear-button action-button" @click="this.date = null">Clear Dates</button>
+        </div>
     </div>
   </div>
 
 </template>
 
 <script>
-import Calendar from '@/components/Calendar.vue'
 import NotifButton from "@/components/NotifButton";
 import NavBar from "../components/NavBar.vue"
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+import ActionRowCustom from "@/components/ActionRowCustom";
 
 import {getAuth, onAuthStateChanged} from "firebase/auth";
 import AvailabilityCard from "@/components/AvailabilityCard.vue"
@@ -57,7 +69,7 @@ import {fetchBranches, fetchTags, getBranchName} from "@/db/Branch"
 
 export default {
   name: "Availability",
-  components: {Calendar, AvailabilityCard, NavBar, NotifButton},
+  components: {Datepicker, AvailabilityCard, NavBar, NotifButton},
   data() {
     return {
       unsubscribeListener: [unsubAssignment, unsubAvailable, unsubShift],
@@ -73,6 +85,7 @@ export default {
       selectedShift: [],
       firstSelected: false,
       firstAvailableType: false,
+      date: null,
     }
   },
   async created() {
@@ -122,8 +135,10 @@ export default {
     },
     availableShifts() {
       return availShift(this.filteredShifts, this.availability, this.userID)
-    }
-
+    },
+    actionRow() {
+      return ActionRowCustom
+    },
   },
 
   methods: {
