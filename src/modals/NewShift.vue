@@ -2,7 +2,7 @@
   <div class="information-wrapper">
     <div class="newshift-popup">
       <!-- cross icon on top right-->
-      <font-awesome-icon icon="fa-solid fa-x" class="cross-icon" @click="this.$emit('toggleCreateShift')" />
+      <font-awesome-icon icon="fa-solid fa-x" class="cross-icon" @click="this.$emit('toggleCreateShift')"/>
 
       <div class="header-wrapper">
         <div class="header">
@@ -17,7 +17,7 @@
       </div>
       <form id="shiftform" class="new-schedule" @submit.prevent="">
         <label for="title">Title</label>
-        <input type="text" name="title" v-model="title" />
+        <input type="text" name="title" v-model="title"/>
 
         <label for="branch">Branch</label>
         <select v-model="branch" multiple>
@@ -25,37 +25,51 @@
         </select>
 
         <label v-if="repeating" for="repeatedDays">Repeats Every</label>
-        <Multiselect v-if="repeating" v-model="selectedDays" mode="tags" placeholder="Select Days" track-by="value"
-          label="value" :close-on-select="false" :options="days" @select="selectToggle" @deselect="removeToggle" />
+        <Multiselect
+            v-if="repeating"
+            v-model="selectedDays"
+            mode="tags"
+            placeholder="Select Days"
+            track-by="value"
+            label="value"
+            :close-on-select="false"
+            :options="days"
+        />
 
         <label v-if="repeating" for="startDate">Starts From</label>
-        <input v-if="repeating" type="date" name="startDate" v-model="startDate" />
+        <input v-if="repeating" type="date" name="startDate" v-model="startDate"/>
         <label v-if="repeating" for="endDate">Ends On</label>
-        <input v-if="repeating" type="date" name="endDate" v-model="endDate" />
+        <input v-if="repeating" type="date" name="endDate" v-model="endDate"/>
 
         <label v-if="!repeating" for="date">Date</label>
-        <input v-if="!repeating" type="date" name="date" v-model="date" />
+        <input v-if="!repeating" type="date" name="date" v-model="date"/>
 
         <div class="multi-input">
           <div class="column">
             <label for="startTime">Time In</label>
-            <input type="time" name="startTime" v-model="startTime" />
+            <input type="time" name="startTime" v-model="startTime"/>
           </div>
           <div class="column">
             <label for="endTime">Time Out</label>
-            <input type="time" name="endTime" v-model="endTime" />
+            <input type="time" name="endTime" v-model="endTime"/>
           </div>
         </div>
         <label for="manpower">Manpower</label>
-        <Multiselect v-model="selectedTags" mode="tags" placeholder="Select Manpower" track-by="value" label="value"
-          :close-on-select="false" :options="tags" @select="selectToggle" @deselect="removeToggle" />
+        <Multiselect
+            v-model="selectedTags"
+            mode="tags"
+            placeholder="Select Manpower"
+            track-by="value" label="value"
+            :close-on-select="false"
+            :options="tags"
+        />
         <label>Manpower Detail</label>
 
-        <div v-if="selectedTags.length === 0"><br /></div>
+        <div v-if="selectedTags.length === 0"><br/></div>
 
         <ol v-for="tag in selectedTags" :key="tag">
-          <input class="manpower-qty" type="number" name="{{tag}}" v-model="manpower[tag]" />
-          <font-awesome-icon icon="fa-user" class="fa-user" />
+          <input class="manpower-qty" type="number" name="{{tag}}" v-model="manpower[tag]"/>
+          <font-awesome-icon icon="fa-user" class="fa-user"/>
           <label for="{{tag}}"> x {{ tag }}</label>
         </ol>
         <div class="button-wrapper custom-action-row">
@@ -69,16 +83,17 @@
 </template>
 
 <script>
-import { db } from "@/firebase";
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import {db} from "@/firebase";
+import {collection, getDocs, addDoc} from "firebase/firestore";
 import Multiselect from "@vueform/multiselect/src/Multiselect";
 import dayjs from "dayjs";
+
 const dbTags = collection(db, "tags");
 const dbBranch = collection(db, "branch");
 
 export default {
   name: "NewShift",
-
+  emit: ["togglePopup"],
   data() {
     return {
       repeating: false,
@@ -111,14 +126,10 @@ export default {
         Sunday: 0,
       },
       branches: [],
-      branch: "",
+      branch: [],
     };
   },
-
-  emit: ["togglePopup"],
-
-  components: { Multiselect },
-
+  components: {Multiselect},
   async mounted() {
     const tagsQuery = await getDocs(dbTags);
     tagsQuery.forEach((doc) => {
@@ -154,9 +165,9 @@ export default {
         return;
       }
       if (
-        parseInt(this.endTime.replace(":", "")) -
-        parseInt(this.startTime.replace(":", "")) <=
-        0
+          parseInt(this.endTime.replace(":", "")) -
+          parseInt(this.startTime.replace(":", "")) <=
+          0
       ) {
         alert("Your Time Out has to be after your Time In");
         return;
@@ -230,9 +241,9 @@ export default {
           }
           while (nextDay.isBefore(endDate)) {
             this.pushRepeatedData(
-              manpower,
-              nextDay.format("YYYY-MM-DD"),
-              filledManpower
+                manpower,
+                nextDay.format("YYYY-MM-DD"),
+                filledManpower
             );
             nextDay = nextDay.add(7, "day");
           }

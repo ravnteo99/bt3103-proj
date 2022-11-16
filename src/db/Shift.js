@@ -6,6 +6,8 @@ const db_shifts = collection(db, "shifts")
 const shiftQuery = query(db_shifts);
 const db_eAssignment = collection(db, "employeeAssignments")
 const db_eAvailability = collection(db, "employeeAvailability")
+const queryAssignments = query(db_eAssignment)
+const queryAvailability = query(db_eAvailability)
 
 const fetchShifts = () => {
     const shifts = ref([])
@@ -15,7 +17,6 @@ const fetchShifts = () => {
             return {
                 'id': doc.id,
                 'title': shift.title,
-                // hacky way to retrieve date out of firestore timestamp
                 'date': shift.date,
                 'startTime': shift.startTime,
                 'endTime': shift.endTime,
@@ -27,6 +28,38 @@ const fetchShifts = () => {
     })
 
     return [unsubscribe, shifts]
+}
+
+const fetchAvailability = () => {
+    const availability = ref([])
+    const unsubscribe = onSnapshot(queryAvailability, (querySnapshot) => {
+        availability.value = querySnapshot.docs.map((doc) => {
+            const available = doc.data()
+            return {
+                'id': doc.id,
+                'employeeID': available.employeeID,
+                'shiftID': available.shiftID,
+            }
+        })
+    })
+
+    return [unsubscribe, availability]
+}
+
+const fetchAssignment = () => {
+    const assignment = ref([])
+    const unsubscribe = onSnapshot(queryAssignments, (querySnapshot) => {
+        assignment.value = querySnapshot.docs.map((doc) => {
+            const assign = doc.data()
+            return {
+                'id': doc.id,
+                'employeeID': assign.employeeID,
+                'shiftID': assign.shiftID,
+            }
+        })
+    })
+
+    return [unsubscribe, assignment]
 }
 
 export const filterShiftAvailability = async (shiftID) => {
@@ -81,6 +114,61 @@ export const filterShiftAssignee = (shiftID) => {
     return [unsubscribe, assigneeIDs]
 }
 
+export const filterShift = (shifts, branchNames, tags, startDate, endDate=null, assigned, userID) => {
+    let filteredShifts = shifts.filter((shift) => {
+        let result = true
+        //filter by startDate & endDate
+        if (shift.date <= startDate) {
+            return false
+        }
+        if (endDate !== null && shift.date >= endDate) {
+            return false
+        }
+        if (!branchNames.includes(shift.branch)) {
+            return false
+        }
+        //filter by whether shift has been fully assigned
+        let tempResult = false
+        tags.forEach((tag) => {
+            if (shift.filledManpower[tag] < shift.manpower[tag]) {
+                tempResult = true
+            }
+        })
+        result = tempResult
+        //filter by whether shift has already been assigned to employee
+        assigned.forEach((assign) => {
+            if (shift.id === assign.shiftID && userID === assign.employeeID) {
+                result = false
+            }
+        })
+        return result
+    })
+    function compareDate(shiftA, shiftB) {
+        if (shiftA.date < shiftB.date) {
+            return -1;
+        }
+        if (shiftA.date > shiftB.date) {
+            return 1;
+        }
+        return 0
+    }
+    filteredShifts = filteredShifts.sort(compareDate)
+    return filteredShifts
+}
+
+export const availShift = (filteredShifts, available, userID) => {
+    let availShifts = filteredShifts.filter((shift) => {
+        let result = false
+        available.forEach((avail) => {
+            if (shift.id === avail.shiftID && userID === avail.employeeID) {
+                result = true
+            }
+        })
+        return result
+    })
+    return availShifts
+}
+
 export const createAssignment = async (shiftID, employeeID) => {
     const q = query(db_eAssignment,
         where("employeeID", "==", employeeID),
@@ -113,4 +201,6 @@ export const deleteAssignment = async (shiftID, employeeID) => {
     }
 }
 
-export const [unsubscribe, shifts] = fetchShifts()
+export const [unsubShift, shifts] = fetchShifts();
+export const [unsubAvailable, availability] = fetchAvailability();
+export const [unsubAssignment, assignment] = fetchAssignment();

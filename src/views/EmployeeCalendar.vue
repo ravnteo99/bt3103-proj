@@ -2,7 +2,7 @@
   <NotifButton />
 
   <NavBar />
-
+  <h1>Timetable</h1>
   <CalendarWeek />
 </template>
 

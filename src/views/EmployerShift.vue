@@ -63,7 +63,7 @@
 
 <script>
 import { branches } from "@/db/Employee";
-import { unsubscribe, shifts } from "@/db/Shift";
+import { unsubShift, shifts } from "@/db/Shift";
 import ShiftDetails from "@/modals/ShiftDetails";
 import NewShift from "../modals/NewShift.vue";
 import NotifButton from "@/components/NotifButton";
@@ -84,7 +84,7 @@ export default {
   },
   data() {
     return {
-      unsubscribeListener: [unsubscribe],
+      unsubscribeListener: [unsubShift],
       shifts: shifts,
       branches: branches,
       selectedBranch: null,

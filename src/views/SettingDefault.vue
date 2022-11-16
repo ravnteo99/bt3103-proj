@@ -1,6 +1,7 @@
 <template>
   <NotifButton/>
   <NavBar />
+  <h1>User Profile</h1>
   <div class="setting">
     <div class="setting-item">
       <h4 class="userTitle"><b>User Information</b></h4>
@@ -67,7 +68,7 @@
 
     <div class="setting-item">
       <div class="userCard">
-        <img class="userImage" src="img.jpg" style="width:168px;height:168px;">
+        <img class="userImage" :src="require(`@/assets/${employee.firstName}.svg`)" style="width:168px;height:168px;">
         <h1 class="userName">{{ employee.firstName }} {{ employee.lastName }}</h1>
         <div class="tagList">
           Tags:
@@ -197,6 +198,14 @@ export default {
   display: flex;
 }
 
+h1 {
+  margin-bottom: 0
+}
+
+img {
+  border-radius: 100%;
+}
+
 .setting-item {
   width: 40%;
   height: 100%;
@@ -232,7 +241,7 @@ export default {
   height: 45px;
   width: 380px;
   border: groove;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
   font-family: 'Gilroy-Light', sans-serif;
   font-weight: 200;
   font-size: 16px;
@@ -256,7 +265,7 @@ export default {
   height: 45px;
   width: 175px;
   border: groove;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
   font-family: 'Gilroy-Light', sans-serif;
   font-weight: 200;
   font-size: 16px;
