@@ -1,4 +1,5 @@
 <template>
+  <NotifButton />
   <div class="page">
     <CalendarWeek />
   </div>
@@ -6,9 +7,10 @@
 
 <script>
 import CalendarWeek from "../components/CalendarWeek.vue";
+import NotifButton from "@/components/NotifButton";
 
 export default {
-  components: { CalendarWeek },
+  components: { CalendarWeek, NotifButton },
 };
 </script>
 

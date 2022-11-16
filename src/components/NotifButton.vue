@@ -1,7 +1,9 @@
 <template>
+  <div class="wrapper">
     <p>{{this.fname}}</p>
     <div class="profile"><MyProfile /></div>
     <div class="signout"><SignOut /></div>
+  </div>
 </template>
 
 <script>
@@ -34,7 +36,6 @@ export default {
             const docSnap = await getDoc(doc(db, 'employee', auth.currentUser.uid))
             if (docSnap.exists()) {
                 this.fname = docSnap.data().firstName
-                console.log(docSnap.data())
             } else {
                 console.log('Document does not exist')
             }
@@ -44,10 +45,19 @@ export default {
 </script>
 
 <style scoped>
+.wrapper {
+  position: absolute;
+  right: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
 p {
     font-weight: bold;
-    margin-bottom: 0px;
+    margin: 0 12px;
 }
+
 .profile {
     margin-bottom: -10px;
 }

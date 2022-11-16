@@ -119,7 +119,6 @@ export default {
 
     // function to get shiftids assigned to userid
     async function getShiftIds(uid) {
-      console.log(uid)
       const employeeAssignmentsRef = collection(db, "employeeAssignments");
       const q = await query(employeeAssignmentsRef, where("employeeID", "==", uid));
       const querySnapshot = await getDocs(q)

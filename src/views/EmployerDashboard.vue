@@ -1,4 +1,5 @@
 <template>
+  <NotifButton />
   <div class="column left">
     <h1>Shifts Requiring Attention</h1>
     <div class="shift-wrapper">
@@ -40,6 +41,7 @@
 
 <script>
 import ShiftCard from "../components/ShiftCard.vue";
+import NotifButton from "@/components/NotifButton";
 import EmployeeTagReqCard from "../components/EmployeeTagReqCard.vue";
 import EmployeeBranchReqCard from "../components/EmployeeBranchReqCard.vue";
 import { db } from "@/firebase";
@@ -51,6 +53,8 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
+
+
 import dayjs from "dayjs";
 const dbShifts = collection(db, "shifts");
 const dbTagRequest = collection(db, "tagRequest");
@@ -65,7 +69,7 @@ export default {
       count: 0,
     };
   },
-  components: { ShiftCard, EmployeeTagReqCard, EmployeeBranchReqCard },
+  components: {NotifButton, ShiftCard, EmployeeTagReqCard, EmployeeBranchReqCard },
   async mounted() {
     for (let i = 0; i < 7; i++) {
       let date = dayjs().add(i, "day").format("YYYY-MM-DD");
