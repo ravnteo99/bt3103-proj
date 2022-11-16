@@ -67,7 +67,7 @@ export default {
     return {
       uid: "",
       admin: false,
-      adminid: "42vuID5nKWMVL1mODCKyqaoVL7s1",
+      adminid: "VfHalcySARX2QPnbOPRXLl39dLQ2",
     };
   },
   mounted() {
@@ -95,7 +95,7 @@ export default {
   font-weight: 800;
   font-size: 18px;
   line-height: 18px;
-  /* background-color: white; */
+  background-color: white;
   min-height: 600px;
   margin-right: 1px;
 }
@@ -114,6 +114,7 @@ export default {
   background: none;
   border-radius: 12px;
   transition-duration: 0.4s;
+  cursor: pointer;
 }
 
 #homeButton:hover,

@@ -116,11 +116,12 @@ import {getTag} from "@/db/Tags";
 import NotifButton from "@/components/NotifButton";
 import TagRequest from "@/modals/TagRequest";
 import ConfirmationMessage from "@/modals/ConfirmationMessage";
+import NavBar from "../components/NavBar.vue";
 
 
 export default {
   name: "SettingDefault",
-  components: {NotifButton, TagRequest, ConfirmationMessage},
+  components: {NotifButton, TagRequest, ConfirmationMessage, NavBar},
   data() {
     return {
       employeeID: '',
