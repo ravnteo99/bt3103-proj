@@ -1,4 +1,5 @@
 <template>
+  <h1 class="section-title">Availability <span>{{ filteredShifts.length }} </span> </h1>
   <Calendar />
 
   <div class="canvas">  
@@ -45,7 +46,6 @@ export default {
       userBranchName: []
     }
   },
-
   async created() {
     this.assignment = assignment
     this.availability = availability
@@ -64,19 +64,19 @@ export default {
       }
     });
   },
-
+  unmounted() {
+    this.unsubscribeListener.forEach((callback) => {
+      callback()
+    })
+  },
   watch: {
       userBranchID(newValue) {
         getBranchName(newValue).then((arr) => {
           this.userBranchName = arr
         })
       },
-      // userBranchName(newValue) {
-      //   [unsubShift, filteredShift] = filterShifts(newValue, this.userTag, this.startDate, this.endDate)
-      //   this.unsubscribeListener.filter()
-      // }
-  },
 
+  },
   computed: {
     filteredShifts() {
       return filterShift(this.shifts, this.userBranchName, this.userTag, this.startDate, this.endDate, this.assignment, this.userID)
@@ -112,5 +112,12 @@ export default {
 
   .action-button {
     font-weight: 600;
+  }
+
+  h1 span {
+    color: #808080;
+    font-weight: normal;
+    font-size: 20px;
+    margin-left: 10px;
   }
 </style>
