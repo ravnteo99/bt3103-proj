@@ -1,51 +1,71 @@
 <template>
   <div class="available-card-wrapper" 
-  :class="[isActive ? 'active' : 'inactive']" 
-  @[mayclick]="toggle(); $emit('select', this.$.vnode.key)">
+      :class="[isActive ? 'active' : 'inactive']"
+       @mouseover="this.isActive=true"
+       @mouseleave="this.isActive=false"
+  >
     <div class="display-picture">
-      <img :src="displayPicture" :alt="title">
+      <img :src="displayPicture" :alt="shiftObj.title">
     </div>
-    <font-awesome-icon class="available-tick" v-if="isAvailable" icon="fa-solid fa-check" />
+    <font-awesome-icon class="available-tick" v-if="isAvailableForShift" icon="fa-solid fa-check" />
     <div class="available-information">
-      <p class="title"> {{ branch }} </p>
-      <p class="date"> <span><font-awesome-icon icon="fa-calendar" class="fa-calendar" /></span>{{ date }} </p>
+      <p class="title"> {{ shiftObj.title }} </p>
+      <p class="date"> <span><font-awesome-icon icon="fa-calendar" class="fa-calendar" /></span>{{ shiftObj.date }} </p>
       <span class="date">
         <span><font-awesome-icon icon="fa-regular fa-clock" /></span>
-        {{startTime}} - {{ endTime}}
+        {{shiftObj.startTime}} - {{ shiftObj.endTime}}
       </span>
     </div>
+
+<!--    Modal component-->
+    <IndicateAvailability
+      v-if="isActive"
+      :employeeID="employeeID"
+      :shiftID="shiftObj.id"
+      :msg="this.isAvailableForShift ? 'Remove Availability' : 'Indicate Availability'"
+      :action="this.isAvailableForShift? 'remove' : 'indicate'"
+    />
   </div>
 </template>
 
+
 <script>
+import IndicateAvailability from "@/modals/IndicateAvailability";
+import {availability, unsubAvailable} from "@/db/Shift";
+import {isAvailable} from "@/db/Availability";
+
 export default {
   name: "AvailabilityCard",
+  components: { IndicateAvailability },
   props: {
-    branch: String,
-    title: String,
-    date: String,
-    startTime: String,
-    endTime: String,
+    shiftObj: Object,
     displayPicture: String,
-    isAvailable: Boolean,
-    firstSelected: Boolean,
-    typeShift: Boolean,
+    employeeID: String,
   },
   data() {
     return {
-      isActive: false
+      unsubscribeListener: [unsubAvailable],
+      availableShifts: availability,
+      isActive: false,
+      isAvailableForShift: false,
+      availableForShift: [],
     }
   },
-  computed: {
-    mayclick() {
-      return this.firstSelected ? ((this.isAvailable && this.typeShift) ? "click" : null) : "click"
-    }
+  unmounted() {
+    this.unsubscribeListener.forEach((callback) => {
+      callback()
+    })
   },
-  methods: {
-    toggle() {
-      this.isActive = !this.isActive
-    }
+  created() {
+    const [unsubAvailability, availableForShift] = isAvailable(this.employeeID, this.shiftObj.id)
+    this.availableForShift = availableForShift
+    this.unsubscribeListener.push(unsubAvailability)
   },
+  watch: {
+    availableForShift(newValue) {
+      this.isAvailableForShift = newValue.length > 0
+    }
+  }
 }
 </script>
 
@@ -64,7 +84,7 @@ export default {
     background-color: white;
   }
   .active {
-    background-color: var(--yellow-tone-2);
+    background-color: rgb(0, 0, 0, 0.2);
   }
 
   .available-tick {

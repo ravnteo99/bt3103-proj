@@ -3,9 +3,14 @@
   <NavBar/>
 
   <h1 class="section-title">Availability <span>{{ filteredShifts.length }} </span></h1>
-  <h3> {{ selectedShift }}</h3>
-  <h3> {{ firstSelected }}</h3>
-  <h3> {{ firstAvailableType }}</h3>
+  <div class="date-indicator">
+    <div class="date-input">
+      <span>Viewing Shifts from: </span>
+      <input type="text" :value="date !== null ? date[0].toDateString() : 'None'" disabled>
+      <span>to</span>
+      <input type="text" :value="date !== null ? date[1].toDateString() : 'None'" disabled>
+    </div>
+  </div>
 
   <div class="section-wrapper">
     <div class="shift-wrapper">
@@ -13,20 +18,10 @@
         <AvailabilityCard
             v-for="shift in filteredShifts"
             :key="shift.id"
-            :branch="shift.branch"
-            :title="shift.title"
-            :date="shift.date"
-            :startTime="shift.startTime"
-            :endTime="shift.endTime"
+            :employeeID="userID"
+            :shiftObj="shift"
             :displayPicture="require('@/assets/AngMoKioHub.svg')"
-            :isAvailable="checkAvailable(shift.id)"
-            :firstSelected="shift.firstSelected"
-            :typeShift="shift.firstSelectedType"
-            @select="(i) => selectedShift.includes(i) ? selectedShift.pop(i) : selectedShift.push(i)"
         />
-      </div>
-      <div class="button-wrapper custom-action-row">
-        <button class="action-button done" type="button">Confirm</button>
       </div>
     </div>
     <div class="right-wrapper">
@@ -62,8 +57,7 @@ import {
   assignment,
   availability,
   shifts,
-  filterShift,
-  availShift
+  filterShift
 } from "@/db/Shift"
 import {fetchBranches, fetchTags, getBranchName} from "@/db/Branch"
 
@@ -74,24 +68,16 @@ export default {
     return {
       unsubscribeListener: [unsubAssignment, unsubAvailable, unsubShift],
       userID: "",
-      userBranchID: [],
       userTag: [],
-      shifts: [],
-      assignment: [],
-      availability: [],
-      startDate: "2022-11-14",
-      endDate: null,
+      shifts: shifts,
+      assignment: assignment,
+      availability: availability,
+      userBranchID: [],
       userBranchName: [],
-      selectedShift: [],
-      firstSelected: false,
-      firstAvailableType: false,
       date: null,
     }
   },
   async created() {
-    this.assignment = assignment
-    this.availability = availability
-    this.shifts = shifts
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -117,40 +103,15 @@ export default {
         this.userBranchName = arr
       })
     },
-    selectedShift(newValue) {
-      console.log(this.selectedShift)
-      if (this.selectedShift.length === 1) {
-        this.firstSelected = true
-        if (this.availableShifts.includes(newValue)) {
-          this.firstAvailable = true
-        }
-      } else if (this.selectedShift.length === 0) {
-        this.firstSelected = false
-      }
-    }
   },
   computed: {
     filteredShifts() {
-      return filterShift(this.shifts, this.userBranchName, this.userTag, this.startDate, this.endDate, this.assignment, this.userID)
-    },
-    availableShifts() {
-      return availShift(this.filteredShifts, this.availability, this.userID)
+      return filterShift(this.shifts, this.userBranchName, this.userTag, this.date, this.assignment, this.userID)
     },
     actionRow() {
       return ActionRowCustom
     },
   },
-
-  methods: {
-    checkAvailable(shiftID) {
-      for (let i = 0; i < this.availableShifts.length; i++) {
-        if (this.availableShifts[i].id === shiftID) {
-          return true
-        }
-      }
-      return false
-    }
-  }
 }
 </script>
 
@@ -191,5 +152,19 @@ h1 span {
   font-weight: normal;
   font-size: 20px;
   margin-left: 10px;
+}
+
+.date-input {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 0;
+  margin-bottom: 20px
+}
+
+.date-input input {
+  padding: 7px 12px 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
 }
 </style>

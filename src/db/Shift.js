@@ -35,6 +35,7 @@ const fetchAvailability = () => {
     const unsubscribe = onSnapshot(queryAvailability, (querySnapshot) => {
         availability.value = querySnapshot.docs.map((doc) => {
             const available = doc.data()
+            // console.log(available)
             return {
                 'id': doc.id,
                 'employeeID': available.employeeID,
@@ -114,16 +115,18 @@ export const filterShiftAssignee = (shiftID) => {
     return [unsubscribe, assigneeIDs]
 }
 
-export const filterShift = (shifts, branchNames, tags, startDate, endDate=null, assigned, userID) => {
+export const filterShift = (shifts, branchNames, tags, date=null, assigned, userID) => {
     let filteredShifts = shifts.filter((shift) => {
         let result = true
         //filter by startDate & endDate
-        if (shift.date <= startDate) {
-            return false
+        if (date !== null) {
+            const startDate = date[0]
+            const endDate = date[1]
+            if (new Date(shift.date) < startDate || new Date(shift.date) > endDate) {
+                return false
+            }
         }
-        if (endDate !== null && shift.date >= endDate) {
-            return false
-        }
+
         if (!branchNames.includes(shift.branch)) {
             return false
         }
@@ -134,7 +137,10 @@ export const filterShift = (shifts, branchNames, tags, startDate, endDate=null, 
                 tempResult = true
             }
         })
-        result = tempResult
+        if (tempResult === false) {
+            return false
+        }
+
         //filter by whether shift has already been assigned to employee
         assigned.forEach((assign) => {
             if (shift.id === assign.shiftID && userID === assign.employeeID) {

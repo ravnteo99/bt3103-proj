@@ -6,7 +6,7 @@
     <div class="setting-item">
       <h4 class="userTitle"><b>User Information</b></h4>
       <h4 class="userDescrip">Enter your personal information below. <br> You can change it anytime you want. </h4>
-      <form id="userForm" @submit.prevent="updateProfile()">
+      <form id="userForm" @submit.prevent="updateProfile">
         <label for="email"><b>Email Address</b></label><br><br>
         <input
             type="text"
@@ -137,7 +137,7 @@ export default {
   },
   methods: {
     async updateProfile() {
-      const employeeRef = doc(db, "employee", this.Id);
+      const employeeRef = doc(db, "employee", this.employeeID);
       const updateData = {
         emailAddress: this.emailAddress,
         firstName: this.firstName,
