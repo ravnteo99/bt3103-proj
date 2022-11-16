@@ -1,5 +1,8 @@
 <template>
   <h1 class="section-title">Availability <span>{{ filteredShifts.length }} </span> </h1>
+  <h3> {{selectedShift}}</h3>
+  <h3> {{firstSelected}}</h3>
+  <h3> {{firstAvailableType}}</h3>
 
   <div class = "section-wrapper">
     <div class="shift-wrapper">
@@ -14,6 +17,9 @@
           :endTime="shift.endTime"
           :displayPicture="require('@/assets/AngMoKioHub.svg')"
           :isAvailable="checkAvailable(shift.id)"
+          :firstSelected="shift.firstSelected"
+          :typeShift="shift.firstSelectedType"
+          @select="(i) => selectedShift.includes(i) ? selectedShift.pop(i) : selectedShift.push(i)"
           />
       </div>
       <div class="button-wrapper custom-action-row">
@@ -23,11 +29,7 @@
     <div class="right-wrapper">
       <Calendar />
     </div>
-
   </div>
-
-
-
 
 </template>
 
@@ -52,7 +54,10 @@ export default {
       availability: [],
       startDate: "2022-11-14",
       endDate: null,
-      userBranchName: []
+      userBranchName: [],
+      selectedShift: [],
+      firstSelected: false,
+      firstAvailableType: false,
     }
   },
   async created() {
@@ -84,7 +89,15 @@ export default {
           this.userBranchName = arr
         })
       },
-
+      selectedShift(newValue) {
+        console.log(this.selectedShift)
+        if (this.selectedShift.length == 1) {
+          this.firstSelected = true
+          if (this.availableShifts.includes(newValue)) {this.firstAvailable = true}
+        } else if (this.selectedShift.length == 0) {
+          this.firstSelected = false
+        }
+      }
   },
   computed: {
     filteredShifts() {
@@ -93,6 +106,7 @@ export default {
     availableShifts() {
       return availShift(this.filteredShifts, this.availability, this.userID)
     }
+
   },
 
   methods: {
