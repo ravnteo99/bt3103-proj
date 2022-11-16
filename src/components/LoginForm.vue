@@ -45,7 +45,7 @@ export default {
         login() {
             signInWithEmailAndPassword(auth, this.email, this.password)
             .then(() => {
-                if (auth.currentUser.uid == 'VfHalcySARX2QPnbOPRXLl39dLQ2') {
+                if (auth.currentUser.uid === '42vuID5nKWMVL1mODCKyqaoVL7s1') {
                     console.log("Employer Login")
                     this.$router.push('/employerdashboard');
                 } else {
@@ -54,11 +54,11 @@ export default {
                 }
             })
             .catch((error) => {
-                if (error.code == "auth/invalid-email") {
+                if (error.code === "auth/invalid-email") {
                     alert(
                     "The email you entered is invalid. Please check your email and try again."
                     );
-                } else if (error.code == "auth/user-not-found") {
+                } else if (error.code === "auth/user-not-found") {
                     alert(
                     "The email you entered does not appear to belong to an account. Please check your email and try again."
                     );
