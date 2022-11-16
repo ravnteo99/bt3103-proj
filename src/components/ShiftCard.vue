@@ -22,7 +22,7 @@ export default {
   display: flex;
   flex-direction: column;
   border-radius: 10px;
-  width: 300px;
+  width: 250px;
   height: 150px;
   padding: 5px;
   text-align: center;

@@ -1,5 +1,6 @@
 <template>
   <NotifButton/>
+  <NavBar />
   <div class="setting">
     <div class="setting-item">
       <h4 class="userTitle"><b>User Information</b></h4>
