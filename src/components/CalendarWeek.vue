@@ -1,20 +1,22 @@
 <template>
-  <CalendarWeekSelector
-    :current-date="today"
-    :selected-date="selectedDate"
-    @dateSelected="selectDate"
-  />
-  <div class="calendar-week">
-    <CalendarDays :selected-date="selectedDate" />
+  <div class="calendar">
+    <CalendarWeekSelector
+      :current-date="today"
+      :selected-date="selectedDate"
+      @dateSelected="selectDate"
+    />
+    <div class="calendar-week">
+      <CalendarDays :selected-date="selectedDate" />
 
-    <ol class="days-grid">
-      <CalendarDayItem
-        v-for="day in days"
-        :key="day"
-        :day="day"
-        :shifts="shiftMap.get(day.date)"
-      />
-    </ol>
+      <ol class="days-grid">
+        <CalendarDayItem
+          v-for="day in days"
+          :key="day"
+          :day="day"
+          :shifts="shiftMap.get(day.date)"
+        />
+      </ol>
+    </div>
   </div>
 </template>
 
@@ -24,9 +26,15 @@ import CalendarWeekSelector from "./CalendarWeekSelector.vue";
 import CalendarDays from "./CalendarDays.vue";
 import CalendarDayItem from "./CalendarDayItem.vue";
 import { db } from "@/firebase.js";
-import { collection, query, where, getDoc, getDocs, doc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDoc,
+  getDocs,
+  doc,
+} from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
 
 export default {
   components: {
@@ -120,12 +128,15 @@ export default {
     // function to get shiftids assigned to userid
     async function getShiftIds(uid) {
       const employeeAssignmentsRef = collection(db, "employeeAssignments");
-      const q = await query(employeeAssignmentsRef, where("employeeID", "==", uid));
-      const querySnapshot = await getDocs(q)
-      let shiftIds = []
+      const q = await query(
+        employeeAssignmentsRef,
+        where("employeeID", "==", uid)
+      );
+      const querySnapshot = await getDocs(q);
+      let shiftIds = [];
       querySnapshot.forEach((doc) => {
-        shiftIds.push(doc.data().shiftID)
-      })
+        shiftIds.push(doc.data().shiftID);
+      });
       return shiftIds;
     }
 
@@ -177,8 +188,13 @@ export default {
 </script>
 
 <style scoped>
+.calendar {
+  width: 100%;
+  flex: right;
+  position: flex;
+}
 .calendar-week {
-  position: relative;
+  position: flex;
   background-color: var(--grey-200);
   border: solid 1px var(--grey-300);
   margin-top: 20px;
@@ -196,6 +212,7 @@ export default {
 .days-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  overflow: hidden;
 }
 
 .day-of-week > * {

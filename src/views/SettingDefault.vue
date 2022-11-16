@@ -1,5 +1,6 @@
 <template>
   <NotifButton/>
+  <NavBar />
   <div class="setting">
     <div class="setting-item">
       <h4 class="userTitle"><b>User Information</b></h4>
@@ -93,10 +94,11 @@ import {getAuth} from "firebase/auth";
 import {collection, getDocs, onSnapshot, doc, updateDoc} from "firebase/firestore";
 import NotifButton from "@/components/NotifButton";
 import TagRequest from "@/modals/TagRequest";
+import NavBar from "../components/NavBar.vue";
 
 export default {
   name: "SettingDefault",
-  components: {NotifButton, TagRequest},
+  components: {NotifButton, TagRequest, NavBar},
   data() {
     return {
       employeeId: '',

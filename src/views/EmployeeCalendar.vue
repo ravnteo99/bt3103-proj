@@ -1,23 +1,22 @@
 <template>
   <NotifButton />
-  <div class="page">
-    <CalendarWeek />
-  </div>
+
+  <NavBar />
+
+  <CalendarWeek />
 </template>
 
 <script>
 import CalendarWeek from "../components/CalendarWeek.vue";
 import NotifButton from "@/components/NotifButton";
+import NavBar from "../components/NavBar.vue";
 
 export default {
-  components: { CalendarWeek, NotifButton },
+  components: { CalendarWeek, NotifButton, NavBar },
 };
 </script>
 
 <style scoped>
-.page {
-  margin-top: 50px;
-}
 
 body {
   font-family: sans-serif;

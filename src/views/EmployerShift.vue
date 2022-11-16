@@ -2,6 +2,7 @@
   <div class="container" v-if="show">
     <!--  display picture on the right-->
     <NotifButton />
+    <NavBar />
 
     <h1 class="section-title">Shifts Information</h1>
 
@@ -72,6 +73,7 @@ import { unsubscribe, shifts } from "@/db/Shift";
 import ShiftDetails from "@/modals/ShiftDetails";
 import NewShift from "../modals/NewShift.vue";
 import NotifButton from "@/components/NotifButton";
+import NavBar from "../components/NavBar.vue";
 
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
@@ -83,7 +85,8 @@ export default {
     ShiftDetails,
     Datepicker,
     NewShift,
-    NotifButton
+    NotifButton,
+    NavBar
   },
   data() {
     return {

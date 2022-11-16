@@ -5,11 +5,11 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
-import { faX, faPlus, faCalendar, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faX, faPlus, faCalendar, faUser, faHome, faBriefcase, faCog } from '@fortawesome/free-solid-svg-icons'
 import { faClock } from "@fortawesome/free-regular-svg-icons";
 
 /* add icons to the library */
-library.add(faX, faPlus, faCalendar, faClock, faUser)
+library.add(faX, faPlus, faCalendar, faClock, faUser, faHome, faBriefcase, faCog)
 
 createApp(App)
     .component('font-awesome-icon', FontAwesomeIcon)
