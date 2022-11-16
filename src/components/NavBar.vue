@@ -67,7 +67,7 @@ export default {
     return {
       uid: "",
       admin: false,
-      adminid: "VfHalcySARX2QPnbOPRXLl39dLQ2",
+      adminid: "42vuID5nKWMVL1mODCKyqaoVL7s1",
     };
   },
   mounted() {

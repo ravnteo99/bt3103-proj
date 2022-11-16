@@ -37,7 +37,7 @@ export default {
       if (docSnap.exists()) {
         this.fname = docSnap.data().firstName;
       } else {
-        console.log("Document does not exist");
+        console.log("User does not exist in collection");
       }
     },
   },
