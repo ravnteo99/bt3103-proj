@@ -50,7 +50,7 @@
 import EmployeeCard from "@/components/EmployeeCard";
 import EmployeePopup from "@/modals/EmployeePopup";
 import NotifButton from "@/components/NotifButton";
-import NavBar from "../components/NavBar.vue"
+import NavBar from "@/components/NavBar.vue"
 
 import { unsubBranch, unsubEmployee, unsubAssignments,
   employees, branches, assignments } from "@/db/Employee";

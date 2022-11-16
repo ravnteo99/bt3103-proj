@@ -1,33 +1,36 @@
 <template>
-  <h1 class="section-title">Availability <span>{{ filteredShifts.length }} </span> </h1>
-  <h3> {{selectedShift}}</h3>
-  <h3> {{firstSelected}}</h3>
-  <h3> {{firstAvailableType}}</h3>
+  <NotifButton/>
+  <NavBar/>
 
-  <div class = "section-wrapper">
+  <h1 class="section-title">Availability <span>{{ filteredShifts.length }} </span></h1>
+  <h3> {{ selectedShift }}</h3>
+  <h3> {{ firstSelected }}</h3>
+  <h3> {{ firstAvailableType }}</h3>
+
+  <div class="section-wrapper">
     <div class="shift-wrapper">
-      <div class="canvas">  
+      <div class="canvas">
         <AvailabilityCard
-          v-for="shift in filteredShifts"
-          :key="shift.id"
-          :branch="shift.branch"
-          :title="shift.title"
-          :date="shift.date"
-          :startTime="shift.startTime"
-          :endTime="shift.endTime"
-          :displayPicture="require('@/assets/AngMoKioHub.svg')"
-          :isAvailable="checkAvailable(shift.id)"
-          :firstSelected="shift.firstSelected"
-          :typeShift="shift.firstSelectedType"
-          @select="(i) => selectedShift.includes(i) ? selectedShift.pop(i) : selectedShift.push(i)"
-          />
+            v-for="shift in filteredShifts"
+            :key="shift.id"
+            :branch="shift.branch"
+            :title="shift.title"
+            :date="shift.date"
+            :startTime="shift.startTime"
+            :endTime="shift.endTime"
+            :displayPicture="require('@/assets/AngMoKioHub.svg')"
+            :isAvailable="checkAvailable(shift.id)"
+            :firstSelected="shift.firstSelected"
+            :typeShift="shift.firstSelectedType"
+            @select="(i) => selectedShift.includes(i) ? selectedShift.pop(i) : selectedShift.push(i)"
+        />
       </div>
       <div class="button-wrapper custom-action-row">
         <button class="action-button done" type="button">Confirm</button>
       </div>
     </div>
     <div class="right-wrapper">
-      <Calendar />
+      <Calendar/>
     </div>
   </div>
 
@@ -35,20 +38,32 @@
 
 <script>
 import Calendar from '@/components/Calendar.vue'
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import NotifButton from "@/components/NotifButton";
+import NavBar from "../components/NavBar.vue"
+
+import {getAuth, onAuthStateChanged} from "firebase/auth";
 import AvailabilityCard from "@/components/AvailabilityCard.vue"
-import {unsubAssignments, unsubAvailability, unsubShift, assignment, availability, shifts, filterShift, availShift} from "@/db/Shift"
+import {
+  unsubAssignment,
+  unsubAvailable,
+  unsubShift,
+  assignment,
+  availability,
+  shifts,
+  filterShift,
+  availShift
+} from "@/db/Shift"
 import {fetchBranches, fetchTags, getBranchName} from "@/db/Branch"
 
 export default {
-    name: "Availability",
-    components: {Calendar, AvailabilityCard},
-    data() {
+  name: "Availability",
+  components: {Calendar, AvailabilityCard, NavBar, NotifButton},
+  data() {
     return {
-      unsubscribeListener: [unsubAssignments, unsubAvailability, unsubShift],
-      userID : "",
-      userBranchID : [],
-      userTag : [],
+      unsubscribeListener: [unsubAssignment, unsubAvailable, unsubShift],
+      userID: "",
+      userBranchID: [],
+      userTag: [],
       shifts: [],
       assignment: [],
       availability: [],
@@ -66,15 +81,15 @@ export default {
     this.shifts = shifts
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
-        if (user) {
-          this.userID = user.uid
-          const [unsubBranch, branchID] = fetchBranches(user.uid)
-          const [unsubTag, userTags] = fetchTags(user.uid)
-          this.unsubscribeListener.push(unsubBranch, unsubTag)
-          this.userBranchID = branchID
-          this.userTag = userTags
+      if (user) {
+        this.userID = user.uid
+        const [unsubBranch, branchID] = fetchBranches(user.uid)
+        const [unsubTag, userTags] = fetchTags(user.uid)
+        this.unsubscribeListener.push(unsubBranch, unsubTag)
+        this.userBranchID = branchID
+        this.userTag = userTags
       } else {
-          this.userID = null;
+        this.userID = null;
       }
     });
   },
@@ -84,20 +99,22 @@ export default {
     })
   },
   watch: {
-      userBranchID(newValue) {
-        getBranchName(newValue).then((arr) => {
-          this.userBranchName = arr
-        })
-      },
-      selectedShift(newValue) {
-        console.log(this.selectedShift)
-        if (this.selectedShift.length == 1) {
-          this.firstSelected = true
-          if (this.availableShifts.includes(newValue)) {this.firstAvailable = true}
-        } else if (this.selectedShift.length == 0) {
-          this.firstSelected = false
+    userBranchID(newValue) {
+      getBranchName(newValue).then((arr) => {
+        this.userBranchName = arr
+      })
+    },
+    selectedShift(newValue) {
+      console.log(this.selectedShift)
+      if (this.selectedShift.length === 1) {
+        this.firstSelected = true
+        if (this.availableShifts.includes(newValue)) {
+          this.firstAvailable = true
         }
+      } else if (this.selectedShift.length === 0) {
+        this.firstSelected = false
       }
+    }
   },
   computed: {
     filteredShifts() {
@@ -111,7 +128,7 @@ export default {
 
   methods: {
     checkAvailable(shiftID) {
-      for (let i=0; i<this.availableShifts.length; i++) {
+      for (let i = 0; i < this.availableShifts.length; i++) {
         if (this.availableShifts[i].id === shiftID) {
           return true
         }
@@ -123,39 +140,41 @@ export default {
 </script>
 
 <style scoped>
-  .section-wrapper {
-    display: flex;
-  }
+.section-wrapper {
+  display: flex;
+}
 
-  .shift-wrapper {
-    border-radius: 10px;
-    overflow: auto;
-    flex: 3;
-    min-width: 500px;
-  }
-  .canvas {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 20px;
-    background-color: #FBFBFD;
-    border-radius: 20px;
-    padding: 20px;
-    height: 500px;
-    overflow-y: scroll;
-  }
-  .custom-action-row {
-    justify-content: flex-end;
-  }
+.shift-wrapper {
+  border-radius: 10px;
+  overflow: auto;
+  flex: 3;
+  min-width: 500px;
+}
 
-  .action-button {
-    font-weight: 600;
-  }
+.canvas {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+  background-color: #FBFBFD;
+  border-radius: 20px;
+  padding: 20px;
+  height: 500px;
+  overflow-y: scroll;
+}
 
-  h1 span {
-    color: #808080;
-    font-weight: normal;
-    font-size: 20px;
-    margin-left: 10px;
-  }
+.custom-action-row {
+  justify-content: flex-end;
+}
+
+.action-button {
+  font-weight: 600;
+}
+
+h1 span {
+  color: #808080;
+  font-weight: normal;
+  font-size: 20px;
+  margin-left: 10px;
+}
 </style>

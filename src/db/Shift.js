@@ -17,7 +17,6 @@ const fetchShifts = () => {
             return {
                 'id': doc.id,
                 'title': shift.title,
-                // hacky way to retrieve date out of firestore timestamp
                 'date': shift.date,
                 'startTime': shift.startTime,
                 'endTime': shift.endTime,
@@ -138,7 +137,7 @@ export const filterShift = (shifts, branchNames, tags, startDate, endDate=null, 
         result = tempResult
         //filter by whether shift has already been assigned to employee
         assigned.forEach((assign) => {
-            if (shift.id == assign.shiftID && userID == assign.employeeID) {
+            if (shift.id === assign.shiftID && userID === assign.employeeID) {
                 result = false
             }
         })
@@ -161,7 +160,7 @@ export const availShift = (filteredShifts, available, userID) => {
     let availShifts = filteredShifts.filter((shift) => {
         let result = false
         available.forEach((avail) => {
-            if (shift.id == avail.shiftID && userID == avail.employeeID) {
+            if (shift.id === avail.shiftID && userID === avail.employeeID) {
                 result = true
             }
         })
@@ -170,9 +169,6 @@ export const availShift = (filteredShifts, available, userID) => {
     return availShifts
 }
 
-export const [unsubShift, shifts] = fetchShifts();
-export const [unsubAvailable, availability] = fetchAvailability();
-export const [unsubAssignment, assignment] = fetchAssignment();
 export const createAssignment = async (shiftID, employeeID) => {
     const q = query(db_eAssignment,
         where("employeeID", "==", employeeID),
@@ -205,4 +201,6 @@ export const deleteAssignment = async (shiftID, employeeID) => {
     }
 }
 
-export const [unsubscribe, shifts] = fetchShifts()
+export const [unsubShift, shifts] = fetchShifts();
+export const [unsubAvailable, availability] = fetchAvailability();
+export const [unsubAssignment, assignment] = fetchAssignment();
