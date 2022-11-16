@@ -45,15 +45,28 @@
           >
             <font-awesome-icon icon="fa-home" />&nbsp; &nbsp; Dashboard</button
           ><br /><br />
+
           <button
             id="shiftManagement"
             type="button"
             @click="$router.push('/shifts')"
             style="font-size: 18px"
           >
+
             <font-awesome-icon icon="fa-briefcase" />&nbsp; &nbsp; Shift
             Management</button
           ><br /><br />
+
+          <button
+            id="employee"
+            type="button"
+            @click="$router.push('/employee')"
+            style="font-size: 18px"
+          >
+
+            <font-awesome-icon icon="fa-solid fa-users" />&nbsp; &nbsp; Employee</button
+          ><br /><br />
+
         </div>
       </div>
     </div>
@@ -67,7 +80,7 @@ export default {
     return {
       uid: "",
       admin: false,
-      adminid: "VfHalcySARX2QPnbOPRXLl39dLQ2",
+      adminid: "42vuID5nKWMVL1mODCKyqaoVL7s1",
     };
   },
   mounted() {
@@ -105,6 +118,7 @@ export default {
 #timetableButton,
 #settingsButton,
 #dashboard,
+#employee,
 #shiftManagement {
   background-color: white;
   text-align: left;
@@ -122,7 +136,8 @@ export default {
 #timetableButton:hover,
 #settingsButton:hover,
 #dashboard:hover,
-#shiftManagement:hover {
+#shiftManagement:hover,
+#employee:hover {
   background-color: #f8d57e;
   height: 45px;
   width: 80%;

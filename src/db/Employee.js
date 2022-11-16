@@ -21,14 +21,15 @@ const listEmployees = () => {
         employees.value = querySnapshot.docs.map((doc) => {
             const employee = doc.data()
             return {
-              "id": doc.id,
-              "firstName": employee.firstName,
-              "fullName": `${employee.firstName} ${employee.lastName}`,
-              "emailAddress": employee.emailAddress,
-              "contactNo": employee.contactNo,
-              "address1": employee.address1,
-              "address2": employee.address2,
-              "address3": employee.address3,
+                "id": doc.id,
+                "firstName": employee.firstName,
+                "lastName": employee.lastName,
+                "fullName": `${employee.firstName} ${employee.lastName}`,
+                "emailAddress": employee.emailAddress,
+                "contactNo": employee.contactNo,
+                "address1": employee.address1,
+                "address2": employee.address2,
+                "address3": employee.address3,
             }
           })
         })
