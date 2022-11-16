@@ -1,0 +1,215 @@
+#LeftContainer{
+    width: 20%;
+    height: 100%;
+    float: left;
+    padding-left: 10px;
+    font-family: 'Gilroy-Light', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 18px;
+
+}
+
+#homeButton, #availButton, #timetableButton, #settingsButton{
+    background-color: white;
+    text-align: left;
+    height:45px;
+    width:180px;
+    border: none;
+    background: none;
+    border-radius: 12px;
+    transition-duration: 0.4s;
+}
+
+#homeButton:hover, #availButton:hover, #timetableButton:hover, #settingsButton:hover{
+    background-color: #F8D57E;
+    height:45px;
+    width:180px
+}
+
+#appName{
+    padding-top: 50px;
+    padding-bottom: 50px;
+    font-family: 'Gilroy-Regular', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 100%;
+}
+
+#MiddleContainer, #userForm{
+    width: 40%;
+    height: 100%;
+    float: left;
+}
+
+#userTitle{
+    padding-top: 50px;
+    font-family: 'Gilroy-Regular', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    line-height: 18px;
+}
+
+#userDescrip{
+    padding-bottom: 30px;
+    font-family: 'Gilroy-Regular', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 18px;
+}
+
+#userForm{
+    font-family: 'Gilroy-Regular', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 18px;
+}
+
+#email, #contactInfo{
+    height:45px;
+    width: 380px;
+    border: groove;
+    margin-bottom: 50px;
+    font-family: 'Gilroy-Light', sans-serif;
+    font-weight: 200;
+    font-size: 16px;
+    border-radius: 12px;
+    line-height: 18px;
+}
+
+#name{
+    height:45px;
+    width: 175px;
+    border: groove;
+    margin-bottom: 50px;
+    font-family: 'Gilroy-Light', sans-serif;
+    font-weight: 200;
+    font-size: 16px;
+    border-radius: 12px;
+    line-height: 18px;
+}
+
+#cancelbutton{
+    background-color: white;
+    border: groove;
+    height:45px;
+    width:120px;
+    font-family: 'Gilroy-Light', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 18px;
+    float: right;
+    border-radius: 12px;
+    transition-duration: 0.4s;
+}
+
+#cancelbutton:hover{
+    background-color: lightgray;
+}
+
+#savebutton{
+    background-color: #F8D57E;
+    border: none;
+    height:45px;
+    width:120px;
+    font-family: 'Gilroy-Light', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 18px;
+    float: right;
+    border-radius: 12px;
+    transition-duration: 0.4s;
+    margin-left: 30px;
+}
+
+#savebutton:hover{
+    background-color: #c1931d;
+}
+
+#RightContainer{
+    margin-top: -130px;
+    margin-left: 30px;
+    width:35%;
+    height: 100%;
+    float:left;
+    background-color: #FAFAFA;
+}
+
+#userImage{
+    margin-top: 25px;
+    margin-left: 100px;
+    margin-bottom: 25px;
+}
+
+#userName{
+    font-family: 'Gilroy-Light', sans-serif;
+    font-weight: 800;
+    font-size: 26px;
+    line-height: 18px;
+    margin-left: 100px;
+    margin-bottom: 25px;
+}
+
+#tagList, #branchList{
+    font-family: 'Gilroy-Light', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    line-height: 18px;
+    margin-left: 30px;
+}
+
+#requestbutton{
+    background-color: white;
+    border: groove;
+    height:45px;
+    width:240px;
+    font-family: 'Gilroy-Light', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 18px;
+    border-radius: 12px;
+    transition-duration: 0.4s;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: 60px;
+    cursor: pointer;
+    cursor: hand;
+}
+
+#requestbutton:hover{
+    background-color: lightgray;
+}
+
+#resetbutton{
+    background-color: #F8D57E;
+    border: none;
+    height:45px;
+    width:240px;
+    font-family: 'Gilroy-Light', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 18px;
+    border-radius: 12px;
+    transition-duration: 0.4s;
+    margin-left: 60px;
+}
+
+#resetbutton:hover{
+    background-color: #c1931d;
+}
+
+.form-popup {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    right: 15px;
+    border: 3px solid #f1f1f1;
+    z-index: 9;
+  }
+
+#requestbutton:checked.form-popup{
+    display:block
+}
+
+
+

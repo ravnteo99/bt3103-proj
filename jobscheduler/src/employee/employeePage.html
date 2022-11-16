@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="index.css"> </link>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src= firebase.js></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/ccxt@1.51.82/dist/ccxt.browser.js"></script>
+    <script src="https://kit.fontawesome.com/521182d791.js" crossorigin="anonymous"></script>
+    <title>emeployee-page</title>
+
+    <script src= "firebasefuncs.js" defer></script>
+
+</head>
+<body> 
+  <div class = "main">
+      <div id = "LeftContainer">
+        
+        <div id="appName"> Cool app name</div>
+        <div class="navBar">
+          <button id="homeButton" type="button" onclick="homeDirFunc()" style='font-size: 18px'><i class='fas fa-home'></i>&nbsp; &nbsp; Home</button><br><br>
+          <button id="availButton" type="button" onclick="availDirFunc()" style='font-size: 18px'><i class='fas fa-briefcase'></i>&nbsp; &nbsp; Availability</button><br><br>
+          <button id="timetableButton" type="button" onclick="timetableDirFunc()" style='font-size: 18px'><i class='far fa-calendar-alt'></i>&nbsp; &nbsp; Timetable</button><br><br>
+          <button id="settingsButton" type="button" onclick="settingsDirFunc()" style='font-size: 18px'><i class='fas fa-cog'></i>&nbsp; &nbsp; Settings</button>
+        </div>
+
+      </div>
+
+      <div id = "MiddleContainer"></div>
+        <h4 id="userTitle"><b>User Information</b></h4>
+        <h4 id="userDescrip">Enter your personal information below. <br> You can change it anytime you want. </h4>
+        <form id="userForm">
+             <label for="email"><b>Email Address</b></label><br><br>
+             <input type="text" id="email" required="" placeholder="userid@example.com"><br><br>
+
+             <label for="name"><b>Full Name</b> </label><br><br>
+             <input type="text" id="name" required="" placeholder="First Name"> &nbsp;&nbsp;
+             <input type="text" id="name" required="" placeholder="Last Name"><br><br>
+
+             <label for="contactInfo"><b>Contact Information</b></label><br><br>
+             <input type="number" id="contactInfo" required="" placeholder="Mobile No."><br><br>
+            
+             <button id="savebutton" type="button" onclick="savetofs()">Save</button>
+             <button id="cancelbutton" type="button" onclick="savetofs()">Cancel</button><br><br>
+
+        </form>
+      </div>
+
+      <div id="RightContainer">
+        <img id="userImage" src="img.jpg" style="width:168px;height:168px;">
+        <h1 id="userName">KaiCong Tey</h1>
+        <p id="tagList">Tags: </p>
+        <p id="branchList">Branches: </p>
+        <form id="cardForm">   
+          <button id="requestbutton" type="button" onclick="openRequestForm()">Request Tag/Branches</button><br>
+
+          <div class="form-popup" id="requestForm">
+            <form action="/request_page" method="post" class="form-container">
+              <h1 id="requestTitle">Request Tags/Branches</h1>
+          
+              <label for="Tags"><b>Tags</b></label>
+              <select class="select" multiple>
+                <option value="1">Barista</option>
+                <option value="2">Cashier</option>
+                <option value="3">Server</option>
+              </select>
+          
+              <label for="psw"><b>Password</b></label>
+              <select class="select" multiple>
+                <option value="1">Ang Mo Kio</option>
+                <option value="2">Vivocity</option>
+                <option value="3">Kent Ridge</option>
+              </select>
+          
+
+              <button id="requestSendbutton" type="submit" onclick="savetofs()">Request</button>
+              <button id="requestCancelbutton" type="button" onclick="closeForm()">Cancel</button><br><br>
+            </form>
+          </div>
+
+          <button id="resetbutton" type="button" onclick="savetofs()">Reset Password</button><br><br>
+
+          <div class="form-popup" id="resetPW">
+            <form action="/resetPW_page" method="post" class="form-container">
+              <h1 id="requestTitle">Request Tags/Branches</h1>
+          
+              <label for="oldPW"><b>Old Password</b> </label><br><br>
+              <input type="text" id="oldPW" required="" placeholder="old password"> 
+          
+              <label for="newPW"><b>New Password</b> </label><br><br>
+              <input type="text" id="newPW" required="" placeholder="new password"> 
+
+              <label for="cfmPW"><b>Confirm Password</b> </label><br><br>
+              <input type="text" id="cfmPW" required="" placeholder="Confirm new password"> 
+          
+              <button id="Sendbutton" type="submit" onclick="savetofs()">Request</button>
+              <button id="Cancelbutton" type="button" onclick="closeForm()">Cancel</button><br><br>
+            </form>
+          </div>
+        </form>
+      </div>
+    
+    </div>
+
+</body>
+</html>
+
+
+
+
