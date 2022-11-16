@@ -58,14 +58,10 @@
 </template>
 
 <script>
-import { firebaseApp } from '../firebase.js';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { getFirestore } from 'firebase/firestore';
+import { auth, db } from '@/firebase';
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import UploadImage from './UploadImage.vue'
 import { doc, setDoc } from "firebase/firestore";
-
-const auth = getAuth(firebaseApp);
-const db = getFirestore(firebaseApp);
 
 export default {
     data() {

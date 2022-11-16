@@ -1,6 +1,6 @@
 import { ref } from 'vue';
 import { db } from "@/firebase"
-import {collection, query, onSnapshot, where, getDocs, doc, getDoc} from "firebase/firestore";
+import {collection, query, onSnapshot, where, getDocs, doc, getDoc, addDoc, deleteDoc} from "firebase/firestore";
 
 const db_shifts = collection(db, "shifts")
 const shiftQuery = query(db_shifts);
@@ -76,11 +76,14 @@ export const filterShiftAvailability = async (shiftID) => {
         return assignment.employeeID
     })
 
-    const availabilityQuery = query(
+    let availabilityQuery = query(
         db_eAvailability,
-        where("shiftID", "==", shiftID),
-        where("employeeID", "not-in", assignedWorkers)
+        where("shiftID", "==", shiftID)
     )
+
+    if (assignedWorkers.length > 0) {
+        availabilityQuery = query(availabilityQuery, where("employeeID", "not-in", assignedWorkers))
+    }
 
     const availableWorkers = ref([])
     const unsubscribe = onSnapshot(availabilityQuery, (snapShot) => {
@@ -170,3 +173,36 @@ export const availShift = (filteredShifts, available, userID) => {
 export const [unsubShift, shifts] = fetchShifts();
 export const [unsubAvailable, availability] = fetchAvailability();
 export const [unsubAssignment, assignment] = fetchAssignment();
+export const createAssignment = async (shiftID, employeeID) => {
+    const q = query(db_eAssignment,
+        where("employeeID", "==", employeeID),
+        where("shiftID", "==", shiftID)
+    );
+
+    const querySnapshot = await getDocs(q);
+    // this employee has not been assigned the shift
+    if (querySnapshot.empty) {
+        await addDoc(db_eAssignment, {
+          employeeID: employeeID,
+          shiftID: shiftID
+        });
+    }
+}
+
+export const deleteAssignment = async (shiftID, employeeID) => {
+    // check if workers moved to "availableWorkers" have been assigned a shift
+    const q = query(db_eAssignment,
+        where("employeeID", "==", employeeID),
+        where("shiftID", "==", shiftID)
+    );
+
+    const querySnapshot = await getDocs(q);
+    // this employee has been assigned a shift
+    if (!querySnapshot.empty) {
+        querySnapshot.forEach((doc) => {
+          deleteDoc(doc.ref)
+        });
+    }
+}
+
+export const [unsubscribe, shifts] = fetchShifts()

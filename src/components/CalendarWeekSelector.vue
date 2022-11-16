@@ -3,12 +3,11 @@
     <div class="left-column">
       <span id="today" @click="selectCurr">Go To Today</span>
     </div>
-    <div class="middle-column">
-      <div class="week-selector">
-        <span id="arrow" @click="selectPrev"> &lt; </span>
-        <CalendarWeekIndicator :selected-date="selectedDate" />
-        <span id="arrow" @click="selectNext"> > </span>
-      </div>
+
+    <div class="week-selector">
+      <span id="arrow" @click="selectPrev"> &lt; </span>
+      <CalendarWeekIndicator :selected-date="selectedDate" />
+      <span id="arrow" @click="selectNext"> > </span>
     </div>
   </div>
 </template>
@@ -56,7 +55,6 @@ export default {
 
 <style scoped>
 .top-bar {
-  position: relative;
   margin-bottom: -25px;
 }
 
@@ -76,16 +74,16 @@ export default {
   cursor: pointer;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+  margin-left: 5%;
 }
 
 .week-selector {
   margin: auto;
   display: flex;
   justify-content: space-between;
-  color: var(--grey-800);
+  color: var(--grey-800);             
   max-width: 30%;
   align-items: center;
-  top: 50%;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }

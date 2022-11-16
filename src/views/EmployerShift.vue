@@ -1,44 +1,60 @@
 <template>
-  <h1 class="section-title">Shifts Information</h1>
+  <div class="container" v-if="show">
+    <!--  display picture on the right-->
+    <NotifButton />
+    <NavBar />
 
-<!--  branch filter for shifts-->
-  <select name="branch" id="branch" class="branch-filter input-field" v-model="selectedBranch">
-    <option value="" selected>All branches</option>
-    <option v-for="branch in branches" :value="branch" :key="branch.name"> {{ branch.name }} </option>
-  </select>
+    <h1 class="section-title">Shifts Information</h1>
 
+  <!--  branch filter for shifts-->
+    <select name="branch" id="branch" class="branch-filter input-field" v-model="selectedBranch">
+      <option value="" selected>All branches</option>
+      <option v-for="branch in branches" :value="branch" :key="branch.name"> {{ branch.name }} </option>
+    </select>
 
-  <div class="section-wrapper">
-    <div class="shift-wrapper">
-      <div class="shift-canvas">
-        <div class="shift-card" v-for="shift in filteredShifts" :key="shift" @click="this.selectedShift=shift">
-          <h3> {{ shift.title }}</h3>
-          <p>
-            <font-awesome-icon icon="fa-calendar" class="fa-calendar" />
-            {{shift.date }}
-          </p>
-          <p>
-            <span><font-awesome-icon icon="fa-regular fa-clock" /></span>
-            {{ shift.startTime }} - {{ shift.endTime }}
-          </p>
-        </div>
+    <div class="date-indicator">
+      <div class="date-input">
+        <span>Viewing Shifts from: </span>
+        <input type="text" :value="date !== null ? date[0].toDateString() : 'None'" disabled>
+        <span>to</span>
+        <input type="text" :value="date !== null ? date[1].toDateString() : 'None'" disabled>
       </div>
     </div>
 
-    <div class="right-wrapper">
-      <button class="create-button action-button">Create Shift</button>
-      <Datepicker
-          v-model="date"
-          inline
-          range
-          :enableTimePicker="false"
-          :action-row-component="actionRow"
-      >
-      </Datepicker>
-      <div class="custom-action-row">
-        <button class="clear-button action-button" @click="this.date = null">Display All Shifts</button>
+    <div class="section-wrapper">
+      <div class="shift-wrapper">
+        <div class="shift-canvas">
+          <div class="shift-card" v-for="shift in filteredShifts" :key="shift" @click="this.selectedShift=shift">
+            <h3> {{ shift.title }}</h3>
+            <p>
+              <font-awesome-icon icon="fa-calendar" class="fa-calendar" />
+              {{shift.date }}
+            </p>
+            <p>
+              <span><font-awesome-icon icon="fa-regular fa-clock" /></span>
+              {{ shift.startTime }} - {{ shift.endTime }}
+            </p>
+          </div>
+        </div>
       </div>
 
+
+      <div class="right-wrapper">
+        <button class="create-button action-button" @click="toggleCreateShiftPopup">Create Shift</button>
+        <div class="custom-action-row">
+          <button class="clear-button action-button" @click="this.date = null">Clear Dates</button>
+        </div>
+        <Datepicker
+            v-model="date"
+            inline
+            range
+            :enableTimePicker="false"
+            :action-row-component="actionRow"
+        >
+        </Datepicker>
+      </div>
+
+      <NewShift v-if="toggleCreateShift" @toggleCreateShift="toggleCreateShift=false"/>
     </div>
   </div>
 
@@ -55,6 +71,9 @@
 import { branches } from "@/db/Employee";
 import { unsubscribe, shifts } from "@/db/Shift";
 import ShiftDetails from "@/modals/ShiftDetails";
+import NewShift from "../modals/NewShift.vue";
+import NotifButton from "@/components/NotifButton";
+import NavBar from "../components/NavBar.vue";
 
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
@@ -64,7 +83,10 @@ export default {
   name: "EmployerShift",
   components: {
     ShiftDetails,
-    Datepicker
+    Datepicker,
+    NewShift,
+    NotifButton,
+    NavBar
   },
   data() {
     return {
@@ -74,6 +96,8 @@ export default {
       selectedBranch: null,
       selectedShift: null,
       date: null,
+      toggleCreateShift: false,
+      show: true
     }
   },
   unmounted() {
@@ -111,6 +135,11 @@ export default {
         return 0;
       })
     }
+  },
+  methods: {
+    toggleCreateShiftPopup() {
+      this.toggleCreateShift = true
+    }
   }
 }
 </script>
@@ -125,6 +154,20 @@ export default {
   overflow: auto;
   flex: 3;
   min-width: 500px;
+}
+
+.date-input {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 0;
+  margin-bottom: 20px
+}
+
+.date-input input {
+  padding: 7px 12px 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
 }
 
 .right-wrapper {

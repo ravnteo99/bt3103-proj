@@ -6,17 +6,20 @@ import ForgotPassword from '@/views/ForgotPassword.vue'
 import Availability from "@/views/Availability";
 import EmployeeDatabase from "@/views/EmployeeDatabase";
 import EmployerShift from "@/views/EmployerShift";
+import EmployerDashboard from "@/views/EmployerDashboard.vue"
+import SettingDefault from "@/views/SettingDefault.vue"
+import Home from "@/views/Home.vue"
 
 const routes = [
 	{
-		path: "/",
-		name: "Login",
-		component: Login,
+		path:'/home',
+		name: 'Home',
+		component: Home
 	},
 	{
-		path: "/signup",
-		name: "Signup",
-		component: Signup,
+		path:'/',
+		name: 'Login',
+		component: Login
 	},
 	{
 		path:'/signup',
@@ -27,6 +30,11 @@ const routes = [
 		path:'/forgotpassword',
 		name: 'ForgotPassword',
 		component: ForgotPassword
+	},
+	{
+		path:'/setting',
+		name: 'SettingDefault',
+		component: SettingDefault
 	},
 	{
 		path:'/availability',
@@ -47,12 +55,18 @@ const routes = [
 		path: "/shifts",
 		name: "EmployerShift",
 		component: EmployerShift
-	}
-];
+	},
+	{
+		path: "/employerdashboard",
+		name: "EmployerDashboard",
+		component: EmployerDashboard,
+	},
+
+]
 
 const router = createRouter({
-	history: createWebHistory(),
-	routes,
-});
+  history: createWebHistory(),
+  routes
+})
 
-export default router;
+export default router

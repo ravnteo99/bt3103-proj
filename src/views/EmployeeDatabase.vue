@@ -1,4 +1,6 @@
 <template>
+  <NotifButton />
+  <NavBar />
   <h1 class="section-title">Available Employees <span>{{ filteredEmployees.length }} </span></h1>
   <div class="filter-wrapper">
     <form @submit.prevent="" class="search-bar">
@@ -47,13 +49,16 @@
 <script>
 import EmployeeCard from "@/components/EmployeeCard";
 import EmployeePopup from "@/modals/EmployeePopup";
+import NotifButton from "@/components/NotifButton";
+import NavBar from "../components/NavBar.vue"
+
 import { unsubBranch, unsubEmployee, unsubAssignments,
   employees, branches, assignments } from "@/db/Employee";
 import { unsubTag, tags } from "@/db/Tags";
 
 export default {
   name: "EmployeeDatabase",
-  components: { EmployeePopup, EmployeeCard },
+  components: {NotifButton, EmployeePopup, EmployeeCard, NavBar },
   data() {
     return {
       unsubscribeListener: [unsubEmployee, unsubBranch, unsubAssignments, unsubTag],
@@ -72,7 +77,10 @@ export default {
   },
   computed: {
     filteredEmployees() {
-      const result = this.employees.filter(employee => {
+      const dbEmployees = this.employees.filter((employee) => {
+        return (employee.lastName !== "employer")
+      })
+      const result = dbEmployees.filter(employee => {
         return employee.fullName.toLowerCase().includes(this.employeeSearch)
       })
 

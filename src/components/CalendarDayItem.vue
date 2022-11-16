@@ -55,7 +55,7 @@ export default {
 
 #no-shifts {
   display: flex;
-  align-content: center;
+  text-align: center;
   justify-content: center;
 }
 </style>

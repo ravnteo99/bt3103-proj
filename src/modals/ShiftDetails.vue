@@ -1,50 +1,57 @@
 <template>
   <div class="shift-wrapper">
-    <div class="shift-popup">
-      <h1 class="title">Shift Details</h1>
+    <div class="external-wrapper">
+      <div class="shift-popup">
+        <h1 class="title">Shift Details</h1>
 
-      <!-- cross icon on top right-->
-      <font-awesome-icon
-          icon="fa-solid fa-x"
-          class="cross-icon"
-          @click="this.$emit('closePopup')"
-      />
+        <!-- cross icon on top right-->
+        <font-awesome-icon
+            icon="fa-solid fa-x"
+            class="cross-icon"
+            @click="this.$emit('closePopup')"
+        />
 
-      <form class="personal-information">
-        <label for="title">Title</label>
-        <input type="text" name="title" v-model="shiftObj.title">
-        <label for="date">Date</label>
-        <input type="text" name="date" v-model="shiftObj.date">
-        <label for="startTime">Start Time</label>
-        <input type="text" name="startTime" v-model="shiftObj.startTime">
-        <div class="worker-pool">
-          <div class="available-workers">
-            <label>Available Workers</label>
-            <div class="canvas">
-              <ShiftWorkers
-                  v-for="workerObj in availableWorkers"
-                  :key="workerObj"
-                  :employee="workerObj"
-              />
+        <form class="personal-information">
+          <label for="title">Title</label>
+          <input type="text" name="title" v-model="shiftObj.title">
+          <label for="date">Date</label>
+          <input type="text" name="date" v-model="shiftObj.date">
+          <label for="startTime">Start Time</label>
+          <input type="text" name="startTime" v-model="shiftObj.startTime">
+          <div class="worker-pool">
+            <div class="available-workers">
+              <label>Available Workers</label>
+              <div class="canvas">
+                <ShiftWorkers
+                    v-for="workerObj in availableWorkers"
+                    :key="workerObj"
+                    :employee="workerObj"
+                    worker-type="availableWorkers"
+                    @toggleEmployee="toggleEmployee"
+                />
+              </div>
+            </div>
+            <div class="assigned-workers">
+              <label>Assignees</label>
+              <div class="canvas">
+                <ShiftWorkers
+                    v-for="workerObj in assignedWorkers"
+                    :key="workerObj"
+                    :employee="workerObj"
+                    worker-type="assignedWorkers"
+                    @toggleEmployee="toggleEmployee"
+                />
+              </div>
             </div>
           </div>
-          <div class="assigned-workers">
-            <label>Assignees</label>
-            <div class="canvas">
-              <ShiftWorkers
-                  v-for="workerObj in assignedWorkers"
-                  :key="workerObj"
-                  :employee="workerObj"
-              />
-            </div>
-          </div>
+        </form>
+
+        <div class="button-wrapper custom-action-row">
+          <button class="action-button cancel-button" type="button" @click="$emit('closePopup')">Cancel</button>
+          <button class="action-button done" type="button" @click="this.showConfirmation=true">Confirm</button>
         </div>
-      </form>
-
-      <div class="button-wrapper custom-action-row">
-        <button class="action-button cancel-button" type="button" @click="$emit('closePopup')">Cancel</button>
-        <button class="action-button done" type="button" @click="this.showConfirmation=true">Confirm</button>
       </div>
+
 
       <!--  Modal component  -->
       <ConfirmationMessage
@@ -60,7 +67,9 @@
 <script>
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase"
-import {filterShiftAssignee, filterShiftAvailability, getShift} from "@/db/Shift";
+import {filterShiftAssignee, filterShiftAvailability, getShift,
+  createAssignment, deleteAssignment} from "@/db/Shift";
+
 import ConfirmationMessage from "@/modals/ConfirmationMessage";
 import ShiftWorkers from "@/components/ShiftWorkers";
 
@@ -105,8 +114,34 @@ export default {
     async updateShift() {
       const shiftRef = doc(db, "shifts", this.shiftId);
       await updateDoc(shiftRef, { ...this.shiftObj });
+      this.assignedWorkers.forEach((employeeID) => {
+         createAssignment(this.shiftId, employeeID)
+      })
+
+      this.availableWorkers.forEach((employeeID) => {
+        deleteAssignment(this.shiftId, employeeID)
+      })
+
       this.showConfirmation = false
       this.$emit('closePopup')
+    },
+    toggleEmployee(value, workerID) {
+      let srcArray, dstArray
+      if (value === "availableWorkers") {
+        srcArray = this.availableWorkers
+        dstArray = this.assignedWorkers
+      } else if (value === "assignedWorkers") {
+        srcArray = this.assignedWorkers
+        dstArray = this.availableWorkers
+      }
+
+      // remove this from src array
+      const index = srcArray.indexOf(workerID)
+      if (index > -1) {
+        srcArray.splice(index, 1);
+      }
+      // push it to dst array
+      dstArray.push(workerID)
     }
   }
 }
@@ -126,19 +161,25 @@ export default {
     align-items: center;
   }
 
-.shift-popup {
+.external-wrapper {
     background-color: white;
     border-radius: 20px;
-    width: 50%;
-    min-height: 500px;
+    max-width: 600px;
+    min-width: 500px;
+    height: 700px;
+    overflow: hidden;
+}
+
+.shift-popup {
+    border-radius: 20px;
+    height: inherit;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    padding: 30px;
+    padding: 0 30px 0 30px;
     position: relative;
-    max-width: 500px;
-    min-width: 400px;
+    overflow-y: auto;
   }
 
 .cross-icon {
@@ -173,20 +214,14 @@ button {
   width: 30%;
 }
 
-.worker-pool {
-  display: flex;
-  justify-content: space-evenly;
-  gap: 10px;
-}
-
-.worker-pool > * {
-  flex: 1;
-}
-
 .canvas {
   border-radius: 10px;
   background-color: #FBFBFD;
   padding: 10px;
   height: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: scroll;
 }
 </style>
