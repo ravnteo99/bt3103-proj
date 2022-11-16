@@ -11,7 +11,7 @@
             type="text"
             id="email"
             required=""
-            v-model="emailAddress"
+            v-model="employee.emailAddress"
         /><br>
 
         <label for="fullName"><b>Full Name</b> </label><br><br>
@@ -19,14 +19,14 @@
             type="text"
             id="fname"
             required=""
-            v-model="firstName"
+            v-model="employee.firstName"
             placeholder="First Name"
         /> &nbsp;&nbsp;
         <input
             type="text"
             id="lname"
             required=""
-            v-model="lastName"
+            v-model="employee.lastName"
             placeholder="Last Name"
         /><br>
 
@@ -35,7 +35,7 @@
             type="text"
             id="contactNo"
             required=""
-            v-model="contactNo"
+            v-model="employee.contactNo"
             placeholder="Mobile No."
         /><br>
 
@@ -44,21 +44,21 @@
             type="text"
             id="address"
             required=""
-            v-model="address1"
+            v-model="employee.address1"
             placeholder="address1"
         />
         <input
             type="text"
             id="address"
             required=""
-            v-model="address2"
+            v-model="employee.address2"
             placeholder="address2"
         />
         <input
             type="text"
             id="address"
             required=""
-            v-model="address3"
+            v-model="employee.address3"
             placeholder="address3"
         /><br>
         <input type="button" @click="updateProfile" value="Save Changes" id="savebutton">
@@ -68,9 +68,19 @@
     <div class="setting-item">
       <div class="userCard">
         <img class="userImage" src="img.jpg" style="width:168px;height:168px;">
-        <h1 class="userName">{{ firstName }} {{ lastName }}</h1>
-        <p class="tagList">Tags: </p>
-        <p class="branchList">Branches: </p>
+        <h1 class="userName">{{ employee.firstName }} {{ employee.lastName }}</h1>
+        <div class="tagList">
+          Tags:
+          <div class="tag-container">
+            <span :class="tag" class="user-tag" v-for="tag in assignedTag" :key="tag"> {{ tag }}</span>
+          </div>
+        </div>
+        <div class="branchList">
+          Branches:
+          <div class="branch-container">
+            <span :class="branch" class="user-tag" v-for="branch in assignedBranch" :key="branch"> {{ branch }}</span>
+          </div>
+        </div>
         <form id="cardForm">
           <button id="requestbutton" type="button" @click="this.tagRequest=true">Request Tag/Branches</button>
           <br>
@@ -84,39 +94,43 @@
 <!--  Modal component-->
   <TagRequest
     v-if="tagRequest"
+    :employeeID="employeeID"
     @togglePopup="this.tagRequest=false"
-    @requestTag="requestTag"
+    @sendRequest="sendRequest"
+  />
+
+  <ConfirmationMessage
+    v-if="requestSent"
+    msg="Your request has been sent"
+    @closeMessage="this.requestSent=false"
+    @confirmEdit="this.requestSent=false"
   />
 </template>
 <script>
 import {db} from "@/firebase"
 import {getAuth} from "firebase/auth";
-import {collection, getDocs, onSnapshot, doc, updateDoc} from "firebase/firestore";
+import {doc, updateDoc} from "firebase/firestore";
+import {unsubBranch, branches, fetchBranchAssignment, getEmployee} from "@/db/Employee";
+import {getTag} from "@/db/Tags";
+
 import NotifButton from "@/components/NotifButton";
 import TagRequest from "@/modals/TagRequest";
-import NavBar from "../components/NavBar.vue";
+import ConfirmationMessage from "@/modals/ConfirmationMessage";
+
 
 export default {
   name: "SettingDefault",
-  components: {NotifButton, TagRequest, NavBar},
+  components: {NotifButton, TagRequest, ConfirmationMessage},
   data() {
     return {
-      employeeId: '',
-      emailAddress: '',
-      firstName: '',
-      lastName: '',
-      contactNo: '',
-      address1: '',
-      address2: '',
-      address3: '',
+      employeeID: '',
+      employee: {},
+      branches: branches,
+      assignedTag: [],
+      assignedBranch: [],
+      unsubscribeListener: [unsubBranch],
       tagRequest: false,
-    }
-  },
-  firestore() {
-    const auth = getAuth();
-    const user = auth.currentUser;
-    return {
-      employee: db.collection('employee').doc(user.uid),
+      requestSent: false
     }
   },
   methods: {
@@ -143,34 +157,37 @@ export default {
 
       await updateDoc(employeeRef, updateData);
     },
-    requestTag() {
+    sendRequest() {
       this.tagRequest = false
+      this.requestSent=true
     }
+  },
+  unmounted() {
+    this.unsubscribeListener.forEach((callback) => {
+      callback()
+    })
   },
   async created() {
     const auth = getAuth();
-    var user = auth.currentUser;
-    this.emailAddress = user.email;
+    const user = auth.currentUser;
+    this.employee = await getEmployee(user.uid)
+    this.employeeID = user.uid
 
-    const employeeQuery = await getDocs(collection(db, "employee"));
-    employeeQuery.forEach((doc) => {
-      onSnapshot(doc.ref, (doc) => {
-        const employeeCheck = doc.data()
-        if (this.emailAddress === employeeCheck.emailAddress) {
-          this.Id = doc.id;
-          this.emailAddress = employeeCheck.emailAddress;
-          this.firstName = employeeCheck.firstName;
-          this.lastName = employeeCheck.lastName;
-          this.contactNo = employeeCheck.contactNo;
-          this.address1 = employeeCheck.address1;
-          this.address2 = employeeCheck.address2;
-          this.address3 = employeeCheck.address3
-        }
-      })
+    const branchOptions = this.branches.map((branch) => {
+      return {'id': branch.id, 'value': branch.name}
     })
-  }
-}
 
+    if (this.employeeID !== undefined) {
+      const [unsubscribe, assignedBranch] = fetchBranchAssignment(user.uid, branchOptions)
+      this.unsubscribeListener.push(unsubscribe)
+      this.assignedBranch = assignedBranch
+    }
+
+    const [unsubTags, tags] = getTag(user.uid)
+    this.assignedTag = tags
+    this.unsubscribeListener.push(unsubTags)
+  },
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -246,24 +263,6 @@ export default {
   line-height: 18px;
 }
 
-#cancelbutton {
-  background-color: white;
-  border: groove;
-  height: 45px;
-  width: 120px;
-  font-family: 'Gilroy-Light', sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 18px;
-  float: right;
-  border-radius: 12px;
-  transition-duration: 0.4s;
-}
-
-#cancelbutton:hover {
-  background-color: lightgray;
-}
-
 #savebutton {
   background-color: #F8D57E;
   border: none;
@@ -283,19 +282,14 @@ export default {
   background-color: #c1931d;
 }
 
-/* userCard css*/
 .userCard {
   margin-top: 60px;
   margin-left: 30px;
-  width: 80%;
-  height: 130%;
   background-color: #FAFAFA;
-  text-align: left;
 }
 
 .userImage {
   margin-top: 25px;
-  margin-left: 100px;
   margin-bottom: 25px;
 }
 
@@ -304,7 +298,6 @@ export default {
   font-weight: 800;
   font-size: 26px;
   line-height: 18px;
-  margin-left: 100px;
   margin-bottom: 25px;
 }
 
@@ -313,7 +306,6 @@ p {
   font-weight: 800;
   font-size: 16px;
   line-height: 18px;
-  margin-left: 30px;
 }
 
 #requestbutton {
@@ -329,9 +321,7 @@ p {
   transition-duration: 0.4s;
   margin-top: 15px;
   margin-bottom: 15px;
-  margin-left: 60px;
   cursor: pointer;
-  cursor: hand;
 }
 
 #requestbutton:hover {
@@ -349,11 +339,40 @@ p {
   line-height: 18px;
   border-radius: 12px;
   transition-duration: 0.4s;
-  margin-left: 60px;
 }
 
 #resetbutton:hover {
   background-color: #c1931d;
+}
+
+.userCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.tagList, .branchList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.user-tag {
+  border-radius: 5px;
+  font-weight: bold;
+  padding: 3px 10px;
+  text-align: center;
+  background-color: #FFB100;
+}
+
+.branchList {
+  margin-top: 10px;
+}
+
+.branch-container > *, .tag-container > * {
+  margin: 0 10px
 }
 </style>
   

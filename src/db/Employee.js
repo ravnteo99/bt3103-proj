@@ -79,22 +79,37 @@ export const fetchBranchAssignment = (employeeID, branchOptions) => {
 }
 
 export const createBranchAssignment = async (employeeID, branchID) => {
-    await addDoc(dbBranchEmployee, {
-      employeeID: employeeID,
-      branchID: branchID
-    });
+    // check if this employee is already assigned to this branch
+    const q = query(dbBranchEmployee,
+        where("employeeID", "==", employeeID),
+        where("shiftID", "==", branchID)
+    );
+
+    const querySnapshot = await getDocs(q);
+    // this employee has not been assigned to the branch
+    if (querySnapshot.empty) {
+        await addDoc(dbBranchEmployee, {
+          employeeID: employeeID,
+          branchID: branchID
+        });
+    }
 }
 
-export const removeBranchAssignment = async (employeeID, branchID) => {
-    const employeeQuery = await getDocs(query(dbBranchEmployee,
-          where("branchID", "==", branchID),
+export const removeBranchAssignment = async (employeeID, branchID=null) => {
+    let employeeQuery = query(dbBranchEmployee,
           where("employeeID", "==", employeeID)
-      ))
+      )
 
-      // remove employee from a branch
-      employeeQuery.forEach( (doc) => {
-        deleteDoc(doc.ref)
-      })
+    if (branchID !== null) {
+        employeeQuery = query(employeeQuery,
+            where("branchID", "==", branchID)
+        )}
+
+    const employeeDocRef = await getDocs(employeeQuery)
+    // remove employee from a branch
+    employeeDocRef.forEach( (doc) => {
+    deleteDoc(doc.ref)
+    })
 }
 
 
