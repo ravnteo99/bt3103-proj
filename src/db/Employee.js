@@ -15,7 +15,7 @@ export const getEmployee =  async (pk) => {
     return docSnap.data()
 }
 
-const listEmployees = () => {
+export const listEmployees = () => {
     const employees = ref([])
     const unsubscribe = onSnapshot(employeeQuery, (querySnapshot) => {
         employees.value = querySnapshot.docs.map((doc) => {
@@ -30,6 +30,7 @@ const listEmployees = () => {
                 "address1": employee.address1,
                 "address2": employee.address2,
                 "address3": employee.address3,
+                "hasProfileImage": employee.hasProfileImage
             }
           })
         })
@@ -37,7 +38,7 @@ const listEmployees = () => {
     return [unsubscribe, employees]
 }
 
-const fetchBranches = () => {
+export const fetchBranches = () => {
     const branches = ref([])
     const unsubscribe = onSnapshot(branchQuery, (querySnapshot) => {
         branches.value = querySnapshot.docs.map((doc) => {
@@ -49,7 +50,7 @@ const fetchBranches = () => {
     return [unsubscribe, branches]
 }
 
-const fetchAssignments = () => {
+export const fetchAssignments = () => {
     const assignments = ref([])
     const q = query(dbBranchEmployee)
     const unsubscribe = onSnapshot(q, (querySnapshot) => {

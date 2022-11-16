@@ -11,7 +11,7 @@
 
       <div class="header-wrapper">
         <div class="header">
-          <img :src="require(`@/assets/${employee.firstName}.svg`)" alt="profile picture">
+          <img :src="profileImage" alt="profile picture">
           <h2> {{ employee.fullName }} </h2>
           <p> {{ employee.emailAddress }} </p>
           <div class="user-tag">
@@ -57,14 +57,26 @@ export default {
   components: { BranchFilter },
   props: ["employee", "tags", "branches", "branchOptions"],
   emits: ["togglePopup"],
+  data() {
+    return {
+      profileImage: this.getProfileLink()
+    }
+  },
   methods: {
     async removeTagAssignment(tagName) {
       await removeTag(this.employee.id, tagName)
     },
     async postTagAssignment(tagName) {
       await addTag(this.employee.id, tagName)
+    },
+    getProfileLink() {
+      if (this.employee.hasProfileImage) {
+        return require(`@/assets/${this.employee.firstName}.svg`)
+      } else {
+        return require('@/assets/unknown.png')
+      }
     }
-  }
+  },
 }
 </script>
 

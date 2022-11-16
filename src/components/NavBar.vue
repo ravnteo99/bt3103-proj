@@ -67,6 +67,15 @@
             <font-awesome-icon icon="fa-solid fa-users" />&nbsp; &nbsp; Employee</button
           ><br /><br />
 
+          <button
+            id="settingsButton"
+            type="button"
+            @click="$router.push('/setting')"
+            style="font-size: 18px"
+          >
+            <font-awesome-icon icon="fa-cog" />&nbsp; &nbsp; Settings
+          </button>
+
         </div>
       </div>
     </div>

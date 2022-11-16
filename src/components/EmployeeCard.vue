@@ -1,12 +1,12 @@
 <template>
   <div class="employee-card-wrapper">
     <div class="display-picture">
-      <img :src="profileLink" :alt="fullName">
+      <img :src="profileImage" :alt="fullName">
     </div>
     <div class="worker-information">
       <p class="name"> {{ fullName }} </p>
       <p v-for="tag in tags" :class="tag" class="user-tag" :key="tag"> {{ methodTag(tag) }} </p>
-      <p class="email-address"> {{ emailAddress }} </p>
+      <p class="email-address"> {{ employee.emailAddress }} </p>
     </div>
   </div>
 </template>
@@ -15,10 +15,14 @@
 export default {
   name: "EmployeeCard",
   props: {
+    employee: Object,
     fullName: String,
     tags: Array,
-    emailAddress: String,
-    profileLink: String
+  },
+  data() {
+    return {
+      profileImage: this.getProfileLink()
+    }
   },
   methods: {
     methodTag(tag) {
@@ -27,8 +31,15 @@ export default {
       } else {
         return tag
       }
+    },
+    getProfileLink() {
+      if (this.employee.hasProfileImage) {
+          return require(`@/assets/${this.employee.firstName}.svg`)
+        } else {
+          return require('@/assets/unknown.png')
+        }
     }
-  }
+  },
 }
 </script>
 
@@ -39,7 +50,8 @@ export default {
     align-items: center;
     background-color: #FBFBFD;
     border-radius: 10px;
-    padding-top: 20px;
+    padding: 20px 10px 10px 10px;
+    width: 200px;
   }
 
   .worker-information {
@@ -57,6 +69,7 @@ export default {
 
   img {
     border-radius: 100%;
+    width: 100px;
   }
 
   .name {
@@ -77,5 +90,6 @@ export default {
 
   .email-address {
     font-size: 15px;
+    overflow-wrap: normal;
   }
 </style>

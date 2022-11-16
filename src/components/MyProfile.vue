@@ -7,7 +7,7 @@ export default {
     name: 'MyProfile',
     methods: {
         myprofile() {
-            //this.$router.push('/profile');
+            this.$router.push('/setting');
         }
     }
 }

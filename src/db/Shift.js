@@ -14,6 +14,7 @@ const fetchShifts = () => {
     const unsubscribe = onSnapshot(shiftQuery, (querySnapshot) => {
         shifts.value = querySnapshot.docs.map((doc) => {
             const shift = doc.data()
+            // console.log(shift)
             return {
                 'id': doc.id,
                 'title': shift.title,

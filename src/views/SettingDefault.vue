@@ -68,7 +68,7 @@
 
     <div class="setting-item">
       <div class="userCard">
-        <img class="userImage" :src="require(`@/assets/${employee.firstName}.svg`)" style="width:168px;height:168px;">
+        <img class="userImage" :src="getProfileLink" style="width:168px;height:168px;">
         <h1 class="userName">{{ employee.firstName }} {{ employee.lastName }}</h1>
         <div class="tagList">
           Tags:
@@ -132,7 +132,8 @@ export default {
       assignedBranch: [],
       unsubscribeListener: [unsubBranch],
       tagRequest: false,
-      requestSent: false
+      requestSent: false,
+      profileLink: ""
     }
   },
   methods: {
@@ -164,6 +165,15 @@ export default {
       this.requestSent=true
     }
   },
+  computed: {
+    getProfileLink() {
+      if (this.employee.hasProfileImage) {
+        return require(`@/assets/${this.employee.firstName}.svg`)
+      } else {
+        return require('@/assets/unknown.png')
+      }
+    }
+  },
   unmounted() {
     this.unsubscribeListener.forEach((callback) => {
       callback()
@@ -188,6 +198,8 @@ export default {
     const [unsubTags, tags] = getTag(user.uid)
     this.assignedTag = tags
     this.unsubscribeListener.push(unsubTags)
+
+    this.profileLink = `@/assets/${this.employee.firstName}.svg`
   },
 }
 </script>

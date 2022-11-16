@@ -79,14 +79,14 @@ export default {
                 alert(
                     "Password must contain at least 6 characters. Please check your password and try again."
                     );
-            } else if (this.password != this.confirmPassword) {
+            } else if (this.password !== this.confirmPassword) {
                 alert(
                     "Passwords do not match. Please check your password and try again."
                     );
             } else {
                 createUserWithEmailAndPassword(auth, this.email, this.password)
                 .then((cred) => {
-                    if (this.password != this.confirmPassword) {
+                    if (this.password !== this.confirmPassword) {
                         throw new Error();
                     } else {
                         alert("Successfully signed up!");
@@ -95,11 +95,11 @@ export default {
                     }
                 })
                 .catch((error) => {
-                    if (error.code == "auth/invalid-email") {
+                    if (error.code === "auth/invalid-email") {
                     alert(
                         "The email you entered is invalid. Please check your email and try again."
                         );
-                    } else if (error.code == "auth/email-already-in-use") {
+                    } else if (error.code === "auth/email-already-in-use") {
                     alert(
                         "Email already exists. Please enter a different email and try again."
                         );
@@ -112,7 +112,8 @@ export default {
               employeeID: auth.currentUser.uid,
               firstName: this.fname,
               lastName: this.lname,
-              emailAddress: this.email
+              emailAddress: this.email,
+              hasProfileImage: false,
             });
         }
     },
@@ -125,7 +126,7 @@ export default {
 <style scoped>
 h1 {
     font-family: sans-serif;
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 p {
     font-family: sans-serif;

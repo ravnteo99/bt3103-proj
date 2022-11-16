@@ -28,10 +28,10 @@
         v-for="employee in filteredEmployees"
         class="employee-card"
         :key="employee.firstName"
+        :employee="employee"
         :full-name="employee.fullName"
         :tags="employeeTags[employee.id]"
         :email-address="employee.emailAddress"
-        :profile-link="require(`@/assets/${employee.firstName}.svg`)"
         @click="toggleModal(employee)"
     />
   </div>
@@ -131,6 +131,21 @@ export default {
     toggleModal(employee) {
       this.lastClick = employee
     },
+    getProfileLink(employeeID) {
+      let profileLink = null
+      for (let i=0; i<this.filteredEmployees.length; i++) {
+        const curEmployee = this.filteredEmployees[i]
+        if (curEmployee.id === employeeID && curEmployee.hasProfileImage) {
+          profileLink = `@/assets/${curEmployee.firstName}.svg`
+        }
+      }
+
+      if (profileLink === null) {
+        profileLink = '@/assets/unknown.png'
+      }
+
+      return profileLink
+    }
   }
 }
 </script>
