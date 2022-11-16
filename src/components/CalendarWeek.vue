@@ -194,7 +194,6 @@ export default {
   position: flex;
 }
 .calendar-week {
-  position: flex;
   background-color: var(--grey-200);
   border: solid 1px var(--grey-300);
   margin-top: 20px;
