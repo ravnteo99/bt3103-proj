@@ -1,18 +1,18 @@
 <template>
-    <div class="main">
-        <div class="navbar">
-            
-            <div id="appName"> Cool app name</div>
-            <div class="navBar">
-            <button id="homeButton" type="button" onclick="homeDirFunc()" style='font-size: 18px'><i class='fas fa-home'></i>&nbsp; &nbsp; Home</button><br><br>
-            <button id="availButton" type="button" @click="$router.push('availability')" style='font-size: 18px'><i class='fas fa-briefcase'></i>&nbsp; &nbsp; Availability</button><br><br>
-            <button id="timetableButton" type="button" onclick="timetableDirFunc()" style='font-size: 18px'><i class='far fa-calendar-alt'></i>&nbsp; &nbsp; Timetable</button><br><br>
-            <button id="settingsButton" type="button" @click="$router.push('setting')" style='font-size: 18px'><i class='fas fa-cog'></i>&nbsp; &nbsp; Settings</button>
-            </div>
+  <div class="main">
+      <div class="navbar">
 
-        </div>
-    </div>
-  </template>
+          <div id="appName"> Cool app name</div>
+          <div class="navBar">
+          <button id="homeButton" type="button" onclick="homeDirFunc()" style='font-size: 18px'><i class='fas fa-home'></i>&nbsp; &nbsp; Home</button><br><br>
+          <button id="availButton" type="button" @click="$router.push('availability')" style='font-size: 18px'><i class='fas fa-briefcase'></i>&nbsp; &nbsp; Availability</button><br><br>
+          <button id="timetableButton" type="button" onclick="timetableDirFunc()" style='font-size: 18px'><i class='far fa-calendar-alt'></i>&nbsp; &nbsp; Timetable</button><br><br>
+          <button id="settingsButton" type="button" @click="$router.push('setting')" style='font-size: 18px'><i class='fas fa-cog'></i>&nbsp; &nbsp; Settings</button>
+          </div>
+
+      </div>
+  </div>
+</template>
 <script>
 import {ref} from "vue";
 import firebaseApp from '../firebase.js';
