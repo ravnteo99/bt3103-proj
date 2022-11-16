@@ -5,6 +5,7 @@
     </div>
     <font-awesome-icon class="available-tick" v-if="isAvailable" icon="fa-solid fa-check" />
     <div class="available-information">
+      <p class="title"> {{ branch }} </p>
       <p class="title"> {{ title }} </p>
       <p class="date"> <span><font-awesome-icon icon="fa-calendar" class="fa-calendar" /></span>{{ date }} </p>
       <span class="date">
@@ -19,6 +20,7 @@
 export default {
   name: "AvailabilityCard",
   props: {
+    branch: String,
     title: String,
     date: String,
     startTime: String,
@@ -45,13 +47,13 @@ export default {
     flex-direction: column;
     align-items: center;
     border-radius: 10px;
-
     width: 150px;
-    padding: 20px;
+    padding: 10px;
     position: relative;
+    height:180px;
   }
   .inactive {
-    background-color: #FBFBFD;
+    background-color: white;
   }
   .active {
     background-color: var(--yellow-tone-2);
@@ -83,18 +85,6 @@ export default {
 
   .title {
     font-weight: bold;
-  }
-
-  .user-tag {
-    border-radius: 5px;
-    font-weight: bold;
-    padding: 3px;
-    width: 200px;
-  }
-
-  .none {
-    background-color: #F83262;
-    color: white;
   }
 
   .date {

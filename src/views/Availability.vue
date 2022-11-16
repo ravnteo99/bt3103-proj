@@ -1,22 +1,31 @@
 <template>
   <h1 class="section-title">Availability <span>{{ filteredShifts.length }} </span> </h1>
-  <Calendar />
 
-  <div class="canvas">  
-    <AvailabilityCard
-      v-for="shift in filteredShifts"
-      :key="shift.id"
-      :title="shift.title"
-      :date="shift.date"
-      :startTime="shift.startTime"
-      :endTime="shift.endTime"
-      :displayPicture="require('@/assets/AngMoKioHub.svg')"
-      :isAvailable="checkAvailable(shift.id)"
-      />
-  </div>
-  <div class="button-wrapper custom-action-row">
+  <div class = "section-wrapper">
+    <div class="shift-wrapper">
+      <div class="canvas">  
+        <AvailabilityCard
+          v-for="shift in filteredShifts"
+          :key="shift.id"
+          :branch="shift.branch"
+          :title="shift.title"
+          :date="shift.date"
+          :startTime="shift.startTime"
+          :endTime="shift.endTime"
+          :displayPicture="require('@/assets/AngMoKioHub.svg')"
+          :isAvailable="checkAvailable(shift.id)"
+          />
+      </div>
+      <div class="button-wrapper custom-action-row">
         <button class="action-button done" type="button">Confirm</button>
+      </div>
+    </div>
+    <div class="right-wrapper">
+      <Calendar />
+    </div>
+
   </div>
+
 
 
 
@@ -100,11 +109,26 @@ export default {
 </script>
 
 <style scoped>
+  .section-wrapper {
+    display: flex;
+  }
+
+  .shift-wrapper {
+    border-radius: 10px;
+    overflow: auto;
+    flex: 3;
+    min-width: 500px;
+  }
   .canvas {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 20px;
+    background-color: #FBFBFD;
+    border-radius: 20px;
+    padding: 20px;
+    height: 500px;
+    overflow-y: scroll;
   }
   .custom-action-row {
     justify-content: flex-end;

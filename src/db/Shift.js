@@ -141,7 +141,16 @@ export const filterShift = (shifts, branchNames, tags, startDate, endDate=null, 
         })
         return result
     })
-
+    function compareDate(shiftA, shiftB) {
+        if (shiftA.date < shiftB.date) {
+            return -1;
+        }
+        if (shiftA.date > shiftB.date) {
+            return 1;
+        }
+        return 0
+    }
+    filteredShifts = filteredShifts.sort(compareDate)
     return filteredShifts
 }
 
