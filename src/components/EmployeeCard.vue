@@ -70,6 +70,7 @@ export default {
   img {
     border-radius: 100%;
     width: 100px;
+    height: 100px;
   }
 
   .name {
