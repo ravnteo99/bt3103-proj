@@ -103,14 +103,13 @@ label {
     font-weight: bold;
 }
 input {
-    -webkit-appearance: none;
-    font-size: 14px;
-    height: 30px;
+    margin-top: 7px;
     width: 280px;
     box-sizing: border-box;
-    border-color: lightgray;
-    border-radius: 8px;
-    border-width: 1px;
+    padding: 7px 12px 6px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    overflow: hidden;
 }
 input:focus {
     border-color: black;
