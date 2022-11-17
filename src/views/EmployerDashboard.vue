@@ -1,41 +1,44 @@
 <template>
-  <NotifButton />
-  <div class="column left">
-    <NavBar/>
-    <h1>Shifts Requiring Attention</h1>
-    <div class="shift-wrapper">
-      <ShiftCard
-        v-for="shift in shifts"
-        :key="shift"
-        :branch="shift.branch"
-        :title="shift.title"
-        :date="shift.date"
-        :startTime="shift.startTime"
-        :endTime="shift.endTime"
-      />
+  <div v-if="!admin">NOT AUTHORISED</div>
+  <div v-else>
+    <NotifButton />
+    <div class="column left">
+      <NavBar />
+      <h1>Shifts Requiring Attention</h1>
+      <div class="shift-wrapper">
+        <ShiftCard
+          v-for="shift in shifts"
+          :key="shift"
+          :branch="shift.branch"
+          :title="shift.title"
+          :date="shift.date"
+          :startTime="shift.startTime"
+          :endTime="shift.endTime"
+        />
+      </div>
     </div>
-  </div>
-  <div class="column right">
-    <h1>Employee Requests</h1>
-    <div class="request-wrapper">
-      <EmployeeTagReqCard
-        v-for="req in tagRequests"
-        :key="req.tagName"
-        :firstName="req.firstName"
-        :lastName="req.lastName"
-        :tagName="req.tagName"
-        :id="req.id"
-        :employeeID="req.employeeID"
-      />
-      <EmployeeBranchReqCard
-        v-for="req in branchRequests"
-        :key="req.tagName"
-        :firstName="req.firstName"
-        :lastName="req.lastName"
-        :branch="req.branch"
-        :id="req.id"
-        :employeeID="req.employeeID"
-      />
+    <div class="column right">
+      <h1>Employee Requests</h1>
+      <div class="request-wrapper">
+        <EmployeeTagReqCard
+          v-for="req in tagRequests"
+          :key="req.tagName"
+          :firstName="req.firstName"
+          :lastName="req.lastName"
+          :tagName="req.tagName"
+          :id="req.id"
+          :employeeID="req.employeeID"
+        />
+        <EmployeeBranchReqCard
+          v-for="req in branchRequests"
+          :key="req.tagName"
+          :firstName="req.firstName"
+          :lastName="req.lastName"
+          :branch="req.branch"
+          :id="req.id"
+          :employeeID="req.employeeID"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -54,7 +57,8 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
-import NavBar from "../components/NavBar.vue"
+import NavBar from "../components/NavBar.vue";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import dayjs from "dayjs";
 const dbShifts = collection(db, "shifts");
@@ -68,10 +72,28 @@ export default {
       tagRequests: [],
       branchRequests: [],
       count: 0,
+      admin: false,
+      adminid: "42vuID5nKWMVL1mODCKyqaoVL7s1",
     };
   },
-  components: {NotifButton, ShiftCard, EmployeeTagReqCard, EmployeeBranchReqCard, NavBar },
+  components: {
+    NotifButton,
+    ShiftCard,
+    EmployeeTagReqCard,
+    EmployeeBranchReqCard,
+    NavBar,
+  },
   async mounted() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.uid = user.uid;
+        if (user.uid === this.adminid) {
+          this.admin = true;
+        }
+      }
+    });
+
     for (let i = 0; i < 7; i++) {
       let date = dayjs().add(i, "day").format("YYYY-MM-DD");
 

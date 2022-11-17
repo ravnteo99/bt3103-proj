@@ -156,4 +156,20 @@ h2 {
 .Junction8 {
   background-color: rgb(250, 224, 191);
 }
+
+.BedokMall {
+  background-color: rgb(255, 255, 193);
+}
+
+.ClementiMall {
+  background-color: rgb(201, 253, 205);
+}
+
+.TampinesHub {
+  background-color: rgb(194, 224, 252);
+}
+
+.Westgate {
+  background-color: rgb(180, 211, 178);
+}
 </style>
