@@ -146,22 +146,22 @@ export default {
     async updateProfile() {
       const employeeRef = doc(db, "employee", this.employeeID);
       const updateData = {
-        emailAddress: this.emailAddress,
-        firstName: this.firstName,
-        lastName: this.lastName,
+        emailAddress: this.employee.emailAddress,
+        firstName: this.employee.firstName,
+        lastName: this.employee.lastName,
       }
 
-      if (this.contactNo !== undefined) {
-        updateData["contactNo"] = this.contactNo
+      if (this.employee.contactNo !== undefined) {
+        updateData["contactNo"] = this.employee.contactNo
       }
-      if (this.address1 !== undefined) {
-        updateData["address1"] = this.address1
+      if (this.employee.address1 !== undefined) {
+        updateData["address1"] = this.employee.address1
       }
-      if (this.address2 !== undefined) {
-        updateData["address2"] = this.address2
+      if (this.employee.address2 !== undefined) {
+        updateData["address2"] = this.employee.address2
       }
-      if (this.address3 !== undefined) {
-        updateData["address3"] = this.address3
+      if (this.employee.address3 !== undefined) {
+        updateData["address3"] = this.employee.address3
       }
 
       await updateDoc(employeeRef, updateData);

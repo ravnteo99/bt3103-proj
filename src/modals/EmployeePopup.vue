@@ -19,7 +19,7 @@
               {{ tag }}
               <span class="remove-class-button" @click="removeTagAssignment(tag)"><font-awesome-icon icon="fa-solid fa-x fa-2xs" /></span>
             </p>
-            <span class="add-button"><font-awesome-icon icon="fa-solid fa-plus" /></span>
+            <span class="add-button" @click="this.addTag=true"><font-awesome-icon icon="fa-solid fa-plus" /></span>
           </div>
         </div>
       </div>
@@ -45,29 +45,38 @@
       </form>
 
     </div>
+
+    <!--  Modal component  -->
+    <EditEmployeeTag
+      v-if="addTag"
+      :employeeID="employee.id"
+      @togglePopup="this.addTag=false"
+    />
   </div>
 </template>
 
 <script>
 import BranchFilter from "@/components/BranchFilter";
-import {removeTag, addTag} from "@/db/Tags";
+import EditEmployeeTag from "@/modals/EditEmployeeTag";
+import {removeTag} from "@/db/Tags";
 
 export default {
   name: "EmployeePopup",
-  components: { BranchFilter },
+  components: { BranchFilter, EditEmployeeTag },
   props: ["employee", "tags", "branches", "branchOptions"],
   emits: ["togglePopup"],
   data() {
     return {
-      profileImage: this.getProfileLink()
+      profileImage: this.getProfileLink(),
+      addTag: false,
     }
   },
   methods: {
+    closeMessage() {
+      this.showConfirmation=false
+    },
     async removeTagAssignment(tagName) {
       await removeTag(this.employee.id, tagName)
-    },
-    async postTagAssignment(tagName) {
-      await addTag(this.employee.id, tagName)
     },
     getProfileLink() {
       if (this.employee.hasProfileImage) {
