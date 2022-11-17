@@ -1,5 +1,9 @@
 <template>
-  <NotifButton/>
+  <div v-if="!auth">
+    NOT AUTHORISED
+  </div>
+  <div v-else>
+    <NotifButton/>
   <NavBar />
   <h1>User Profile</h1>
   <div class="setting">
@@ -106,10 +110,11 @@
     @closeMessage="this.requestSent=false"
     @confirmEdit="this.requestSent=false"
   />
+  </div>
 </template>
 <script>
 import {db} from "@/firebase"
-import {getAuth} from "firebase/auth";
+import {getAuth, onAuthStateChanged} from "firebase/auth";
 import {doc, updateDoc} from "firebase/firestore";
 import {unsubBranch, branches, fetchBranchAssignment, getEmployee} from "@/db/Employee";
 import {getTag} from "@/db/Tags";
@@ -133,7 +138,8 @@ export default {
       unsubscribeListener: [unsubBranch],
       tagRequest: false,
       requestSent: false,
-      profileLink: ""
+      profileLink: "",
+      auth: false
     }
   },
   methods: {
@@ -181,6 +187,11 @@ export default {
   },
   async created() {
     const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.auth = true;
+      }
+    });
     const user = auth.currentUser;
     this.employee = await getEmployee(user.uid)
     this.employeeID = user.uid
