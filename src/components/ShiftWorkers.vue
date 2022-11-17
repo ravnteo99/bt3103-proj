@@ -28,7 +28,7 @@ export default {
       workerID: this.employee,
       workerObj: {},
       workerTags: [],
-      displayPicture: "",
+      displayPicture: this.getProfileLink(),
     }
   },
   mounted() {
@@ -51,6 +51,15 @@ export default {
     fullName() {
       return `${this.workerObj.firstName} ${this.workerObj.lastName}`
     },
+  },
+  methods: {
+    getProfileLink() {
+      if (this.employee.hasProfileImage) {
+          return require(`@/assets/${this.employee.firstName}.svg`)
+        } else {
+          return require('@/assets/unknown.png')
+        }
+    }
   }
 }
 </script>
